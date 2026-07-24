@@ -58,10 +58,14 @@ IdaWhats is an unofficial, community-maintained gateway. It connects to WhatsApp
 
   | Engine            | Ban-risk profile                                                                                        | Resource cost                     |
   | ----------------- | ------------------------------------------------------------------------------------------------------- | --------------------------------- |
-  | `whatsapp-web.js` | Lower — drives a real headless Chromium that looks like genuine WhatsApp Web traffic.                   | High RAM (~300–500 MB / session). |
-  | `baileys`         | Higher — speaks the multi-device WebSocket protocol directly and is easier for WhatsApp to fingerprint. | Low RAM (~30–80 MB / session).    |
+  | `whatsapp-web.js` | Lower — drives a real headless Chromium that looks like genuine WhatsApp Web traffic.                   | High RAM (~300–500 MB / session). | ✅ Full status ticks (sent → delivered → read) |
+  | `baileys`         | Higher — speaks the multi-device WebSocket protocol directly and is easier for WhatsApp to fingerprint. | Low RAM (~30–80 MB / session).    | ✅ Full status ticks (sent → delivered → read) |
 
-  If account safety is your top priority and you can afford the memory, prefer `whatsapp-web.js`. If you need density and accept the trade-off, use `baileys`.
+  Both engines deliver the same message status ticks (sent ✅, delivered ✅✅, read ✅✅). The
+  `whatsapp-web.js` engine uses a real Chromium browser giving maximum stealth and compatibility;
+  the `baileys` engine is browser-free and lighter on resources. For best reliability use
+  `whatsapp-web.js` (default). For higher session density on limited hardware, use
+  `ENGINE_TYPE=baileys`.
 
 ### Safe-sending guidelines
 
