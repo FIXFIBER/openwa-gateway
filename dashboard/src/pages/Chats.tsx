@@ -1253,6 +1253,10 @@ export function Chats() {
                                   src={thumb}
                                   alt=""
                                   onLoad={onMediaLoad}
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.style.display = 'none';
+                                  }}
                                   style={{ maxWidth: 220, borderRadius: 8, display: 'block', marginBottom: 4 }}
                                 />
                               )}
@@ -1362,6 +1366,16 @@ export function Chats() {
                                   href={mediaSrc}
                                   download={mediaInfo.filename || 'document'}
                                   className="chat-document-media"
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  onClick={(e) => {
+                                    // If it is an image, open the lightbox instead of downloading directly
+                                    if (mediaInfo?.mimetype?.startsWith('image/')) {
+                                      e.preventDefault();
+                                      const idx = imageMedia.findIndex(x => x.id === msg.id);
+                                      if (idx >= 0) setLightboxIndex(idx);
+                                    }
+                                  }}
                                 >
                                   📎 {mediaInfo.filename || t('chats.downloadDocument')}
                                 </a>
