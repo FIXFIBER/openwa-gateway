@@ -12,7 +12,7 @@ services:
     runtime: node
     plan: free
     branch: main
-    repo: https://github.com/FIXFIBER/idawhats-gateway.git
+    repo: https://github.com/FIXFIBER/openwa-gateway.git
     # Build: skip Chromium (baileys engine), compile TS + dashboard
     buildCommand: |
       export PUPPETEER_SKIP_DOWNLOAD=true
