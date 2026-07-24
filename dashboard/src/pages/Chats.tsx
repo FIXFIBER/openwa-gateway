@@ -1291,7 +1291,14 @@ export function Chats() {
                         }
                         if (!mediaInfo) return null;
                         if (mediaInfo.omitted) {
-                          return <div className="message-media-omitted">📎 {t('chats.media.omitted')}</div>;
+                          return (
+                            <div className="message-media-omitted" style={{ cursor: mediaInfo?.data ? 'pointer' : 'default' }} onClick={() => {
+                              if (mediaInfo?.data) {
+                                const idx = imageMedia.findIndex(x => x.id === msg.id);
+                                if (idx >= 0) setLightboxIndex(idx);
+                              }
+                            }}>📎 {t('chats.media.omitted')}</div>
+                          );
                         }
                         const mediaSrc = getMediaSrc(mediaInfo);
                         if (!mediaSrc) return null;
@@ -1333,7 +1340,10 @@ export function Chats() {
                             );
                           case 'video':
                             return (
-                              <div className="message-media-video">
+                              <div className="message-media-video" onClick={() => {
+                                const idx = imageMedia.findIndex(x => x.id === msg.id);
+                                if (idx >= 0) setLightboxIndex(idx);
+                              }} style={{ cursor: 'pointer' }}>
                                 <video
                                   src={failedMedia.has(msg.id) ? '' : mediaSrc}
                                   controls
@@ -1348,6 +1358,12 @@ export function Chats() {
                                       const placeholder = document.createElement('span');
                                       placeholder.className = 'message-media-omitted';
                                       placeholder.textContent = '🎬 ' + (mediaInfo.filename || t('chats.media.video')) + ' ';
+                                      placeholder.style.cursor = 'pointer';
+                                      placeholder.addEventListener('click', (ev) => {
+                                        ev.stopPropagation();
+                                        const idx = imageMedia.findIndex(x => x.id === msg.id);
+                                        if (idx >= 0) setLightboxIndex(idx);
+                                      });
                                       wrapper.appendChild(placeholder);
                                       const retryBtn = document.createElement('button');
                                       retryBtn.className = 'chat-media-retry';
@@ -1363,7 +1379,10 @@ export function Chats() {
                           case 'audio':
                           case 'voice':
                             return (
-                              <div className="message-media-audio">
+                              <div className="message-media-audio" onClick={() => {
+                                const idx = imageMedia.findIndex(x => x.id === msg.id);
+                                if (idx >= 0) setLightboxIndex(idx);
+                              }} style={{ cursor: 'pointer' }}>
                                 <audio
                                   src={failedMedia.has(msg.id) ? '' : mediaSrc}
                                   controls
@@ -1377,6 +1396,12 @@ export function Chats() {
                                       const placeholder = document.createElement('span');
                                       placeholder.className = 'message-media-omitted';
                                       placeholder.textContent = '🎵 ' + (mediaInfo.filename || t('chats.media.audio')) + ' ';
+                                      placeholder.style.cursor = 'pointer';
+                                      placeholder.addEventListener('click', (ev) => {
+                                        ev.stopPropagation();
+                                        const idx = imageMedia.findIndex(x => x.id === msg.id);
+                                        if (idx >= 0) setLightboxIndex(idx);
+                                      });
                                       wrapper.appendChild(placeholder);
                                       const retryBtn = document.createElement('button');
                                       retryBtn.className = 'chat-media-retry';
