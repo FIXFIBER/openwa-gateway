@@ -1,16 +1,48 @@
-# OpenWA on serv00 — Free 24/7 Deploy Runbook
+# OpenWA — Free Hosting Deploy Runbook
 
-Goal: run your OpenWA WhatsApp gateway on **serv00.com** (free, no card) so it
-keeps working when your laptop is off. You only `git push` when you change code.
+Two free, no-card paths. **serv00 is currently full** (server user cap), so the
+working choice right now is **Render**.
 
-## 0. One-time account setup (do in serv00 panel)
+============================================================================
+## PATH A — Render (FREE, no card, CURRENT recommendation)
+============================================================================
+Catch: Render free web services **sleep after 15 min idle**. A pinger must hit
+the health URL every <15 min or it sleeps (WhatsApp session drops).
+
+### A0. Deploy
+1. Push code to GitHub (done: FIXFIBER/openwa-gateway).
+2. Render dashboard → New → **Blueprint** → connect the repo → it reads `render.yaml`.
+   Or CLI: `render blueprint launch` (render CLI v2.20.0 is installed locally).
+3. In Render dashboard, set **API_MASTER_KEY** as a secret (or accept the random
+   seeded key shown in the first deploy log).
+4. Deploy. Render builds (skips Chromium, compiles TS + dashboard) and starts
+   `node dist/main` on the injected PORT. Health check = `/api/sessions`.
+
+### A1. Keep it awake (defeat 15-min sleep)
+- **True 24/7 (laptop off):** add a free **UptimeRobot** HTTP monitor (5-min
+  interval) pointing at `https://<your-app>.onrender.com/api/sessions`. No card.
+- **Laptop-on only:** the Hermes cron `openwa-render-keepalive` (every 10 min)
+  runs `serv00-deploy/ping-render.sh`. Write the URL to
+  `/home/darkaxis/whatsappopenwa/.render-url` so the cron picks it up.
+
+### A2. Link a number
+Dashboard at `https://<your-app>.onrender.com/` (log in with API key) → Sessions
+→ scan QR. `AUTO_START_SESSIONS=true` re-links after restarts.
+
+============================================================================
+## PATH B — serv00 (FREE, no card, but currently at user cap)
+============================================================================
+Use only when serv00 reopens a server (they rotate; retry later or watch
+@serv00com on X). Steps preserved below.
+
+### B0. One-time account setup
 1. Sign up at serv00.com (free).
 2. Add a **domain** as WWW type `nodejs`.
 3. Enable **Binexec**: DevilWEB → Additional services → Run your own applications → ON.
-   Then **log out and SSH back in** (required for binexec to activate).
-4. In SSH, confirm: `node22 -v` prints v22.x.
+   Then **log out and SSH back in**.
+4. Confirm: `node22 -v` prints v22.x.
 
-## 1. Push your code to GitHub (so the host pulls it)
+### B1. Push your code to GitHub (so the host pulls it)
 On your laptop:
 ```
 cd ~/whatsappopenwa
