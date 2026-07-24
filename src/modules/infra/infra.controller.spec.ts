@@ -104,8 +104,8 @@ describe('InfraController.importStorage filePath validation (Vuln 3)', () => {
   });
 
   it('guards and opens the same cwd-resolved path returned by storage export', async () => {
-    const cwdSpy = jest.spyOn(process, 'cwd').mockReturnValue('/srv/openwa');
-    (fs.existsSync as jest.Mock).mockImplementation((p: string) => p === '/srv/openwa/data/exports/export.tar.gz');
+    const cwdSpy = jest.spyOn(process, 'cwd').mockReturnValue('/srv/idawhats');
+    (fs.existsSync as jest.Mock).mockImplementation((p: string) => p === '/srv/idawhats/data/exports/export.tar.gz');
     (fs.createReadStream as jest.Mock).mockClear();
     const storage = {
       importFromStream: jest.fn().mockResolvedValue(3),
@@ -113,7 +113,7 @@ describe('InfraController.importStorage filePath validation (Vuln 3)', () => {
     };
     try {
       const result = await buildController(storage).importStorage({ filePath: 'data/exports/export.tar.gz' });
-      expect(fs.createReadStream).toHaveBeenCalledWith('/srv/openwa/data/exports/export.tar.gz');
+      expect(fs.createReadStream).toHaveBeenCalledWith('/srv/idawhats/data/exports/export.tar.gz');
       expect(storage.importFromStream).toHaveBeenCalledTimes(1);
       expect(result).toEqual({ imported: true, count: 3, storageType: 'local' });
     } finally {
@@ -259,8 +259,8 @@ describe('InfraController PostgreSQL schema (POSTGRES_SCHEMA)', () => {
   }
 
   it('writes POSTGRES_SCHEMA for external Postgres', () => {
-    const env = written({ database: { type: 'postgres', builtIn: false, host: 'db', schema: 'openwa' } });
-    expect(env).toContain('POSTGRES_SCHEMA=openwa');
+    const env = written({ database: { type: 'postgres', builtIn: false, host: 'db', schema: 'idawhats' } });
+    expect(env).toContain('POSTGRES_SCHEMA=idawhats');
   });
 
   it('defaults POSTGRES_SCHEMA to public for external Postgres when no schema is provided', () => {
@@ -280,8 +280,8 @@ describe('InfraController PostgreSQL schema (POSTGRES_SCHEMA)', () => {
 
   it('getConfig surfaces the saved POSTGRES_SCHEMA, defaulting to public', () => {
     (fs.existsSync as jest.Mock).mockReturnValue(true);
-    (fs.readFileSync as jest.Mock).mockReturnValue('DATABASE_TYPE=postgres\nPOSTGRES_SCHEMA=openwa\n');
-    expect(newController().getConfig().database.schema).toBe('openwa');
+    (fs.readFileSync as jest.Mock).mockReturnValue('DATABASE_TYPE=postgres\nPOSTGRES_SCHEMA=idawhats\n');
+    expect(newController().getConfig().database.schema).toBe('idawhats');
     (fs.readFileSync as jest.Mock).mockReturnValue('DATABASE_TYPE=postgres\n');
     expect(newController().getConfig().database.schema).toBe('public');
     (fs.existsSync as jest.Mock).mockReturnValue(false);
@@ -385,7 +385,7 @@ describe('InfraController.saveConfig env-name correctness and merge (#226)', () 
 
   it('drops stale postgres keys (including POSTGRES_SCHEMA) when switching to sqlite', () => {
     const existing =
-      'DATABASE_TYPE=postgres\nDATABASE_HOST=oldhost\nDATABASE_PASSWORD=secret\nDATABASE_PORT=5432\nPOSTGRES_SCHEMA=openwa\n';
+      'DATABASE_TYPE=postgres\nDATABASE_HOST=oldhost\nDATABASE_PASSWORD=secret\nDATABASE_PORT=5432\nPOSTGRES_SCHEMA=idawhats\n';
     const env = written({ database: { type: 'sqlite' } }, existing);
     expect(env).toContain('DATABASE_TYPE=sqlite');
     expect(env).not.toContain('DATABASE_HOST=');
@@ -996,9 +996,9 @@ describe('InfraController.getStatus storage (reads the real storage.localPath ke
     // `./uploads` fallback instead of the real path StorageService uses (`storage.localPath`).
     const status = await buildController({
       'storage.type': 'local',
-      'storage.localPath': '/srv/openwa/media',
+      'storage.localPath': '/srv/idawhats/media',
     }).getStatus();
-    expect(status.storage.path).toBe('/srv/openwa/media');
+    expect(status.storage.path).toBe('/srv/idawhats/media');
   });
 
   it('falls back to ./data/media (matching StorageService) when storage.localPath is unset', async () => {
@@ -1007,9 +1007,9 @@ describe('InfraController.getStatus storage (reads the real storage.localPath ke
   });
 
   it('reports the bucket in S3 mode so the active backend is visible', async () => {
-    const status = await buildController({ 'storage.type': 's3', 'storage.s3.bucket': 'my-openwa-bucket' }).getStatus();
+    const status = await buildController({ 'storage.type': 's3', 'storage.s3.bucket': 'my-idawhats-bucket' }).getStatus();
     expect(status.storage.type).toBe('s3');
-    expect(status.storage.bucket).toBe('my-openwa-bucket');
+    expect(status.storage.bucket).toBe('my-idawhats-bucket');
   });
 
   it('omits bucket in local mode (no fabricated field)', async () => {
@@ -1189,8 +1189,8 @@ describe('InfraController C002 audit trail (light-dependency handlers)', () => {
 
   it('importStorage emits INFRA_STORAGE_IMPORTED with the imported file count', async () => {
     const audit = makeAudit();
-    const cwdSpy = jest.spyOn(process, 'cwd').mockReturnValue('/srv/openwa');
-    (fs.existsSync as jest.Mock).mockImplementation((p: string) => p === '/srv/openwa/data/exports/x.tar.gz');
+    const cwdSpy = jest.spyOn(process, 'cwd').mockReturnValue('/srv/idawhats');
+    (fs.existsSync as jest.Mock).mockImplementation((p: string) => p === '/srv/idawhats/data/exports/x.tar.gz');
     try {
       const storageService = { importFromStream: jest.fn().mockResolvedValue(5), getCurrentStorageType: () => 'local' };
       await build(audit, { storageService }).importStorage({ filePath: 'data/exports/x.tar.gz' });

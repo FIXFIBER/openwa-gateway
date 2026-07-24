@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Query parameters for listing contacts. Null fields are omitted from the query string. */
 public record ListContactsQuery(Integer limit, Integer offset) {

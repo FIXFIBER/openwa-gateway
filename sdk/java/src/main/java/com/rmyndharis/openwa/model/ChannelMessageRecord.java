@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /**
  * A message read live from a channel by {@code channels.messages()}. This is the engine payload

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /**
  * One status/story from the GET status endpoints ({@code list}/{@code fromContact}), which answer a

@@ -1,19 +1,19 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.CreateTemplateRequest;
-import com.rmyndharis.openwa.model.TemplateRecord;
-import com.rmyndharis.openwa.model.UpdateTemplateRequest;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.CreateTemplateRequest;
+import com.rmyndharis.idawhats.model.TemplateRecord;
+import com.rmyndharis.idawhats.model.UpdateTemplateRequest;
 import java.util.List;
 
 /** Templates resource — stored message templates with {@code {{variable}}} placeholders. */
 public final class TemplatesResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public TemplatesResource(OpenWAClient client) {
+    public TemplatesResource(IdaWhatsClient client) {
         this.client = client;
     }
 

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for {@code requestPairingCode}. */
 public record RequestPairingCodeRequest(String phoneNumber) {

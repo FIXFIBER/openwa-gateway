@@ -10,7 +10,7 @@ import {
 import { renderHttpRequestMetrics } from '../../common/metrics/request-metrics';
 
 /**
- * Prometheus exposition for OpenWA. Kept dependency-free (no prom-client) — the
+ * Prometheus exposition for IdaWhats. Kept dependency-free (no prom-client) — the
  * surface is small and the text format (v0.0.4) is trivial to emit by hand.
  *
  * Scraping is gated by METRICS_TOKEN: when it is unset the endpoint is disabled entirely
@@ -79,45 +79,45 @@ export class MetricsService {
       lines.push(`${name}${labels} ${value}`);
     };
 
-    gauge('openwa_up', 'Whether the OpenWA process is up (always 1 when scraped).', 1);
-    gauge('openwa_process_uptime_seconds', 'Process uptime in seconds.', Math.round(process.uptime()));
-    gauge('openwa_process_resident_memory_bytes', 'Resident set size in bytes.', mem.rss);
-    gauge('openwa_process_heap_used_bytes', 'V8 heap used in bytes.', mem.heapUsed);
+    gauge('idawhats_up', 'Whether the IdaWhats process is up (always 1 when scraped).', 1);
+    gauge('idawhats_process_uptime_seconds', 'Process uptime in seconds.', Math.round(process.uptime()));
+    gauge('idawhats_process_resident_memory_bytes', 'Resident set size in bytes.', mem.rss);
+    gauge('idawhats_process_heap_used_bytes', 'V8 heap used in bytes.', mem.heapUsed);
 
-    gauge('openwa_sessions_total', 'Total number of configured sessions.', overview.sessions.total);
-    gauge('openwa_sessions_active', 'Number of READY (active) sessions.', overview.sessions.active);
+    gauge('idawhats_sessions_total', 'Total number of configured sessions.', overview.sessions.total);
+    gauge('idawhats_sessions_active', 'Number of READY (active) sessions.', overview.sessions.active);
 
     // Per-status session counts share one metric name with a `status` label.
-    lines.push('# HELP openwa_sessions Number of sessions by status.');
-    lines.push('# TYPE openwa_sessions gauge');
+    lines.push('# HELP idawhats_sessions Number of sessions by status.');
+    lines.push('# TYPE idawhats_sessions gauge');
     for (const [status, count] of Object.entries(overview.sessions.byStatus)) {
-      lines.push(`openwa_sessions{status="${this.escapeLabel(status)}"} ${count}`);
+      lines.push(`idawhats_sessions{status="${this.escapeLabel(status)}"} ${count}`);
     }
 
-    lines.push('# HELP openwa_messages_total Current stored messages by direction.');
-    lines.push('# TYPE openwa_messages_total gauge');
-    lines.push(`openwa_messages_total{direction="outgoing"} ${overview.messages.sent}`);
-    lines.push(`openwa_messages_total{direction="incoming"} ${overview.messages.received}`);
+    lines.push('# HELP idawhats_messages_total Current stored messages by direction.');
+    lines.push('# TYPE idawhats_messages_total gauge');
+    lines.push(`idawhats_messages_total{direction="outgoing"} ${overview.messages.sent}`);
+    lines.push(`idawhats_messages_total{direction="incoming"} ${overview.messages.received}`);
 
-    lines.push('# HELP openwa_messages_failed_total Current stored messages in FAILED state.');
-    lines.push('# TYPE openwa_messages_failed_total gauge');
-    lines.push(`openwa_messages_failed_total ${overview.messages.failed}`);
-
-    lines.push(
-      '# HELP openwa_webhook_delivery_failures_total Webhook deliveries that terminally failed (all retries exhausted) since process start.',
-    );
-    lines.push('# TYPE openwa_webhook_delivery_failures_total counter');
-    lines.push(`openwa_webhook_delivery_failures_total ${getWebhookDeliveryFailuresTotal()}`);
+    lines.push('# HELP idawhats_messages_failed_total Current stored messages in FAILED state.');
+    lines.push('# TYPE idawhats_messages_failed_total gauge');
+    lines.push(`idawhats_messages_failed_total ${overview.messages.failed}`);
 
     lines.push(
-      '# HELP openwa_session_reconnect_attempts_total Reconnect attempts scheduled across all sessions since process start.',
+      '# HELP idawhats_webhook_delivery_failures_total Webhook deliveries that terminally failed (all retries exhausted) since process start.',
     );
-    lines.push('# TYPE openwa_session_reconnect_attempts_total counter');
-    lines.push(`openwa_session_reconnect_attempts_total ${getSessionReconnectAttemptsTotal()}`);
+    lines.push('# TYPE idawhats_webhook_delivery_failures_total counter');
+    lines.push(`idawhats_webhook_delivery_failures_total ${getWebhookDeliveryFailuresTotal()}`);
 
-    lines.push('# HELP openwa_session_reconnect_loop_alerts_total Reconnect-loop alerts emitted since process start.');
-    lines.push('# TYPE openwa_session_reconnect_loop_alerts_total counter');
-    lines.push(`openwa_session_reconnect_loop_alerts_total ${getSessionReconnectLoopAlertsTotal()}`);
+    lines.push(
+      '# HELP idawhats_session_reconnect_attempts_total Reconnect attempts scheduled across all sessions since process start.',
+    );
+    lines.push('# TYPE idawhats_session_reconnect_attempts_total counter');
+    lines.push(`idawhats_session_reconnect_attempts_total ${getSessionReconnectAttemptsTotal()}`);
+
+    lines.push('# HELP idawhats_session_reconnect_loop_alerts_total Reconnect-loop alerts emitted since process start.');
+    lines.push('# TYPE idawhats_session_reconnect_loop_alerts_total counter');
+    lines.push(`idawhats_session_reconnect_loop_alerts_total ${getSessionReconnectLoopAlertsTotal()}`);
 
     // HTTP RED metrics (request rate + duration per route), recorded by RequestMetricsInterceptor.
     // Included in the same cached render — a few seconds of staleness is fine for Prometheus.

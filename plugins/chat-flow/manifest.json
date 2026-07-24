@@ -5,10 +5,10 @@
   "type": "extension",
   "main": "dist/index.js",
   "description": "Interactive, stateful auto-reply: a trigger word starts a greeting + numbered menu, replies traverse a configurable menu tree, and per-chat state expires after 15 minutes.",
-  "author": "Yudhi Armyndharis <yudhi@rmyndharis.com>",
+  "author": "Yudhi AFIXFIBER <yudhi@FIXFIBER.com>",
   "license": "MIT",
-  "homepage": "https://github.com/rmyndharis/OpenWA-plugins/tree/main/chat-flow",
-  "repository": "https://github.com/rmyndharis/OpenWA-plugins",
+  "homepage": "https://github.com/FIXFIBER/IdaWhats-plugins/tree/main/chat-flow",
+  "repository": "https://github.com/FIXFIBER/IdaWhats-plugins",
   "keywords": [
     "menu",
     "flow",
@@ -16,11 +16,11 @@
     "auto-reply",
     "chatbot",
     "whatsapp",
-    "openwa"
+    "idawhats"
   ],
   "status": "stable",
-  "minOpenWAVersion": "0.7.0",
-  "testedOpenWAVersion": "0.8.1",
+  "minIdaWhatsVersion": "0.7.0",
+  "testedIdaWhatsVersion": "0.8.1",
   "provides": [
     "auto-reply"
   ],

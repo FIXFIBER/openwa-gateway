@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for adding a label to a chat. Requires an OPERATOR-level key. */
 public record AddLabelRequest(String labelId) {

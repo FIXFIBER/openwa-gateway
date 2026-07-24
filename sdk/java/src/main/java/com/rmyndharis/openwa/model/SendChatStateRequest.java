@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for sending a chat presence state (typing/recording/paused). */
 public record SendChatStateRequest(String chatId, ChatState state) {

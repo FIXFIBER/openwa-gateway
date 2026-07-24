@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** A contact known to a session. Optional fields are {@code null} when absent. */
 public record ContactRecord(

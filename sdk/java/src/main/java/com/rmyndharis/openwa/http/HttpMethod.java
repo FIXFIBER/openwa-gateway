@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.http;
+package com.rmyndharis.idawhats.http;
 
 /** HTTP methods the SDK issues. */
 public enum HttpMethod {

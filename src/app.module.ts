@@ -69,7 +69,7 @@ if (process.env.MCP_ENABLED === 'true') {
   mcpModules.push(
     McpModule.forRoot({
       basePath: '/mcp',
-      serverInfo: { name: 'openwa', version },
+      serverInfo: { name: 'idawhats', version },
     }),
   );
 }
@@ -170,7 +170,7 @@ if (dashboardServingEnabled && dashboardBuildPresent) {
             port: configService.get<number>('dataDatabase.port'),
             username: configService.get<string>('dataDatabase.username'),
             password: configService.get<string>('dataDatabase.password'),
-            database: configService.get<string>('dataDatabase.name', 'openwa'),
+            database: configService.get<string>('dataDatabase.name', 'idawhats'),
 
             ssl: configService.get<boolean>('dataDatabase.ssl', false)
               ? {
@@ -208,7 +208,7 @@ if (dashboardServingEnabled && dashboardBuildPresent) {
           ...baseConfig,
           name: 'data',
           type: 'better-sqlite3' as const,
-          database: configService.get<string>('dataDatabase.database', './data/openwa.sqlite'),
+          database: configService.get<string>('dataDatabase.database', './data/idawhats.sqlite'),
           synchronize,
           migrationsRun: !synchronize,
         };

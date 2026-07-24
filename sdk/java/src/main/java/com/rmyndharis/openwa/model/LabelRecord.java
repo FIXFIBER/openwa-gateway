@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /**
  * A WhatsApp Business chat label. Mirrors the backend {@code Label} — returned by the engine

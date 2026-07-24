@@ -1,14 +1,14 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.SendImageStatusRequest;
-import com.rmyndharis.openwa.model.SendTextStatusRequest;
-import com.rmyndharis.openwa.model.SendVideoStatusRequest;
-import com.rmyndharis.openwa.model.StatusListResult;
-import com.rmyndharis.openwa.model.StatusResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.SendImageStatusRequest;
+import com.rmyndharis.idawhats.model.SendTextStatusRequest;
+import com.rmyndharis.idawhats.model.SendVideoStatusRequest;
+import com.rmyndharis.idawhats.model.StatusListResult;
+import com.rmyndharis.idawhats.model.StatusResult;
 
 /**
  * Status (Stories) resource — WhatsApp status updates.
@@ -16,9 +16,9 @@ import com.rmyndharis.openwa.model.StatusResult;
  * <p>NOTE: this is WhatsApp "Status/Stories", distinct from session lifecycle status.
  */
 public final class StatusResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public StatusResource(OpenWAClient client) {
+    public StatusResource(IdaWhatsClient client) {
         this.client = client;
     }
 

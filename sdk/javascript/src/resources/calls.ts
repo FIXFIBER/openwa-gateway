@@ -6,11 +6,11 @@
  */
 
 import { encodeSegment } from '../http.js';
-import type { OpenWAClient } from '../client.js';
+import type { IdaWhatsClient } from '../client.js';
 import type { SuccessResult } from '../types.js';
 
 export class CallsResource {
-  constructor(private readonly client: OpenWAClient) {}
+  constructor(private readonly client: IdaWhatsClient) {}
 
   /**
    * Reject a ringing incoming call. The `callId` comes from the `call.received`

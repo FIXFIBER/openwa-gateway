@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Query parameters for {@code GET /sessions/:id/messages}. Null fields are omitted. */
 public record ListMessagesQuery(String chatId, String from, Integer limit, Integer offset) {

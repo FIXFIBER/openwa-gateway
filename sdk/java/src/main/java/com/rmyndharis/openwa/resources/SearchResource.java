@@ -1,9 +1,9 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.SearchQuery;
-import com.rmyndharis.openwa.model.SearchResults;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.SearchQuery;
+import com.rmyndharis.idawhats.model.SearchResults;
 
 /**
  * Search resource — full-text message search across sessions via {@code GET /search}.
@@ -11,9 +11,9 @@ import com.rmyndharis.openwa.model.SearchResults;
  * <p>Requires an OPERATOR-level API key. {@code q} is the only required parameter.
  */
 public final class SearchResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public SearchResource(OpenWAClient client) {
+    public SearchResource(IdaWhatsClient client) {
         this.client = client;
     }
 

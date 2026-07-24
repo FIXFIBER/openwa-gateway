@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for forwarding a message to another chat. */
 public record ForwardMessageRequest(String fromChatId, String toChatId, String messageId) {

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OpenWA\Exceptions;
+namespace IdaWhats\Exceptions;
 
 /** 404 Not Found. */
-class OpenWANotFoundException extends OpenWAApiException
+class IdaWhatsNotFoundException extends IdaWhatsApiException
 {
 }

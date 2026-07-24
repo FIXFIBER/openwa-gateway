@@ -1,27 +1,27 @@
-package com.rmyndharis.openwa;
+package com.rmyndharis.idawhats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.rmyndharis.openwa.errors.OpenWANotFoundError;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.SuccessResult;
-import com.rmyndharis.openwa.support.MockTransport;
+import com.rmyndharis.idawhats.errors.IdaWhatsNotFoundError;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.SuccessResult;
+import com.rmyndharis.idawhats.support.MockTransport;
 import org.junit.jupiter.api.Test;
 
 class ClientTest {
     final MockTransport tx = new MockTransport();
-    final OpenWAClient client = new OpenWAClient(
+    final IdaWhatsClient client = new IdaWhatsClient(
         ClientConfig.builder().baseUrl("http://h:2785").apiKey("owa_k1_x").transport(tx).build());
 
     @Test
     void constructorRejectsMissingConfig() {
         assertThrows(IllegalArgumentException.class,
-            () -> new OpenWAClient(ClientConfig.builder().apiKey("x").build()));
+            () -> new IdaWhatsClient(ClientConfig.builder().apiKey("x").build()));
         assertThrows(IllegalArgumentException.class,
-            () -> new OpenWAClient(ClientConfig.builder().baseUrl("http://h").build()));
+            () -> new IdaWhatsClient(ClientConfig.builder().baseUrl("http://h").build()));
     }
 
     @Test
@@ -37,7 +37,7 @@ class ClientTest {
     @Test
     void nonOkResponseThrowsClassifiedError() {
         tx.respond(404, "{\"statusCode\":404,\"message\":\"nope\",\"error\":\"Not Found\"}");
-        assertThrows(OpenWANotFoundError.class,
+        assertThrows(IdaWhatsNotFoundError.class,
             () -> client.request(HttpMethod.GET, "/api/x", null, null, SuccessResult.class));
     }
 

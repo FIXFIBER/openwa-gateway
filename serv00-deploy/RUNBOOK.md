@@ -1,4 +1,4 @@
-# OpenWA — Free Hosting Deploy Runbook
+# IdaWhats — Free Hosting Deploy Runbook
 
 Two free, no-card paths. **serv00 is currently full** (server user cap), so the
 working choice right now is **Render**.
@@ -10,7 +10,7 @@ Catch: Render free web services **sleep after 15 min idle**. A pinger must hit
 the health URL every <15 min or it sleeps (WhatsApp session drops).
 
 ### A0. Deploy
-1. Push code to GitHub (done: FIXFIBER/openwa-gateway).
+1. Push code to GitHub (done: FIXFIBER/idawhats-gateway).
 2. Render dashboard → New → **Blueprint** → connect the repo → it reads `render.yaml`.
    Or CLI: `render blueprint launch` (render CLI v2.20.0 is installed locally).
 3. In Render dashboard, set **API_MASTER_KEY** as a secret (or accept the random
@@ -21,9 +21,9 @@ the health URL every <15 min or it sleeps (WhatsApp session drops).
 ### A1. Keep it awake (defeat 15-min sleep)
 - **True 24/7 (laptop off):** add a free **UptimeRobot** HTTP monitor (5-min
   interval) pointing at `https://<your-app>.onrender.com/api/sessions`. No card.
-- **Laptop-on only:** the Hermes cron `openwa-render-keepalive` (every 10 min)
+- **Laptop-on only:** the Hermes cron `idawhats-render-keepalive` (every 10 min)
   runs `serv00-deploy/ping-render.sh`. Write the URL to
-  `/home/darkaxis/whatsappopenwa/.render-url` so the cron picks it up.
+  `/home/darkaxis/whatsappidawhats/.render-url` so the cron picks it up.
 
 ### A2. Link a number
 Dashboard at `https://<your-app>.onrender.com/` (log in with API key) → Sessions
@@ -45,11 +45,11 @@ Use only when serv00 reopens a server (they rotate; retry later or watch
 ### B1. Push your code to GitHub (so the host pulls it)
 On your laptop:
 ```
-cd ~/whatsappopenwa
+cd ~/whatsappidawhats
 git init -q 2>/dev/null || true
-git remote add origin git@github.com:YOURUSER/openwa.git   # or HTTPS
+git remote add origin git@github.com:YOURUSER/idawhats.git   # or HTTPS
 git add -A
-git commit -m "openwa serv00 deploy kit"
+git commit -m "idawhats serv00 deploy kit"
 git push -u origin main
 ```
 > The `serv00-deploy/` folder is already in the repo and is git-ignored-safe.
@@ -58,14 +58,14 @@ git push -u origin main
 ```
 export SERV00_LOGIN=yourlogin SERV00_DOMAIN=yourdomain.com
 export API_MASTER_KEY=$(openssl rand -hex 32)   # pick a strong key, SAVE IT
-bash ~/domains/yourdomain.com/public_nodejs/openwa/serv00-deploy/deploy.sh
+bash ~/domains/yourdomain.com/public_nodejs/idawhats/serv00-deploy/deploy.sh
 ```
 The script clones, installs, builds, writes `.env`, and starts the server.
 
 ## 3. Install the keep-alive cron (24/7 survival)
 ```
 crontab -e
-*/20 * * * * $HOME/domains/yourdomain.com/public_nodejs/openwa/serv00-deploy/keepalive.cron.sh
+*/20 * * * * $HOME/domains/yourdomain.com/public_nodejs/idawhats/serv00-deploy/keepalive.cron.sh
 ```
 This curls the health endpoint every 20 min (stops serv00's 24h idle kill) and
 auto-restarts if the process dies.

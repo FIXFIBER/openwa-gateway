@@ -1,13 +1,13 @@
 """
-OpenWA Python SDK.
+IdaWhats Python SDK.
 
-Official client library for the OpenWA WhatsApp API Gateway.
+Official client library for the IdaWhats WhatsApp API Gateway.
 
 Example usage::
 
-    from openwa import OpenWAClient
+    from idawhats import IdaWhatsClient
 
-    client = OpenWAClient(
+    client = IdaWhatsClient(
         base_url="http://localhost:2785",
         api_key="owa_k1_…",
     )
@@ -15,35 +15,35 @@ Example usage::
     client.sessions.start("my-session")
     result = client.messages.send_text("my-session", {
         "chatId": "628123456789@c.us",
-        "text": "Hello from the OpenWA Python SDK!",
+        "text": "Hello from the IdaWhats Python SDK!",
     })
     print(result["messageId"])
 """
 
 from __future__ import annotations
 
-from .client import OpenWAClient
+from .client import IdaWhatsClient
 from .errors import (
-    OpenWAApiError,
-    OpenWAAuthError,
-    OpenWAConflictError,
-    OpenWAError,
-    OpenWAForbiddenError,
-    OpenWANotFoundError,
-    OpenWANotImplementedError,
-    OpenWARateLimitError,
-    OpenWATimeoutError,
+    IdaWhatsApiError,
+    IdaWhatsAuthError,
+    IdaWhatsConflictError,
+    IdaWhatsError,
+    IdaWhatsForbiddenError,
+    IdaWhatsNotFoundError,
+    IdaWhatsNotImplementedError,
+    IdaWhatsRateLimitError,
+    IdaWhatsTimeoutError,
 )
 
 __all__ = [
-    "OpenWAClient",
-    "OpenWAError",
-    "OpenWAApiError",
-    "OpenWAAuthError",
-    "OpenWAForbiddenError",
-    "OpenWANotFoundError",
-    "OpenWAConflictError",
-    "OpenWARateLimitError",
-    "OpenWANotImplementedError",
-    "OpenWATimeoutError",
+    "IdaWhatsClient",
+    "IdaWhatsError",
+    "IdaWhatsApiError",
+    "IdaWhatsAuthError",
+    "IdaWhatsForbiddenError",
+    "IdaWhatsNotFoundError",
+    "IdaWhatsConflictError",
+    "IdaWhatsRateLimitError",
+    "IdaWhatsNotImplementedError",
+    "IdaWhatsTimeoutError",
 ]

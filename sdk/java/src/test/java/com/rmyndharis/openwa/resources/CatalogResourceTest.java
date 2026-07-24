@@ -1,20 +1,20 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.rmyndharis.openwa.ClientConfig;
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.CatalogProductsQuery;
-import com.rmyndharis.openwa.model.SendCatalogRequest;
-import com.rmyndharis.openwa.model.SendProductRequest;
-import com.rmyndharis.openwa.support.MockTransport;
+import com.rmyndharis.idawhats.ClientConfig;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.CatalogProductsQuery;
+import com.rmyndharis.idawhats.model.SendCatalogRequest;
+import com.rmyndharis.idawhats.model.SendProductRequest;
+import com.rmyndharis.idawhats.support.MockTransport;
 import org.junit.jupiter.api.Test;
 
 class CatalogResourceTest {
     final MockTransport tx = new MockTransport();
-    final OpenWAClient client = new OpenWAClient(
+    final IdaWhatsClient client = new IdaWhatsClient(
         ClientConfig.builder().baseUrl("http://h").apiKey("k").transport(tx).build());
     final CatalogResource catalog = new CatalogResource(client);
 

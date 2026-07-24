@@ -1,4 +1,4 @@
-package openwa
+package idawhats
 
 import "net/url"
 

@@ -623,7 +623,7 @@ flowchart TB
 ```yaml
 # Example PagerDuty/Opsgenie configuration
 schedule:
-  name: "OpenWA On-Call"
+  name: "IdaWhats On-Call"
   rotation:
     - week: 1
       primary: "developer-a"

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Media payload for a status post: provide {@code url} OR {@code base64}. */
 public record StatusMediaInput(String url, String base64, String mimetype) {

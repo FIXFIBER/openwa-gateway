@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Nested bulk media payload. The server consumes {@code ptt} only for the audio member. */
 public record BulkMediaRequest(

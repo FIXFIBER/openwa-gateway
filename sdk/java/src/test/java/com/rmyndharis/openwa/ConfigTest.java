@@ -1,14 +1,14 @@
-package com.rmyndharis.openwa;
+package com.rmyndharis.idawhats;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.rmyndharis.openwa.errors.OpenWAError;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.http.HttpTransport;
-import com.rmyndharis.openwa.model.SuccessResult;
-import com.rmyndharis.openwa.support.MockTransport;
+import com.rmyndharis.idawhats.errors.IdaWhatsError;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.http.HttpTransport;
+import com.rmyndharis.idawhats.model.SuccessResult;
+import com.rmyndharis.idawhats.support.MockTransport;
 import java.time.Duration;
 import org.junit.jupiter.api.Test;
 
@@ -39,7 +39,7 @@ class ConfigTest {
     void trimsWhitespaceFromBaseUrlAndApiKey() {
         // A trailing newline (e.g. key read from a file/env) must be tolerated, not fatal.
         MockTransport tx = new MockTransport().respond(200, "{\"valid\":true}");
-        OpenWAClient c = new OpenWAClient(
+        IdaWhatsClient c = new IdaWhatsClient(
             ClientConfig.builder().baseUrl("http://h ").apiKey(" owa_k1_x\n").transport(tx).build());
         c.auth();
         assertEquals("owa_k1_x", tx.lastRequest().headers().get("X-API-Key"));
@@ -47,12 +47,12 @@ class ConfigTest {
     }
 
     @Test
-    void transportIllegalArgumentIsWrappedAsOpenWAError() {
+    void transportIllegalArgumentIsWrappedAsIdaWhatsError() {
         HttpTransport bad = req -> {
             throw new IllegalArgumentException("restricted header name: \"Host\"");
         };
-        OpenWAClient c = new OpenWAClient(base().transport(bad).build());
-        OpenWAError e = assertThrows(OpenWAError.class,
+        IdaWhatsClient c = new IdaWhatsClient(base().transport(bad).build());
+        IdaWhatsError e = assertThrows(IdaWhatsError.class,
             () -> c.request(HttpMethod.GET, "/x", null, null, SuccessResult.class));
         assertTrue(e.getMessage().contains("Invalid request"));
     }

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for deleting a chat from the chat list. */
 public record DeleteChatRequest(String chatId) {

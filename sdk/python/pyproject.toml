@@ -3,16 +3,16 @@ requires = ["setuptools>=68.0", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
-name = "rmyndharis-openwa"
+name = "rmyndharis-idawhats"
 version = "0.1.0"
-description = "Official Python SDK for OpenWA WhatsApp API Gateway"
+description = "Official Python SDK for IdaWhats WhatsApp API Gateway"
 readme = "README.md"
 license = { text = "MIT" }
 requires-python = ">=3.9"
 authors = [
-    { name = "OpenWA Contributors" }
+    { name = "IdaWhats Contributors" }
 ]
-keywords = ["whatsapp", "api", "sdk", "openwa", "gateway"]
+keywords = ["whatsapp", "api", "sdk", "idawhats", "gateway"]
 
 dependencies = [
     "httpx>=0.25.0,<1.0",
@@ -25,16 +25,16 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/rmyndharis/OpenWA"
-Repository = "https://github.com/rmyndharis/OpenWA"
+Homepage = "https://github.com/rmyndharis/IdaWhats"
+Repository = "https://github.com/rmyndharis/IdaWhats"
 
 [tool.setuptools.packages.find]
-include = ["openwa*"]
+include = ["idawhats*"]
 
 # Ship type information (PEP 561) so consumers get the bundled type hints.
 [tool.setuptools.package-data]
-openwa = ["py.typed"]
-"openwa.resources" = ["py.typed"]
+idawhats = ["py.typed"]
+"idawhats.resources" = ["py.typed"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,30 +1,30 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.BatchStatusResponse;
-import com.rmyndharis.openwa.model.BulkMessageResponse;
-import com.rmyndharis.openwa.model.ChatHistoryMessage;
-import com.rmyndharis.openwa.model.DeleteMessageRequest;
-import com.rmyndharis.openwa.model.EditMessageRequest;
-import com.rmyndharis.openwa.model.ForwardMessageRequest;
-import com.rmyndharis.openwa.model.ListMessagesQuery;
-import com.rmyndharis.openwa.model.MessageHistoryQuery;
-import com.rmyndharis.openwa.model.MessageListResponse;
-import com.rmyndharis.openwa.model.MessageResponse;
-import com.rmyndharis.openwa.model.ReactMessageRequest;
-import com.rmyndharis.openwa.model.ReactionRecord;
-import com.rmyndharis.openwa.model.ReplyMessageRequest;
-import com.rmyndharis.openwa.model.SendBulkRequest;
-import com.rmyndharis.openwa.model.SendContactRequest;
-import com.rmyndharis.openwa.model.SendLocationRequest;
-import com.rmyndharis.openwa.model.SendMediaRequest;
-import com.rmyndharis.openwa.model.SendAudioRequest;
-import com.rmyndharis.openwa.model.SendTemplateRequest;
-import com.rmyndharis.openwa.model.SendTextRequest;
-import com.rmyndharis.openwa.model.SuccessResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.BatchStatusResponse;
+import com.rmyndharis.idawhats.model.BulkMessageResponse;
+import com.rmyndharis.idawhats.model.ChatHistoryMessage;
+import com.rmyndharis.idawhats.model.DeleteMessageRequest;
+import com.rmyndharis.idawhats.model.EditMessageRequest;
+import com.rmyndharis.idawhats.model.ForwardMessageRequest;
+import com.rmyndharis.idawhats.model.ListMessagesQuery;
+import com.rmyndharis.idawhats.model.MessageHistoryQuery;
+import com.rmyndharis.idawhats.model.MessageListResponse;
+import com.rmyndharis.idawhats.model.MessageResponse;
+import com.rmyndharis.idawhats.model.ReactMessageRequest;
+import com.rmyndharis.idawhats.model.ReactionRecord;
+import com.rmyndharis.idawhats.model.ReplyMessageRequest;
+import com.rmyndharis.idawhats.model.SendBulkRequest;
+import com.rmyndharis.idawhats.model.SendContactRequest;
+import com.rmyndharis.idawhats.model.SendLocationRequest;
+import com.rmyndharis.idawhats.model.SendMediaRequest;
+import com.rmyndharis.idawhats.model.SendAudioRequest;
+import com.rmyndharis.idawhats.model.SendTemplateRequest;
+import com.rmyndharis.idawhats.model.SendTextRequest;
+import com.rmyndharis.idawhats.model.SuccessResult;
 import java.util.List;
 
 /**
@@ -33,9 +33,9 @@ import java.util.List;
  * <p>The real routes use the {@code /send-} prefix, e.g. {@code /messages/send-text}.
  */
 public final class MessagesResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public MessagesResource(OpenWAClient client) {
+    public MessagesResource(IdaWhatsClient client) {
         this.client = client;
     }
 

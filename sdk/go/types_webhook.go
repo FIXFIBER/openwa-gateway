@@ -1,4 +1,4 @@
-package openwa
+package idawhats
 
 // WebhookEvent names an event a webhook may subscribe to. It is an alias for
 // string so the Event* constants drop straight into the []string Events fields

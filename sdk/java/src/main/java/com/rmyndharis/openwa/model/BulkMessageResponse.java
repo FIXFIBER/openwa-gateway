@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Acknowledgement returned by {@code POST /messages/send-bulk} (HTTP 202). */
 public record BulkMessageResponse(

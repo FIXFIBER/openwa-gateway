@@ -101,9 +101,9 @@ ENV PUPPETEER_EXECUTABLE_PATH=/usr/local/bin/puppeteer-chrome
 COPY --from=build /app/dist ./dist
 
 # Create non-root user
-RUN groupadd -r openwa && useradd -r -g openwa openwa
-RUN chown -R openwa:openwa /app /opt/puppeteer
-USER openwa
+RUN groupadd -r idawhats && useradd -r -g idawhats idawhats
+RUN chown -R idawhats:idawhats /app /opt/puppeteer
+USER idawhats
 
 
 # Expose port
@@ -133,7 +133,7 @@ services:
       - "2785:2785"
     environment:
       - NODE_ENV=development
-      - DATABASE_URL=postgresql://openwa:openwa@postgres:5432/openwa
+      - DATABASE_URL=postgresql://idawhats:idawhats@postgres:5432/idawhats
       - REDIS_URL=redis://redis:6379
       # The env var is API_MASTER_KEY (not API_KEY_MASTER); never hardcode a key — set a
       # strong secret. Production refuses to boot with a placeholder/default.
@@ -150,9 +150,9 @@ services:
   postgres:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_USER=openwa
-      - POSTGRES_PASSWORD=openwa
-      - POSTGRES_DB=openwa
+      - POSTGRES_USER=idawhats
+      - POSTGRES_PASSWORD=idawhats
+      - POSTGRES_DB=idawhats
     volumes:
       - postgres-data:/var/lib/postgresql/data
     ports:
@@ -182,7 +182,7 @@ version: '3.8'
 
 services:
   app:
-    image: ghcr.io/rmyndharis/openwa:latest
+    image: ghcr.io/FIXFIBER/IdaWhats:latest
     deploy:
       replicas: 1
       resources:
@@ -224,7 +224,7 @@ volumes:
 ```
 
 > [!IMPORTANT]
-> **Keep `replicas: 1`.** OpenWA is a single-process application: live engine state lives in an
+> **Keep `replicas: 1`.** IdaWhats is a single-process application: live engine state lives in an
 > in-memory `Map` in `SessionService` (`src/modules/session/session.service.ts`). Multi-replica is
 > **not** a supported topology — running two replicas against a shared `SESSION_DATA_PATH` makes two
 > browsers write the same WhatsApp LocalAuth directory and **corrupts the session** (forced logout /
@@ -347,7 +347,7 @@ jobs:
           username: ${{ secrets.STAGING_USER }}
           key: ${{ secrets.STAGING_SSH_KEY }}
           script: |
-            cd /opt/openwa
+            cd /opt/idawhats
             docker compose pull
             docker compose up -d
             docker system prune -f
@@ -366,7 +366,7 @@ jobs:
           username: ${{ secrets.PROD_USER }}
           key: ${{ secrets.PROD_SSH_KEY }}
           script: |
-            cd /opt/openwa
+            cd /opt/idawhats
             docker compose -f docker-compose.prod.yml pull
             docker compose -f docker-compose.prod.yml up -d --no-deps app
             docker system prune -f
@@ -380,7 +380,7 @@ jobs:
 flowchart TB
     subgraph Server["Single Server"]
         NGINX[Nginx Reverse Proxy]
-        NGINX --> APP[OpenWA App]
+        NGINX --> APP[IdaWhats App]
         APP --> PG[(PostgreSQL)]
         APP --> RD[(Redis)]
         APP --> FS[File Storage]
@@ -391,8 +391,8 @@ flowchart TB
 
 ### Multi-Server Deployment
 
-> **Design sketch, not a supported topology.** OpenWA is single-process with in-memory engine state,
-> so the multi-`OpenWA` fan-out below would corrupt WhatsApp auth across replicas. It is retained only
+> **Design sketch, not a supported topology.** IdaWhats is single-process with in-memory engine state,
+> so the multi-`IdaWhats` fan-out below would corrupt WhatsApp auth across replicas. It is retained only
 > as the target architecture once the session-claim design in
 > [13 - Horizontal Scaling Guide](./13-horizontal-scaling.md) is implemented. Deploy with `replicas: 1`.
 
@@ -407,9 +407,9 @@ flowchart TB
     end
     
     subgraph AppServers["Application Servers"]
-        APP1[OpenWA 1]
-        APP2[OpenWA 2]
-        APP3[OpenWA N]
+        APP1[IdaWhats 1]
+        APP2[IdaWhats 2]
+        APP3[IdaWhats N]
     end
     
     subgraph DataLayer["Data Layer"]
@@ -448,11 +448,11 @@ LOG_FORMAT=json
 # ===========================================
 # Option 1: SQLite (for minimal deployments)
 DATABASE_TYPE=sqlite
-DATABASE_SQLITE_PATH=./data/openwa.db
+DATABASE_SQLITE_PATH=./data/idawhats.db
 
 # Option 2: PostgreSQL (for production)
 # DATABASE_TYPE=postgres
-# DATABASE_URL=postgresql://user:pass@localhost:5432/openwa
+# DATABASE_URL=postgresql://user:pass@localhost:5432/idawhats
 # DATABASE_POOL_MAX=20
 # DATABASE_SSL=false
 
@@ -466,14 +466,14 @@ STORAGE_LOCAL_BASE_URL=/media
 
 # Option 2: S3
 # STORAGE_TYPE=s3
-# STORAGE_S3_BUCKET=openwa-media
+# STORAGE_S3_BUCKET=idawhats-media
 # STORAGE_S3_REGION=ap-southeast-1
 # STORAGE_S3_ACCESS_KEY_ID=your-access-key
 # STORAGE_S3_SECRET_ACCESS_KEY=your-secret-key
 
 # Option 3: MinIO (S3-compatible)
 # STORAGE_TYPE=minio
-# STORAGE_S3_BUCKET=openwa-media
+# STORAGE_S3_BUCKET=idawhats-media
 # STORAGE_S3_ENDPOINT=http://minio:9000
 # STORAGE_S3_ACCESS_KEY_ID=minioadmin
 # STORAGE_S3_SECRET_ACCESS_KEY=minioadmin
@@ -707,7 +707,7 @@ rule_files:
   - 'alerts.yml'
 
 scrape_configs:
-  - job_name: 'openwa'
+  - job_name: 'idawhats'
     static_configs:
       - targets: ['app:2785']
     metrics_path: '/api/metrics'
@@ -723,27 +723,27 @@ scrape_configs:
 
 ### Alert Rules
 
-These rules use the metric names OpenWA actually exports (`openwa_*`). The memory rule below uses a
+These rules use the metric names IdaWhats actually exports (`idawhats_*`). The memory rule below uses a
 node-exporter metric — an **external** exporter, not the app — and is kept as a host-level example.
 
 ```yaml
 # monitoring/alerts.yml
 groups:
-  - name: openwa-alerts
+  - name: idawhats-alerts
     rules:
-      # Service Down — openwa_up disappears (or the scrape fails)
+      # Service Down — idawhats_up disappears (or the scrape fails)
       - alert: ServiceDown
-        expr: up{job="openwa"} == 0 or absent(openwa_up)
+        expr: up{job="idawhats"} == 0 or absent(idawhats_up)
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: "OpenWA service is down"
-          description: "The OpenWA application is not responding"
+          summary: "IdaWhats service is down"
+          description: "The IdaWhats application is not responding"
 
       # Session(s) disconnected
       - alert: SessionDisconnected
-        expr: openwa_sessions{status="disconnected"} > 0
+        expr: idawhats_sessions{status="disconnected"} > 0
         for: 2m
         labels:
           severity: warning
@@ -753,7 +753,7 @@ groups:
 
       # Failed messages currently stored
       - alert: FailedMessagesPresent
-        expr: openwa_messages_failed_total > 0
+        expr: idawhats_messages_failed_total > 0
         for: 5m
         labels:
           severity: warning
@@ -763,15 +763,15 @@ groups:
 
       # Process memory growth (app-exported RSS; ~2GB example threshold)
       - alert: HighProcessMemory
-        expr: openwa_process_resident_memory_bytes > 2e9
+        expr: idawhats_process_resident_memory_bytes > 2e9
         for: 10m
         labels:
           severity: warning
         annotations:
-          summary: "High OpenWA process memory"
+          summary: "High IdaWhats process memory"
           description: "RSS is {{ $value | humanize1024 }}B"
 
-      # Host memory pressure — EXTERNAL (node-exporter), not exported by OpenWA
+      # Host memory pressure — EXTERNAL (node-exporter), not exported by IdaWhats
       - alert: HighHostMemoryUsage
         expr: |
           (node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes)
@@ -809,19 +809,19 @@ route:
 receivers:
   - name: 'slack-notifications'
     slack_configs:
-      - channel: '#openwa-alerts'
+      - channel: '#idawhats-alerts'
         send_resolved: true
 
   - name: 'slack-critical'
     slack_configs:
-      - channel: '#openwa-critical'
+      - channel: '#idawhats-critical'
         send_resolved: true
         title: '🚨 CRITICAL: {{ .GroupLabels.alertname }}'
         text: '{{ range .Alerts }}{{ .Annotations.description }}{{ end }}'
 
   - name: 'slack-warnings'
     slack_configs:
-      - channel: '#openwa-alerts'
+      - channel: '#idawhats-alerts'
         send_resolved: true
         title: '⚠️ WARNING: {{ .GroupLabels.alertname }}'
 ```
@@ -874,7 +874,7 @@ export class HealthController {
 
 ### Prometheus Metrics Implementation
 
-The metrics surface is small, so OpenWA emits Prometheus text exposition format (v0.0.4) **by hand** —
+The metrics surface is small, so IdaWhats emits Prometheus text exposition format (v0.0.4) **by hand** —
 there is **no `prom-client` dependency** and **no `collectDefaultMetrics`**. `MetricsService` reads an
 aggregate overview from `StatsService` plus `process.memoryUsage()`, memoizes the rendered text for a
 short TTL (~5s, so back-to-back scrapes don't repeat the DB scan), and exposes it at
@@ -899,15 +899,15 @@ export class MetricsService {
     const mem = process.memoryUsage();
     const lines: string[] = [];
     // ... gauge() helper pushes `# HELP` / `# TYPE` / value lines ...
-    gauge('openwa_up', '...', 1);
-    gauge('openwa_process_uptime_seconds', '...', Math.round(process.uptime()));
-    gauge('openwa_process_resident_memory_bytes', '...', mem.rss);
-    gauge('openwa_process_heap_used_bytes', '...', mem.heapUsed);
-    gauge('openwa_sessions_total', '...', overview.sessions.total);
-    gauge('openwa_sessions_active', '...', overview.sessions.active);
-    // openwa_sessions{status="..."} — one line per status
-    // openwa_messages_total{direction="outgoing"|"incoming"}
-    // openwa_messages_failed_total
+    gauge('idawhats_up', '...', 1);
+    gauge('idawhats_process_uptime_seconds', '...', Math.round(process.uptime()));
+    gauge('idawhats_process_resident_memory_bytes', '...', mem.rss);
+    gauge('idawhats_process_heap_used_bytes', '...', mem.heapUsed);
+    gauge('idawhats_sessions_total', '...', overview.sessions.total);
+    gauge('idawhats_sessions_active', '...', overview.sessions.active);
+    // idawhats_sessions{status="..."} — one line per status
+    // idawhats_messages_total{direction="outgoing"|"incoming"}
+    // idawhats_messages_failed_total
     return lines.join('\n') + '\n';
   }
 }
@@ -917,30 +917,30 @@ export class MetricsService {
 
 | Metric | Type | Labels | Meaning |
 |--------|------|--------|---------|
-| `openwa_up` | gauge | — | Always `1` when scraped |
-| `openwa_process_uptime_seconds` | gauge | — | Process uptime |
-| `openwa_process_resident_memory_bytes` | gauge | — | RSS |
-| `openwa_process_heap_used_bytes` | gauge | — | V8 heap used |
-| `openwa_sessions_total` | gauge | — | Configured sessions |
-| `openwa_sessions_active` | gauge | — | READY (active) sessions |
-| `openwa_sessions` | gauge | `status` | Session count per status |
-| `openwa_messages_total` | gauge | `direction` (`incoming`/`outgoing`) | Current stored messages by direction |
-| `openwa_messages_failed_total` | gauge | — | Current messages in FAILED state |
+| `idawhats_up` | gauge | — | Always `1` when scraped |
+| `idawhats_process_uptime_seconds` | gauge | — | Process uptime |
+| `idawhats_process_resident_memory_bytes` | gauge | — | RSS |
+| `idawhats_process_heap_used_bytes` | gauge | — | V8 heap used |
+| `idawhats_sessions_total` | gauge | — | Configured sessions |
+| `idawhats_sessions_active` | gauge | — | READY (active) sessions |
+| `idawhats_sessions` | gauge | `status` | Session count per status |
+| `idawhats_messages_total` | gauge | `direction` (`incoming`/`outgoing`) | Current stored messages by direction |
+| `idawhats_messages_failed_total` | gauge | — | Current messages in FAILED state |
 
 ### Grafana Dashboard Definition
 
 ```json
-// monitoring/grafana/dashboards/openwa.json — panels use the openwa_* metrics OpenWA exports
+// monitoring/grafana/dashboards/idawhats.json — panels use the idawhats_* metrics IdaWhats exports
 {
-  "title": "OpenWA Dashboard",
-  "uid": "openwa-main",
+  "title": "IdaWhats Dashboard",
+  "uid": "idawhats-main",
   "panels": [
     {
       "title": "Active Sessions",
       "type": "stat",
       "gridPos": { "x": 0, "y": 0, "w": 6, "h": 4 },
       "targets": [
-        { "expr": "openwa_sessions_active" }
+        { "expr": "idawhats_sessions_active" }
       ]
     },
     {
@@ -948,7 +948,7 @@ export class MetricsService {
       "type": "stat",
       "gridPos": { "x": 6, "y": 0, "w": 6, "h": 4 },
       "targets": [
-        { "expr": "openwa_messages_total{direction=\"outgoing\"}" }
+        { "expr": "idawhats_messages_total{direction=\"outgoing\"}" }
       ]
     },
     {
@@ -956,7 +956,7 @@ export class MetricsService {
       "type": "stat",
       "gridPos": { "x": 12, "y": 0, "w": 6, "h": 4 },
       "targets": [
-        { "expr": "openwa_messages_failed_total" }
+        { "expr": "idawhats_messages_failed_total" }
       ]
     },
     {
@@ -964,7 +964,7 @@ export class MetricsService {
       "type": "timeseries",
       "gridPos": { "x": 0, "y": 4, "w": 12, "h": 8 },
       "targets": [
-        { "expr": "openwa_sessions", "legendFormat": "{{status}}" }
+        { "expr": "idawhats_sessions", "legendFormat": "{{status}}" }
       ]
     },
     {
@@ -972,7 +972,7 @@ export class MetricsService {
       "type": "timeseries",
       "gridPos": { "x": 12, "y": 4, "w": 12, "h": 8 },
       "targets": [
-        { "expr": "openwa_messages_total", "legendFormat": "{{direction}}" }
+        { "expr": "idawhats_messages_total", "legendFormat": "{{direction}}" }
       ]
     },
     {
@@ -980,8 +980,8 @@ export class MetricsService {
       "type": "timeseries",
       "gridPos": { "x": 0, "y": 12, "w": 12, "h": 8 },
       "targets": [
-        { "expr": "openwa_process_resident_memory_bytes / 1024 / 1024", "legendFormat": "RSS (MB)" },
-        { "expr": "openwa_process_heap_used_bytes / 1024 / 1024", "legendFormat": "Heap used (MB)" }
+        { "expr": "idawhats_process_resident_memory_bytes / 1024 / 1024", "legendFormat": "RSS (MB)" },
+        { "expr": "idawhats_process_heap_used_bytes / 1024 / 1024", "legendFormat": "Heap used (MB)" }
       ]
     },
     {
@@ -989,7 +989,7 @@ export class MetricsService {
       "type": "stat",
       "gridPos": { "x": 12, "y": 12, "w": 12, "h": 8 },
       "targets": [
-        { "expr": "openwa_process_uptime_seconds" }
+        { "expr": "idawhats_process_uptime_seconds" }
       ]
     }
   ]
@@ -1015,7 +1015,7 @@ export class AppLoggerService implements LoggerService {
         winston.format.json()
       ),
       defaultMeta: { 
-        service: 'openwa',
+        service: 'idawhats',
         version: process.env.npm_package_version 
       },
       transports: [
@@ -1058,22 +1058,22 @@ this.logger.log('Message sent', {
 
 ### Key Metrics to Monitor
 
-These are the metrics OpenWA actually exports at `GET /api/metrics`:
+These are the metrics IdaWhats actually exports at `GET /api/metrics`:
 
 | Category | Metric | Description | Alert Idea |
 |----------|--------|-------------|------------|
-| **Liveness** | `openwa_up` | Always `1` when scraped (absence/scrape-failure = down) | Target down |
-| **Sessions** | `openwa_sessions_total` | Configured sessions | Near your expected session count |
-| **Sessions** | `openwa_sessions_active` | READY (active) sessions | Drops below expected |
-| **Sessions** | `openwa_sessions{status="..."}` | Per-status counts (e.g. `disconnected`, `failed`) | `disconnected`/`failed` > 0 |
-| **Messages** | `openwa_messages_total{direction="outgoing"}` | Current stored outgoing messages | Unexpected change |
-| **Messages** | `openwa_messages_total{direction="incoming"}` | Current stored incoming messages | Unexpected change |
-| **Messages** | `openwa_messages_failed_total` | Current messages in FAILED state | Above acceptable threshold |
-| **System** | `openwa_process_resident_memory_bytes` | RSS | Growth / near limit |
-| **System** | `openwa_process_heap_used_bytes` | V8 heap used | Growth |
-| **System** | `openwa_process_uptime_seconds` | Process uptime | Frequent restarts (resets) |
+| **Liveness** | `idawhats_up` | Always `1` when scraped (absence/scrape-failure = down) | Target down |
+| **Sessions** | `idawhats_sessions_total` | Configured sessions | Near your expected session count |
+| **Sessions** | `idawhats_sessions_active` | READY (active) sessions | Drops below expected |
+| **Sessions** | `idawhats_sessions{status="..."}` | Per-status counts (e.g. `disconnected`, `failed`) | `disconnected`/`failed` > 0 |
+| **Messages** | `idawhats_messages_total{direction="outgoing"}` | Current stored outgoing messages | Unexpected change |
+| **Messages** | `idawhats_messages_total{direction="incoming"}` | Current stored incoming messages | Unexpected change |
+| **Messages** | `idawhats_messages_failed_total` | Current messages in FAILED state | Above acceptable threshold |
+| **System** | `idawhats_process_resident_memory_bytes` | RSS | Growth / near limit |
+| **System** | `idawhats_process_heap_used_bytes` | V8 heap used | Growth |
+| **System** | `idawhats_process_uptime_seconds` | Process uptime | Frequent restarts (resets) |
 
-> OpenWA does **not** expose request-rate, latency-histogram, webhook, queue, or Node default
+> IdaWhats does **not** expose request-rate, latency-histogram, webhook, queue, or Node default
 > (`nodejs_*`) metrics. For host/container-level signals (CPU, memory pressure, event-loop), scrape
 > external exporters: `up` and `container_memory_usage_bytes` come from blackbox/cAdvisor, and
 > `node_*` from node-exporter — not from the app.
@@ -1117,7 +1117,7 @@ before restoring; PostgreSQL dumps still require the explicit `psql` step descri
 
 ### Vertical Scaling
 
-OpenWA scales **vertically** — add CPU/RAM to a single instance. The table below is **unbenchmarked
+IdaWhats scales **vertically** — add CPU/RAM to a single instance. The table below is **unbenchmarked
 starting guidance**, not measured figures; actual usage depends heavily on engine choice
 (whatsapp-web.js spawns a Chromium per session; Baileys is far lighter), message volume, and media.
 Size up from your own monitoring.
@@ -1131,7 +1131,7 @@ Size up from your own monitoring.
 
 ### Horizontal Scaling
 
-**Not currently supported.** OpenWA is a single-process application with in-memory engine state, so
+**Not currently supported.** IdaWhats is a single-process application with in-memory engine state, so
 multiple replicas against a shared session volume corrupt WhatsApp auth. Run exactly **one** API
 instance per session-data volume (`replicas: 1`). The DB-backed session registry / node-claim design
 that would be required to scale out is documented — as a future design sketch, not a shipped feature —

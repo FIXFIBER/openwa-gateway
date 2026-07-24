@@ -1,8 +1,8 @@
-package com.rmyndharis.openwa.errors;
+package com.rmyndharis.idawhats.errors;
 
 /** Base class for every error thrown by the SDK. */
-public class OpenWAError extends RuntimeException {
-    public OpenWAError(String message) {
+public class IdaWhatsError extends RuntimeException {
+    public IdaWhatsError(String message) {
         super(message);
     }
 }

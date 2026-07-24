@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# OpenWA restore.
+# IdaWhats restore.
 #
 # Restores the always-SQLite auth/audit database, a SQLite data store, engine authentication, local
 # media, installed plugins, and bootstrap configuration from an archive produced by scripts/backup.sh.
@@ -9,11 +9,11 @@
 # Usage:
 #   ./scripts/restore.sh <backup-archive.tar.gz>
 # Environment:
-#   OPENWA_DATA_DIR   data directory to restore into (default: ./data)
+#   IDAWHATS_DATA_DIR   data directory to restore into (default: ./data)
 #   SESSION_DATA_PATH, BAILEYS_AUTH_DIR, STORAGE_LOCAL_PATH, PLUGINS_DIR
 #                     override the corresponding state directories
 #
-# Stop the OpenWA app before restoring. A snapshot of the current data dir is taken
+# Stop the IdaWhats app before restoring. A snapshot of the current data dir is taken
 # first so a bad restore can be undone.
 #
 set -euo pipefail
@@ -21,7 +21,7 @@ set -euo pipefail
 umask 077
 
 ARCHIVE="${1:-}"
-DATA_DIR="${OPENWA_DATA_DIR:-./data}"
+DATA_DIR="${IDAWHATS_DATA_DIR:-./data}"
 SESSIONS_DIR="${SESSION_DATA_PATH:-$DATA_DIR/sessions}"
 BAILEYS_DIR="${BAILEYS_AUTH_DIR:-$DATA_DIR/baileys}"
 MEDIA_DIR="${STORAGE_LOCAL_PATH:-$DATA_DIR/media}"
@@ -51,24 +51,24 @@ resolve_path() {
 }
 
 RESOLVED_DATA_DIR="$(resolve_path "$DATA_DIR")"
-RESOLVED_USER_HOME="$(resolve_path "${HOME:-/nonexistent-openwa-home}")"
+RESOLVED_USER_HOME="$(resolve_path "${HOME:-/nonexistent-idawhats-home}")"
 
 log() { echo "[restore] $*"; }
 
 case "$DATA_DIR" in
   '' | / | . | ./ | .. | ../)
-    log "ERROR: refusing unsafe OPENWA_DATA_DIR target: ${DATA_DIR:-<empty>}"
+    log "ERROR: refusing unsafe IDAWHATS_DATA_DIR target: ${DATA_DIR:-<empty>}"
     exit 1
     ;;
 esac
 case "$RESOLVED_CWD/" in
   "$RESOLVED_DATA_DIR"/*)
-    log "ERROR: OPENWA_DATA_DIR must not be the workspace or one of its parent directories: $DATA_DIR"
+    log "ERROR: IDAWHATS_DATA_DIR must not be the workspace or one of its parent directories: $DATA_DIR"
     exit 1
     ;;
 esac
 if [ "$RESOLVED_DATA_DIR" = "$RESOLVED_USER_HOME" ]; then
-  log "ERROR: OPENWA_DATA_DIR must not be the user home directory: $DATA_DIR"
+  log "ERROR: IDAWHATS_DATA_DIR must not be the user home directory: $DATA_DIR"
   exit 1
 fi
 
@@ -154,9 +154,9 @@ else
   log "WARN: main.sqlite not in archive — API keys / audit log will NOT be restored"
 fi
 
-if [ -f "$STAGE/openwa.sqlite" ]; then
-  log "Restoring data store (openwa.sqlite)"
-  cp "$STAGE/openwa.sqlite" "$DATA_DIR/openwa.sqlite"
+if [ -f "$STAGE/idawhats.sqlite" ]; then
+  log "Restoring data store (idawhats.sqlite)"
+  cp "$STAGE/idawhats.sqlite" "$DATA_DIR/idawhats.sqlite"
 fi
 
 if [ -d "$STAGE/sessions" ]; then

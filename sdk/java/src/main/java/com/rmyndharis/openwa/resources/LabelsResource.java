@@ -1,12 +1,12 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.AddLabelRequest;
-import com.rmyndharis.openwa.model.LabelRecord;
-import com.rmyndharis.openwa.model.SuccessResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.AddLabelRequest;
+import com.rmyndharis.idawhats.model.LabelRecord;
+import com.rmyndharis.idawhats.model.SuccessResult;
 import java.util.List;
 
 /**
@@ -15,9 +15,9 @@ import java.util.List;
  * <p>Labels are a WhatsApp Business feature; the session must be a business account.
  */
 public final class LabelsResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public LabelsResource(OpenWAClient client) {
+    public LabelsResource(IdaWhatsClient client) {
         this.client = client;
     }
 

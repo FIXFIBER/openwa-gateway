@@ -1,7 +1,7 @@
 {
-    "name": "@rmyndharis/openwa",
+    "name": "@rmyndharis/idawhats",
     "version": "0.1.0",
-    "description": "Official JavaScript/TypeScript SDK for OpenWA WhatsApp API Gateway",
+    "description": "Official JavaScript/TypeScript SDK for IdaWhats WhatsApp API Gateway",
     "type": "module",
     "main": "./dist/cjs/index.js",
     "module": "./dist/esm/index.js",
@@ -31,14 +31,14 @@
         "whatsapp",
         "api",
         "sdk",
-        "openwa",
+        "idawhats",
         "gateway"
     ],
-    "author": "OpenWA Contributors",
+    "author": "IdaWhats Contributors",
     "license": "MIT",
     "repository": {
         "type": "git",
-        "url": "https://github.com/rmyndharis/OpenWA",
+        "url": "https://github.com/rmyndharis/IdaWhats",
         "directory": "sdk/javascript"
     },
     "engines": {

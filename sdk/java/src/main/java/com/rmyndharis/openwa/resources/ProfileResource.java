@@ -1,19 +1,19 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.SetProfileNameRequest;
-import com.rmyndharis.openwa.model.SetProfilePictureRequest;
-import com.rmyndharis.openwa.model.SetProfileStatusRequest;
-import com.rmyndharis.openwa.model.SuccessResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.SetProfileNameRequest;
+import com.rmyndharis.idawhats.model.SetProfilePictureRequest;
+import com.rmyndharis.idawhats.model.SetProfileStatusRequest;
+import com.rmyndharis.idawhats.model.SuccessResult;
 
 /** Profile resource — the linked account's display name, status text and picture. */
 public final class ProfileResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public ProfileResource(OpenWAClient client) {
+    public ProfileResource(IdaWhatsClient client) {
         this.client = client;
     }
 

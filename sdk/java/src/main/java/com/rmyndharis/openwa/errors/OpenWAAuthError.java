@@ -1,8 +1,8 @@
-package com.rmyndharis.openwa.errors;
+package com.rmyndharis.idawhats.errors;
 
 /** 401 Unauthorized — missing or invalid API key. */
-public class OpenWAAuthError extends OpenWAApiError {
-    public OpenWAAuthError(String message, int status, Object body, String errorKind) {
+public class IdaWhatsAuthError extends IdaWhatsApiError {
+    public IdaWhatsAuthError(String message, int status, Object body, String errorKind) {
         super(message, status, body, errorKind);
     }
 }

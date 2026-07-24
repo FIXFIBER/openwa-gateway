@@ -5,21 +5,21 @@
   "type": "extension",
   "main": "dist/index.js",
   "description": "Auto-translates group messages between participants' languages via a LibreTranslate backend. Configure in-chat with /tr commands. Admin-gated; disabled until enabled.",
-  "author": "Yudhi Armyndharis <yudhi@rmyndharis.com>",
+  "author": "Yudhi AFIXFIBER <yudhi@FIXFIBER.com>",
   "license": "MIT",
-  "homepage": "https://github.com/rmyndharis/OpenWA-plugins/tree/main/group-translate",
-  "repository": "https://github.com/rmyndharis/OpenWA-plugins",
+  "homepage": "https://github.com/FIXFIBER/IdaWhats-plugins/tree/main/group-translate",
+  "repository": "https://github.com/FIXFIBER/IdaWhats-plugins",
   "keywords": [
     "translation",
     "libretranslate",
     "i18n",
     "groups",
     "whatsapp",
-    "openwa"
+    "idawhats"
   ],
   "status": "stable",
-  "minOpenWAVersion": "0.7.0",
-  "testedOpenWAVersion": "0.8.1",
+  "minIdaWhatsVersion": "0.7.0",
+  "testedIdaWhatsVersion": "0.8.1",
   "provides": [
     "translation"
   ],

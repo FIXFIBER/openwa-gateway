@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.http;
+package com.rmyndharis.idawhats.http;
 
 import java.util.List;
 import java.util.Map;

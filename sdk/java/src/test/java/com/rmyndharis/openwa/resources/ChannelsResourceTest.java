@@ -1,21 +1,21 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.rmyndharis.openwa.ClientConfig;
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.ChannelMessageQuery;
-import com.rmyndharis.openwa.model.ChannelMessageRecord;
-import com.rmyndharis.openwa.model.ChannelRecord;
-import com.rmyndharis.openwa.model.SubscribeChannelRequest;
-import com.rmyndharis.openwa.support.MockTransport;
+import com.rmyndharis.idawhats.ClientConfig;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.ChannelMessageQuery;
+import com.rmyndharis.idawhats.model.ChannelMessageRecord;
+import com.rmyndharis.idawhats.model.ChannelRecord;
+import com.rmyndharis.idawhats.model.SubscribeChannelRequest;
+import com.rmyndharis.idawhats.support.MockTransport;
 import org.junit.jupiter.api.Test;
 
 class ChannelsResourceTest {
     final MockTransport tx = new MockTransport();
-    final OpenWAClient client = new OpenWAClient(
+    final IdaWhatsClient client = new IdaWhatsClient(
         ClientConfig.builder().baseUrl("http://h").apiKey("k").transport(tx).build());
 
     @Test

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Query params for {@code channels.messages(...)}. Gson omits null fields. */
 public record ChannelMessageQuery(Integer limit) {

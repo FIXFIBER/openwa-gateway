@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** A stored message template with {@code {{variable}}} placeholders. Optional fields are {@code null} when absent. */
 public record TemplateRecord(

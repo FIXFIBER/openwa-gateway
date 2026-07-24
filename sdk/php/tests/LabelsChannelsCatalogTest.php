@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OpenWA\Tests;
+namespace IdaWhats\Tests;
 
 use PHPUnit\Framework\TestCase;
 

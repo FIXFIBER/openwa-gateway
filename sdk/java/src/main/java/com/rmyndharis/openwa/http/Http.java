@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.http;
+package com.rmyndharis.idawhats.http;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;

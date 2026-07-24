@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for sending a text message. */
 public record SendTextRequest(String chatId, String text) {

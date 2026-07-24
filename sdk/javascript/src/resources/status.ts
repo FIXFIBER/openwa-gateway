@@ -7,7 +7,7 @@
  */
 
 import { encodeSegment } from '../http.js';
-import type { OpenWAClient } from '../client.js';
+import type { IdaWhatsClient } from '../client.js';
 import type {
   SendImageStatusRequest,
   SendTextStatusRequest,
@@ -17,7 +17,7 @@ import type {
 } from '../types.js';
 
 export class StatusResource {
-  constructor(private readonly client: OpenWAClient) {}
+  constructor(private readonly client: IdaWhatsClient) {}
 
   /** Get all status updates. */
   list(sessionId: string): Promise<{ statuses: StatusRecord[] }> {

@@ -229,7 +229,7 @@ For IPv6, use a library that supports IPv6 parsing (e.g., `ipaddr.js`) when perf
 
 ### In Transit
 
-OpenWA serves plain HTTP on its port; terminate **TLS at your reverse proxy / load balancer** (nginx, Traefik, Caddy) and expose the gateway only over HTTPS in production. The API key is bearer-equivalent and is sent on every request, so it must never traverse plaintext `http://` outside local development.
+IdaWhats serves plain HTTP on its port; terminate **TLS at your reverse proxy / load balancer** (nginx, Traefik, Caddy) and expose the gateway only over HTTPS in production. The API key is bearer-equivalent and is sent on every request, so it must never traverse plaintext `http://` outside local development.
 
 ### At Rest
 
@@ -366,12 +366,12 @@ const corsOptions = {
 
 ```mermaid
 sequenceDiagram
-    participant OW as OpenWA
+    participant OW as IdaWhats
     participant WH as Webhook Endpoint
     
     OW->>OW: Create payload
     OW->>OW: Sign with HMAC-SHA256
-    OW->>WH: POST + X-OpenWA-Signature
+    OW->>WH: POST + X-IdaWhats-Signature
     WH->>WH: Verify signature
     WH->>WH: Process if valid
     WH-->>OW: 200 OK
@@ -380,7 +380,7 @@ sequenceDiagram
 ### Signature Verification
 
 ```typescript
-// OpenWA: Generate signature
+// IdaWhats: Generate signature
 function signPayload(payload: object, secret: string): string {
   const hmac = crypto.createHmac('sha256', secret);
   hmac.update(JSON.stringify(payload));
@@ -540,7 +540,7 @@ flowchart TB
 | Webhook secrets | Database — **plaintext**; never returned by the API | Per webhook |
 | Session auth state | File system (data volume) — **not encrypted** | Never (tied to the WA session) |
 
-> There is no application `ENCRYPTION_KEY` — OpenWA does not encrypt data at rest (see §4.4). The rotation cadences above are operational recommendations, not enforced by the app.
+> There is no application `ENCRYPTION_KEY` — IdaWhats does not encrypt data at rest (see §4.4). The rotation cadences above are operational recommendations, not enforced by the app.
 
 ### Environment Variables Security
 
@@ -557,7 +557,7 @@ docker secret create db_password ./secret.txt
 
 ### Docker Secrets
 
-> **Caveat:** the `*_FILE` convention shown below requires a secret-file reader in the app (see "Reading Secrets" below), which is **not currently implemented** — OpenWA reads secrets straight from environment variables. Until that helper exists, pass secrets as plain env vars (e.g. an `.env` file with restricted permissions) rather than `_FILE` paths.
+> **Caveat:** the `*_FILE` convention shown below requires a secret-file reader in the app (see "Reading Secrets" below), which is **not currently implemented** — IdaWhats reads secrets straight from environment variables. Until that helper exists, pass secrets as plain env vars (e.g. an `.env` file with restricted permissions) rather than `_FILE` paths.
 
 ```yaml
 # docker-compose.prod.yml
@@ -565,7 +565,7 @@ version: '3.8'
 
 services:
   app:
-    image: openwa:latest
+    image: idawhats:latest
     secrets:
       - db_password
       - encryption_key
@@ -585,7 +585,7 @@ secrets:
 
 ### Reading Secrets in Application
 
-> **Not implemented as shown.** OpenWA does **not** read `<NAME>_FILE` Docker-secret files — there is no `getSecret()` helper today. Secrets come straight from `process.env`, layered at boot as `process.env` → `.env` → `data/.env.generated` (`override:false`, so a real environment value wins). The function below is a suggested pattern to add if you want Docker-secret `_FILE` support; as-is, `DATABASE_PASSWORD_FILE` / `ENCRYPTION_KEY_FILE` are not consulted.
+> **Not implemented as shown.** IdaWhats does **not** read `<NAME>_FILE` Docker-secret files — there is no `getSecret()` helper today. Secrets come straight from `process.env`, layered at boot as `process.env` → `.env` → `data/.env.generated` (`override:false`, so a real environment value wins). The function below is a suggested pattern to add if you want Docker-secret `_FILE` support; as-is, `DATABASE_PASSWORD_FILE` / `ENCRYPTION_KEY_FILE` are not consulted.
 
 ```typescript
 // config/secrets.ts
@@ -614,7 +614,7 @@ const dbPassword = getSecret('DATABASE_PASSWORD');
 
 ### Key Rotation Procedure
 
-> **Not applicable today.** OpenWA stores no encrypted-at-rest data (see §4.4), so there is no data-encryption key to rotate and no `rotateEncryptionKey()` in the codebase. The flow below is illustrative for if/when field-level encryption is added. To rotate the `API_MASTER_KEY` or `API_KEY_PEPPER`, use the API-key endpoints (§4.2) — rotating the pepper invalidates existing key hashes.
+> **Not applicable today.** IdaWhats stores no encrypted-at-rest data (see §4.4), so there is no data-encryption key to rotate and no `rotateEncryptionKey()` in the codebase. The flow below is illustrative for if/when field-level encryption is added. To rotate the `API_MASTER_KEY` or `API_KEY_PEPPER`, use the API-key endpoints (§4.2) — rotating the pepper invalidates existing key hashes.
 
 ```mermaid
 flowchart TB
@@ -826,7 +826,7 @@ contacts:
     
   security_lead:
     name: "Security Lead"
-    email: "security@openwa.dev"
+    email: "security@idawhats.dev"
     
   escalation:
     - level: 1
@@ -838,7 +838,7 @@ contacts:
 
 communication:
   internal_channel: "#incident-response"
-  status_page: "https://status.openwa.dev"
+  status_page: "https://status.idawhats.dev"
 ```
 
 ### Runbooks
@@ -859,7 +859,7 @@ communication:
 4. Snapshot affected database
 
 ### Evidence Collection
-- Capture the audit log (the `audit_logs` table / audit query API) and the application logs (`docker compose logs openwa`) — there is no `logs:export` script
+- Capture the audit log (the `audit_logs` table / audit query API) and the application logs (`docker compose logs idawhats`) — there is no `logs:export` script
 - Database query logs
 - Network traffic captures
 - System metrics at incident time

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -6,19 +6,19 @@ import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.rmyndharis.openwa.ClientConfig;
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.MessageDirection;
-import com.rmyndharis.openwa.model.SearchHit;
-import com.rmyndharis.openwa.model.SearchQuery;
-import com.rmyndharis.openwa.model.SearchResults;
-import com.rmyndharis.openwa.support.MockTransport;
+import com.rmyndharis.idawhats.ClientConfig;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.MessageDirection;
+import com.rmyndharis.idawhats.model.SearchHit;
+import com.rmyndharis.idawhats.model.SearchQuery;
+import com.rmyndharis.idawhats.model.SearchResults;
+import com.rmyndharis.idawhats.support.MockTransport;
 import org.junit.jupiter.api.Test;
 
 class SearchResourceTest {
     final MockTransport tx = new MockTransport();
-    final OpenWAClient client = new OpenWAClient(
+    final IdaWhatsClient client = new IdaWhatsClient(
         ClientConfig.builder().baseUrl("http://h").apiKey("k").transport(tx).build());
 
     private static final String RESULTS = "{\"hits\":[{\"messageId\":\"m1\","

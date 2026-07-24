@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /**
  * Group settings — {@code announce} (only admins can send messages), {@code locked} (only admins

@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OpenWA\Exceptions;
+namespace IdaWhats\Exceptions;
 
 /** 409 Conflict — typically an engine-not-ready condition. */
-class OpenWAConflictException extends OpenWAApiException
+class IdaWhatsConflictException extends IdaWhatsApiException
 {
 }

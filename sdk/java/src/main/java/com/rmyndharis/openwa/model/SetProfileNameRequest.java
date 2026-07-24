@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for setting the account display name. */
 public record SetProfileNameRequest(String name) {

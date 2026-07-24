@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for setting the account about/status text (an empty string clears it). */
 public record SetProfileStatusRequest(String status) {

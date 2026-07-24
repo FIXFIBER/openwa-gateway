@@ -1,24 +1,24 @@
 #!/usr/bin/env bash
 #
-# OpenWA backup.
+# IdaWhats backup.
 #
 # Captures the load-bearing state needed to restore a working install:
 #   - main.sqlite   — auth (API keys) + audit log, ALWAYS SQLite (see app.module.ts)
-#   - data store    — openwa.sqlite (SQLite) OR a pg_dump (when DATABASE_TYPE=postgres)
+#   - data store    — idawhats.sqlite (SQLite) OR a pg_dump (when DATABASE_TYPE=postgres)
 #   - sessions/     — whatsapp-web.js LocalAuth session data
 #   - baileys/      — Baileys engine authentication state
 #   - media/        — locally-stored media (skipped automatically when using S3)
 #   - plugin-packages/ — installed plugin packages from PLUGINS_DIR
-#   - plugin-state/    — registry and persisted ctx.storage state under OPENWA_DATA_DIR
+#   - plugin-state/    — registry and persisted ctx.storage state under IDAWHATS_DATA_DIR
 #   - .env.generated and .api-key — dashboard config and plaintext bootstrap admin key
 #
-# The previous runbook backed up the wrong file (openwa.db) and omitted main.sqlite,
+# The previous runbook backed up the wrong file (idawhats.db) and omitted main.sqlite,
 # so a "successful" backup silently lost every API key and all audit history.
 #
 # Usage:
 #   ./scripts/backup.sh
 # Environment:
-#   OPENWA_DATA_DIR   data directory (default: ./data)
+#   IDAWHATS_DATA_DIR   data directory (default: ./data)
 #   BACKUP_DIR        where archives are written (default: ./backups)
 #   DATABASE_TYPE     sqlite (default) | postgres
 #   SESSION_DATA_PATH, BAILEYS_AUTH_DIR, STORAGE_LOCAL_PATH, PLUGINS_DIR
@@ -30,13 +30,13 @@ set -euo pipefail
 # permissive operator umask for newly-created backup artifacts.
 umask 077
 
-DATA_DIR="${OPENWA_DATA_DIR:-./data}"
+DATA_DIR="${IDAWHATS_DATA_DIR:-./data}"
 BACKUP_DIR="${BACKUP_DIR:-./backups}"
 DATABASE_TYPE="${DATABASE_TYPE:-sqlite}"
 TIMESTAMP="$(date +%Y%m%d-%H%M%S)"
 
 MAIN_DB="$DATA_DIR/main.sqlite"
-DATA_DB="$DATA_DIR/openwa.sqlite"
+DATA_DB="$DATA_DIR/idawhats.sqlite"
 SESSIONS_DIR="${SESSION_DATA_PATH:-$DATA_DIR/sessions}"
 BAILEYS_DIR="${BAILEYS_AUTH_DIR:-$DATA_DIR/baileys}"
 MEDIA_DIR="${STORAGE_LOCAL_PATH:-$DATA_DIR/media}"
@@ -82,12 +82,12 @@ if [ "$DATABASE_TYPE" = "postgres" ]; then
     PGPASSWORD="${DATABASE_PASSWORD:-}" pg_dump \
       -h "${DATABASE_HOST:-localhost}" \
       -p "${DATABASE_PORT:-5432}" \
-      -U "${DATABASE_USERNAME:-openwa}" \
-      "${DATABASE_NAME:-openwa}" >"$STAGE/database.sql"
+      -U "${DATABASE_USERNAME:-idawhats}" \
+      "${DATABASE_NAME:-idawhats}" >"$STAGE/database.sql"
   fi
 else
-  log "Backing up data store (openwa.sqlite)"
-  backup_sqlite "$DATA_DB" "$STAGE/openwa.sqlite"
+  log "Backing up data store (idawhats.sqlite)"
+  backup_sqlite "$DATA_DB" "$STAGE/idawhats.sqlite"
 fi
 
 if [ -d "$SESSIONS_DIR" ]; then
@@ -130,7 +130,7 @@ if [ -f "$ADMIN_KEY_FILE" ]; then
 fi
 
 mkdir -p "$BACKUP_DIR"
-ARCHIVE="$BACKUP_DIR/openwa-backup-$TIMESTAMP.tar.gz"
+ARCHIVE="$BACKUP_DIR/idawhats-backup-$TIMESTAMP.tar.gz"
 tar -czf "$ARCHIVE" -C "$STAGE" .
 
 log "Backup complete: $ARCHIVE"

@@ -1,2 +1,2 @@
-/** Official Java SDK for the OpenWA WhatsApp API Gateway. */
-package com.rmyndharis.openwa;
+/** Official Java SDK for the IdaWhats WhatsApp API Gateway. */
+package com.rmyndharis.idawhats;

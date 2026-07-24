@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for editing the text of a message sent by this account. */
 public record EditMessageRequest(String chatId, String messageId, String body) {

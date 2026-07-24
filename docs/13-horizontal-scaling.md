@@ -2,7 +2,7 @@
 
 > ## ⚠️ DESIGN REFERENCE ONLY — NOT IMPLEMENTED
 >
-> **OpenWA is currently a single-process, single-instance application.** Live WhatsApp
+> **IdaWhats is currently a single-process, single-instance application.** Live WhatsApp
 > engine state (browser + WebSocket + reconnect/error state) lives in an in-memory `Map`
 > in `SessionService`; there is **no** DB-backed session registry, **no** node-claim/lease,
 > and **no** Socket.IO Redis adapter.
@@ -14,9 +14,9 @@
 >
 > Everything in this guide (session-claim, node affinity, `replicas: 3`) is a **future
 > design sketch**, retained for planning. Until it is implemented, deploy with
-> **`replicas: 1`** for the OpenWA API service.
+> **`replicas: 1`** for the IdaWhats API service.
 
-This guide explains a *proposed* design for deploying OpenWA in a horizontally scaled environment for high availability and increased capacity.
+This guide explains a *proposed* design for deploying IdaWhats in a horizontally scaled environment for high availability and increased capacity.
 
 ## 13.1 Architecture Overview
 
@@ -26,10 +26,10 @@ flowchart TB
         NGINX[Nginx/Traefik]
     end
 
-    subgraph Nodes["OpenWA Nodes"]
-        N1[OpenWA Node 1]
-        N2[OpenWA Node 2]
-        N3[OpenWA Node 3]
+    subgraph Nodes["IdaWhats Nodes"]
+        N1[IdaWhats Node 1]
+        N2[IdaWhats Node 2]
+        N3[IdaWhats Node 3]
     end
 
     subgraph Storage["Shared Storage"]
@@ -104,8 +104,8 @@ Each node "claims" sessions on startup and releases them on shutdown. **(Not imp
 version: '3.8'
 
 services:
-  openwa:
-    image: ghcr.io/rmyndharis/openwa:0.4.6
+  idawhats:
+    image: ghcr.io/FIXFIBER/IdaWhats:0.4.6
     deploy:
       replicas: 1 # MUST stay 1 until session-claim is implemented — multiple replicas on one session volume corrupt WhatsApp auth
       update_config:
@@ -123,8 +123,8 @@ services:
       - NODE_ENV=production
       - DATABASE_TYPE=postgres
       - DATABASE_HOST=postgres
-      - DATABASE_NAME=openwa
-      - DATABASE_USER=openwa
+      - DATABASE_NAME=idawhats
+      - DATABASE_USER=idawhats
       - DATABASE_PASSWORD=${DB_PASSWORD}
       - REDIS_HOST=redis
       - ENABLE_QUEUE=true
@@ -132,7 +132,7 @@ services:
     volumes:
       - sessions:/app/data/sessions
     networks:
-      - openwa-net
+      - idawhats-net
     depends_on:
       - postgres
       - redis
@@ -145,13 +145,13 @@ services:
         constraints:
           - node.role == manager
     environment:
-      - POSTGRES_DB=openwa
-      - POSTGRES_USER=openwa
+      - POSTGRES_DB=idawhats
+      - POSTGRES_USER=idawhats
       - POSTGRES_PASSWORD=${DB_PASSWORD}
     volumes:
       - postgres-data:/var/lib/postgresql/data
     networks:
-      - openwa-net
+      - idawhats-net
 
   redis:
     image: redis:7-alpine
@@ -161,11 +161,11 @@ services:
     volumes:
       - redis-data:/data
     networks:
-      - openwa-net
+      - idawhats-net
 
-  # NOTE (v0.4.0): OpenWA no longer ships a bundled Traefik container.
+  # NOTE (v0.4.0): IdaWhats no longer ships a bundled Traefik container.
   # For TLS / public exposure, bring your own reverse proxy (Traefik, nginx,
-  # Caddy, a cloud load balancer, etc.) and point it at openwa:2785.
+  # Caddy, a cloud load balancer, etc.) and point it at idawhats:2785.
   # See section 13.5 for Traefik / nginx config examples.
 
 volumes:
@@ -174,7 +174,7 @@ volumes:
   sessions:
 
 networks:
-  openwa-net:
+  idawhats-net:
     driver: overlay
 ```
 
@@ -185,14 +185,14 @@ networks:
 docker swarm init
 
 # Deploy stack
-docker stack deploy -c docker-compose.swarm.yml openwa
+docker stack deploy -c docker-compose.swarm.yml idawhats
 
 # Scale up/down
-docker service scale openwa_openwa=5
+docker service scale idawhats_idawhats=5
 
 # Check status
 docker service ls
-docker service ps openwa_openwa
+docker service ps idawhats_idawhats
 ```
 
 ## 13.4 Kubernetes Deployment
@@ -203,7 +203,7 @@ docker service ps openwa_openwa
 apiVersion: v1
 kind: Namespace
 metadata:
-  name: openwa
+  name: idawhats
 ```
 
 ### k8s/configmap.yaml
@@ -212,14 +212,14 @@ metadata:
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: openwa-config
-  namespace: openwa
+  name: idawhats-config
+  namespace: idawhats
 data:
   NODE_ENV: 'production'
   DATABASE_TYPE: 'postgres'
   DATABASE_HOST: 'postgres-service'
   DATABASE_PORT: '5432'
-  DATABASE_NAME: 'openwa'
+  DATABASE_NAME: 'idawhats'
   REDIS_HOST: 'redis-service'
   REDIS_PORT: '6379'
   ENABLE_QUEUE: 'true'
@@ -232,11 +232,11 @@ data:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: openwa-secrets
-  namespace: openwa
+  name: idawhats-secrets
+  namespace: idawhats
 type: Opaque
 stringData:
-  DATABASE_USER: openwa
+  DATABASE_USER: idawhats
   DATABASE_PASSWORD: your-secure-password
   ADMIN_API_KEY: your-admin-api-key
   WEBHOOK_SECRET: your-webhook-secret
@@ -248,30 +248,30 @@ stringData:
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
-  name: openwa
-  namespace: openwa
+  name: idawhats
+  namespace: idawhats
 spec:
-  serviceName: openwa
+  serviceName: idawhats
   replicas: 1 # MUST stay 1 until session-claim is implemented — see the warning at the top of this guide
   selector:
     matchLabels:
-      app: openwa
+      app: idawhats
   template:
     metadata:
       labels:
-        app: openwa
+        app: idawhats
     spec:
       containers:
-        - name: openwa
-          image: ghcr.io/rmyndharis/openwa:0.4.6
+        - name: idawhats
+          image: ghcr.io/FIXFIBER/IdaWhats:0.4.6
           ports:
             - containerPort: 2785
               name: http
           envFrom:
             - configMapRef:
-                name: openwa-config
+                name: idawhats-config
             - secretRef:
-                name: openwa-secrets
+                name: idawhats-secrets
           env:
             - name: NODE_ID
               valueFrom:
@@ -315,12 +315,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: openwa-service
-  namespace: openwa
+  name: idawhats-service
+  namespace: idawhats
 spec:
   type: ClusterIP
   selector:
-    app: openwa
+    app: idawhats
   ports:
     - port: 80
       targetPort: 2785
@@ -329,12 +329,12 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: openwa-headless
-  namespace: openwa
+  name: idawhats-headless
+  namespace: idawhats
 spec:
   clusterIP: None
   selector:
-    app: openwa
+    app: idawhats
   ports:
     - port: 2785
       name: http
@@ -346,29 +346,29 @@ spec:
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: openwa-ingress
-  namespace: openwa
+  name: idawhats-ingress
+  namespace: idawhats
   annotations:
     nginx.ingress.kubernetes.io/affinity: 'cookie'
-    nginx.ingress.kubernetes.io/session-cookie-name: 'openwa-session'
+    nginx.ingress.kubernetes.io/session-cookie-name: 'idawhats-session'
     nginx.ingress.kubernetes.io/session-cookie-max-age: '172800'
 spec:
   ingressClassName: nginx
   rules:
-    - host: openwa.example.com
+    - host: idawhats.example.com
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: openwa-service
+                name: idawhats-service
                 port:
                   number: 80
   tls:
     - hosts:
-        - openwa.example.com
-      secretName: openwa-tls
+        - idawhats.example.com
+      secretName: idawhats-tls
 ```
 
 ### Deploy to Kubernetes
@@ -378,13 +378,13 @@ spec:
 kubectl apply -f k8s/
 
 # Check pods
-kubectl get pods -n openwa
+kubectl get pods -n idawhats
 
 # Check logs
-kubectl logs -f deployment/openwa -n openwa
+kubectl logs -f deployment/idawhats -n idawhats
 
 # Scale
-kubectl scale statefulset openwa --replicas=5 -n openwa
+kubectl scale statefulset idawhats --replicas=5 -n idawhats
 ```
 
 ## 13.5 Load Balancer Configuration
@@ -395,9 +395,9 @@ kubectl scale statefulset openwa --replicas=5 -n openwa
 # traefik/dynamic-scaling.yml
 http:
   routers:
-    openwa:
-      rule: 'Host(`openwa.example.com`)'
-      service: openwa
+    idawhats:
+      rule: 'Host(`idawhats.example.com`)'
+      service: idawhats
       middlewares:
         - sticky-session
 
@@ -405,20 +405,20 @@ http:
     sticky-session:
       headers:
         customResponseHeaders:
-          X-OpenWA-Node: '{{.Node}}'
+          X-IdaWhats-Node: '{{.Node}}'
 
   services:
-    openwa:
+    idawhats:
       loadBalancer:
         sticky:
           cookie:
-            name: openwa_node
+            name: idawhats_node
             secure: true
             httpOnly: true
         servers:
-          - url: 'http://openwa-1:2785'
-          - url: 'http://openwa-2:2785'
-          - url: 'http://openwa-3:2785'
+          - url: 'http://idawhats-1:2785'
+          - url: 'http://idawhats-2:2785'
+          - url: 'http://idawhats-3:2785'
         healthCheck:
           path: /api/health
           interval: 10s
@@ -428,20 +428,20 @@ http:
 ### Nginx Upstream Config
 
 ```nginx
-upstream openwa {
+upstream idawhats {
     ip_hash;  # Sticky sessions based on client IP
 
-    server openwa-1:2785 weight=1 max_fails=3 fail_timeout=30s;
-    server openwa-2:2785 weight=1 max_fails=3 fail_timeout=30s;
-    server openwa-3:2785 weight=1 max_fails=3 fail_timeout=30s;
+    server idawhats-1:2785 weight=1 max_fails=3 fail_timeout=30s;
+    server idawhats-2:2785 weight=1 max_fails=3 fail_timeout=30s;
+    server idawhats-3:2785 weight=1 max_fails=3 fail_timeout=30s;
 }
 
 server {
     listen 80;
-    server_name openwa.example.com;
+    server_name idawhats.example.com;
 
     location / {
-        proxy_pass http://openwa;
+        proxy_pass http://idawhats;
         proxy_http_version 1.1;
         proxy_set_header Upgrade $http_upgrade;
         proxy_set_header Connection "upgrade";
@@ -454,7 +454,7 @@ server {
     }
 
     location /api/health {
-        proxy_pass http://openwa;
+        proxy_pass http://idawhats;
         proxy_connect_timeout 5s;
         proxy_read_timeout 5s;
     }
@@ -496,25 +496,25 @@ Tested on 2 vCPU / 4GB RAM nodes:
 ### Prometheus Metrics (Future)
 
 ```yaml
-# prometheus/openwa-rules.yaml
+# prometheus/idawhats-rules.yaml
 groups:
-  - name: openwa
+  - name: idawhats
     rules:
       - alert: HighMemoryUsage
-        expr: container_memory_usage_bytes{container="openwa"} > 1.8e9
+        expr: container_memory_usage_bytes{container="idawhats"} > 1.8e9
         for: 5m
         labels:
           severity: warning
         annotations:
-          summary: 'OpenWA node high memory usage'
+          summary: 'IdaWhats node high memory usage'
 
       - alert: NodeDown
-        expr: up{job="openwa"} == 0
+        expr: up{job="idawhats"} == 0
         for: 1m
         labels:
           severity: critical
         annotations:
-          summary: 'OpenWA node is down'
+          summary: 'IdaWhats node is down'
 ```
 
 ### Health Check Endpoints

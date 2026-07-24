@@ -1,6 +1,6 @@
-# Panduan Deployment Docker OpenWA
+# Panduan Deployment Docker IdaWhats
 
-Panduan ini menjelaskan cara melakukan deployment **OpenWA** (WhatsApp API Gateway) menggunakan Docker dan Docker Compose.
+Panduan ini menjelaskan cara melakukan deployment **IdaWhats** (WhatsApp API Gateway) menggunakan Docker dan Docker Compose.
 
 ---
 
@@ -13,10 +13,10 @@ Sebelum memulai, pastikan server Anda sudah terinstal:
 
 ## 📁 Struktur Konfigurasi
 
-OpenWA menggunakan fitur **Profiles** di Docker Compose untuk mempermudah orkestrasi layanan tambahan (database, cache, dll) sesuai kebutuhan infrastruktur Anda.
+IdaWhats menggunakan fitur **Profiles** di Docker Compose untuk mempermudah orkestrasi layanan tambahan (database, cache, dll) sesuai kebutuhan infrastruktur Anda.
 
 ### Layanan Utama (Core)
-*   **`openwa-api`**: Server backend utama REST API OpenWA, sekaligus menyajikan Dashboard web (React UI) pada port yang sama.
+*   **`idawhats-api`**: Server backend utama REST API IdaWhats, sekaligus menyajikan Dashboard web (React UI) pada port yang sama.
 
 ### Layanan Tambahan (Optional Profiles)
 *   **`postgres`**: Database PostgreSQL (bawaan docker).
@@ -31,8 +31,8 @@ Untuk kebutuhan uji coba lokal dengan database bawaan SQLite dan penyimpanan lok
 
 ```bash
 # 1. Clone repositori hasil fork Anda
-git clone git@github.com:jimmimohtar/OpenWA.git
-cd OpenWA
+git clone git@github.com:jimmimohtar/IdaWhats.git
+cd IdaWhats
 
 # 2. Jalankan docker compose khusus development
 docker compose -f docker-compose.dev.yml up -d
@@ -90,7 +90,7 @@ Berikut variabel penting yang bisa disesuaikan di `.env`:
 |---|---|---|
 | `API_PORT` | `2785` | Port REST API sekaligus Dashboard UI (disajikan oleh NestJS). |
 | `DATABASE_TYPE` | `sqlite` | Jenis database yang digunakan (`sqlite` atau `postgres`). |
-| `DATABASE_NAME` | `/app/data/openwa.sqlite` | Lokasi database SQLite atau nama database PostgreSQL. |
+| `DATABASE_NAME` | `/app/data/idawhats.sqlite` | Lokasi database SQLite atau nama database PostgreSQL. |
 | `ENGINE_TYPE` | `whatsapp-web.js` | Driver/mesin engine WhatsApp yang digunakan (`whatsapp-web.js` default, berbasis Chromium; atau `baileys`, tanpa browser). |
 | `SERVE_DASHBOARD` | `true` | Sajikan Dashboard UI dari port API yang sama. Set `false` untuk menonaktifkan penyajian static files. |
 | `PUPPETEER_HEADLESS` | `true` | Menjalankan browser WhatsApp secara tersembunyi (hanya berlaku untuk engine `whatsapp-web.js`). |
@@ -104,9 +104,9 @@ Memeriksa apakah kontainer berjalan lancar:
 docker compose ps
 ```
 
-Melihat log aktivitas sistem OpenWA:
+Melihat log aktivitas sistem IdaWhats:
 ```bash
-docker compose logs -f openwa-api
+docker compose logs -f idawhats-api
 ```
 
 Melakukan pembersihan/berhenti:

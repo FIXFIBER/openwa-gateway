@@ -3192,13 +3192,13 @@ describe('WhatsAppWebJsAdapter orphaned Chromium sweep (pre-launch)', () => {
     }
   });
 
-  it('appends the --openwa-session marker to the puppeteer args handed to the Client', async () => {
+  it('appends the --idawhats-session marker to the puppeteer args handed to the Client', async () => {
     const adapter = newAdapter();
 
     await adapter.initialize({});
 
     const client = (adapter as unknown as { client: { options: { puppeteer?: { args?: string[] } } } }).client;
-    expect(client.options.puppeteer?.args).toContain(`--openwa-session=${SESSION_ID}`);
+    expect(client.options.puppeteer?.args).toContain(`--idawhats-session=${SESSION_ID}`);
   });
 
   it('does not mutate the caller-owned puppeteer args array shared across sessions', async () => {
@@ -3223,10 +3223,10 @@ describe('WhatsAppWebJsAdapter orphaned Chromium sweep (pre-launch)', () => {
     const argsB = await argsFor('sess-b');
 
     expect(sharedArgs).toEqual(['--no-sandbox']);
-    expect(argsB).toContain('--openwa-session=sess-b');
+    expect(argsB).toContain('--idawhats-session=sess-b');
     // The cross-session leak that let a restart of sess-a SIGKILL sess-b's live browser: the sweep
     // substring-matches this marker against the full `ps` command line.
-    expect(argsB).not.toContain('--openwa-session=sess-a');
+    expect(argsB).not.toContain('--idawhats-session=sess-a');
   });
 
   it('SIGKILLs a Chromium process carrying this session marker and logs the sweep', async () => {
@@ -3234,7 +3234,7 @@ describe('WhatsAppWebJsAdapter orphaned Chromium sweep (pre-launch)', () => {
       stdout: psTable([
         [
           1501,
-          `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --headless --openwa-session=${SESSION_ID}`,
+          `/Applications/Google Chrome.app/Contents/MacOS/Google Chrome --headless --idawhats-session=${SESSION_ID}`,
         ],
         [1502, '/usr/bin/node dist/main.js'],
       ]),
@@ -3261,8 +3261,8 @@ describe('WhatsAppWebJsAdapter orphaned Chromium sweep (pre-launch)', () => {
   it('does NOT kill a non-browser process that merely carries the marker string', async () => {
     mockPsResult({
       stdout: psTable([
-        [1601, `/bin/grep --openwa-session=${SESSION_ID}`],
-        [1602, `/usr/bin/node scan-sessions.js --openwa-session=${SESSION_ID}`],
+        [1601, `/bin/grep --idawhats-session=${SESSION_ID}`],
+        [1602, `/usr/bin/node scan-sessions.js --idawhats-session=${SESSION_ID}`],
       ]),
     });
 
@@ -3273,7 +3273,7 @@ describe('WhatsAppWebJsAdapter orphaned Chromium sweep (pre-launch)', () => {
 
   it('does NOT kill a Chromium process belonging to a different session', async () => {
     mockPsResult({
-      stdout: psTable([[1701, '/usr/lib/chromium/chromium --headless --no-sandbox --openwa-session=session-lain']]),
+      stdout: psTable([[1701, '/usr/lib/chromium/chromium --headless --no-sandbox --idawhats-session=session-lain']]),
     });
 
     await newAdapter().initialize({});
@@ -3309,7 +3309,7 @@ describe('WhatsAppWebJsAdapter orphaned Chromium sweep (pre-launch)', () => {
       order.push('ps');
       (args[args.length - 1] as ExecFileCallback)(
         null,
-        psTable([[1801, `/usr/bin/chromium --headless --openwa-session=${SESSION_ID}`]]),
+        psTable([[1801, `/usr/bin/chromium --headless --idawhats-session=${SESSION_ID}`]]),
         '',
       );
     });

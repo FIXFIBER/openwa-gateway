@@ -1,20 +1,20 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.CreateWebhookRequest;
-import com.rmyndharis.openwa.model.UpdateWebhookRequest;
-import com.rmyndharis.openwa.model.WebhookResponse;
-import com.rmyndharis.openwa.model.WebhookTestResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.CreateWebhookRequest;
+import com.rmyndharis.idawhats.model.UpdateWebhookRequest;
+import com.rmyndharis.idawhats.model.WebhookResponse;
+import com.rmyndharis.idawhats.model.WebhookTestResult;
 import java.util.List;
 
 /** Webhooks resource — configure event delivery to external HTTP endpoints. */
 public final class WebhooksResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public WebhooksResource(OpenWAClient client) {
+    public WebhooksResource(IdaWhatsClient client) {
         this.client = client;
     }
 

@@ -1,15 +1,15 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.HealthReadyResponse;
-import com.rmyndharis.openwa.model.HealthResponse;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.HealthReadyResponse;
+import com.rmyndharis.idawhats.model.HealthResponse;
 
 /** Health resource — connectivity and readiness probes. */
 public final class HealthResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public HealthResource(OpenWAClient client) {
+    public HealthResource(IdaWhatsClient client) {
         this.client = client;
     }
 

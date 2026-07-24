@@ -1,18 +1,18 @@
 # Webhook Signature Verification
 
-OpenWA signs webhook deliveries when a webhook is configured with a secret. Receivers should verify the signature before processing the event.
+IdaWhats signs webhook deliveries when a webhook is configured with a secret. Receivers should verify the signature before processing the event.
 
 ## Headers
 
-OpenWA sends these system headers with webhook deliveries:
+IdaWhats sends these system headers with webhook deliveries:
 
 | Header | Description |
 | ------ | ----------- |
-| `X-OpenWA-Signature` | HMAC-SHA256 signature, present only when the webhook has a secret |
-| `X-OpenWA-Event` | Event name, for example `message.received` |
-| `X-OpenWA-Idempotency-Key` | Stable key for duplicate detection |
-| `X-OpenWA-Delivery-Id` | Unique identifier for this delivery (stable across retry attempts) |
-| `X-OpenWA-Retry-Count` | Retry count for the current delivery |
+| `X-IdaWhats-Signature` | HMAC-SHA256 signature, present only when the webhook has a secret |
+| `X-IdaWhats-Event` | Event name, for example `message.received` |
+| `X-IdaWhats-Idempotency-Key` | Stable key for duplicate detection |
+| `X-IdaWhats-Delivery-Id` | Unique identifier for this delivery (stable across retry attempts) |
+| `X-IdaWhats-Retry-Count` | Retry count for the current delivery |
 
 The signature format is:
 
@@ -31,9 +31,9 @@ const crypto = require('crypto');
 const express = require('express');
 
 const app = express();
-const WEBHOOK_SECRET = process.env.OPENWA_WEBHOOK_SECRET;
+const WEBHOOK_SECRET = process.env.IDAWHATS_WEBHOOK_SECRET;
 
-function verifyOpenWASignature(rawBody, signature, secret) {
+function verifyIdaWhatsSignature(rawBody, signature, secret) {
   if (!signature || !secret) return false;
 
   const expected =
@@ -47,10 +47,10 @@ function verifyOpenWASignature(rawBody, signature, secret) {
   return crypto.timingSafeEqual(signatureBuffer, expectedBuffer);
 }
 
-app.post('/openwa/webhook', express.raw({ type: 'application/json' }), (req, res) => {
-  const signature = req.header('X-OpenWA-Signature');
+app.post('/idawhats/webhook', express.raw({ type: 'application/json' }), (req, res) => {
+  const signature = req.header('X-IdaWhats-Signature');
 
-  if (!verifyOpenWASignature(req.body, signature, WEBHOOK_SECRET)) {
+  if (!verifyIdaWhatsSignature(req.body, signature, WEBHOOK_SECRET)) {
     return res.status(401).send('Invalid signature');
   }
 
@@ -73,10 +73,10 @@ import os
 from fastapi import FastAPI, Request, HTTPException
 
 app = FastAPI()
-WEBHOOK_SECRET = os.environ["OPENWA_WEBHOOK_SECRET"]
+WEBHOOK_SECRET = os.environ["IDAWHATS_WEBHOOK_SECRET"]
 
 
-def verify_openwa_signature(raw_body: bytes, signature: str | None, secret: str) -> bool:
+def verify_idawhats_signature(raw_body: bytes, signature: str | None, secret: str) -> bool:
     if not signature:
         return False
 
@@ -87,12 +87,12 @@ def verify_openwa_signature(raw_body: bytes, signature: str | None, secret: str)
     return hmac.compare_digest(signature, expected)
 
 
-@app.post("/openwa/webhook")
-async def openwa_webhook(request: Request):
+@app.post("/idawhats/webhook")
+async def idawhats_webhook(request: Request):
     raw_body = await request.body()
-    signature = request.headers.get("x-openwa-signature")
+    signature = request.headers.get("x-idawhats-signature")
 
-    if not verify_openwa_signature(raw_body, signature, WEBHOOK_SECRET):
+    if not verify_idawhats_signature(raw_body, signature, WEBHOOK_SECRET):
         raise HTTPException(status_code=401, detail="Invalid signature")
 
     event = await request.json()
@@ -103,9 +103,9 @@ async def openwa_webhook(request: Request):
 
 ## Processing Checklist
 
-- Verify `X-OpenWA-Signature` before trusting or parsing the event.
+- Verify `X-IdaWhats-Signature` before trusting or parsing the event.
 - Use the exact raw request body received by your HTTP server.
 - Use a constant-time comparison function.
 - Return `401` for invalid signatures.
-- Use `X-OpenWA-Idempotency-Key` to avoid duplicate processing on retries.
+- Use `X-IdaWhats-Idempotency-Key` to avoid duplicate processing on retries.
 - Return a `2xx` response only after the event is accepted for processing.

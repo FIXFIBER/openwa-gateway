@@ -1,35 +1,35 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.rmyndharis.openwa.ClientConfig;
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.BulkMessageContent;
-import com.rmyndharis.openwa.model.BulkMessageItem;
-import com.rmyndharis.openwa.model.BulkMessageType;
-import com.rmyndharis.openwa.model.DeleteMessageRequest;
-import com.rmyndharis.openwa.model.EditMessageRequest;
-import com.rmyndharis.openwa.model.ForwardMessageRequest;
-import com.rmyndharis.openwa.model.ListMessagesQuery;
-import com.rmyndharis.openwa.model.MessageHistoryQuery;
-import com.rmyndharis.openwa.model.ReactMessageRequest;
-import com.rmyndharis.openwa.model.ReplyMessageRequest;
-import com.rmyndharis.openwa.model.SendBulkRequest;
-import com.rmyndharis.openwa.model.SendContactRequest;
-import com.rmyndharis.openwa.model.SendLocationRequest;
-import com.rmyndharis.openwa.model.SendMediaRequest;
-import com.rmyndharis.openwa.model.SendAudioRequest;
-import com.rmyndharis.openwa.model.SendTemplateRequest;
-import com.rmyndharis.openwa.model.SendTextRequest;
-import com.rmyndharis.openwa.support.MockTransport;
+import com.rmyndharis.idawhats.ClientConfig;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.BulkMessageContent;
+import com.rmyndharis.idawhats.model.BulkMessageItem;
+import com.rmyndharis.idawhats.model.BulkMessageType;
+import com.rmyndharis.idawhats.model.DeleteMessageRequest;
+import com.rmyndharis.idawhats.model.EditMessageRequest;
+import com.rmyndharis.idawhats.model.ForwardMessageRequest;
+import com.rmyndharis.idawhats.model.ListMessagesQuery;
+import com.rmyndharis.idawhats.model.MessageHistoryQuery;
+import com.rmyndharis.idawhats.model.ReactMessageRequest;
+import com.rmyndharis.idawhats.model.ReplyMessageRequest;
+import com.rmyndharis.idawhats.model.SendBulkRequest;
+import com.rmyndharis.idawhats.model.SendContactRequest;
+import com.rmyndharis.idawhats.model.SendLocationRequest;
+import com.rmyndharis.idawhats.model.SendMediaRequest;
+import com.rmyndharis.idawhats.model.SendAudioRequest;
+import com.rmyndharis.idawhats.model.SendTemplateRequest;
+import com.rmyndharis.idawhats.model.SendTextRequest;
+import com.rmyndharis.idawhats.support.MockTransport;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class MessagesResourceTest {
     final MockTransport tx = new MockTransport();
-    final OpenWAClient client = new OpenWAClient(
+    final IdaWhatsClient client = new IdaWhatsClient(
         ClientConfig.builder().baseUrl("http://h").apiKey("k").transport(tx).build());
 
     private static final String MSG = "{\"messageId\":\"m1\",\"timestamp\":123}";

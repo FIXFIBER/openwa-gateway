@@ -1,16 +1,16 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.CatalogInfo;
-import com.rmyndharis.openwa.model.CatalogProduct;
-import com.rmyndharis.openwa.model.CatalogProductsQuery;
-import com.rmyndharis.openwa.model.MessageResponse;
-import com.rmyndharis.openwa.model.PaginatedProducts;
-import com.rmyndharis.openwa.model.SendCatalogRequest;
-import com.rmyndharis.openwa.model.SendProductRequest;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.CatalogInfo;
+import com.rmyndharis.idawhats.model.CatalogProduct;
+import com.rmyndharis.idawhats.model.CatalogProductsQuery;
+import com.rmyndharis.idawhats.model.MessageResponse;
+import com.rmyndharis.idawhats.model.PaginatedProducts;
+import com.rmyndharis.idawhats.model.SendCatalogRequest;
+import com.rmyndharis.idawhats.model.SendProductRequest;
 
 /**
  * Catalog resource — WhatsApp Business catalog, products, and product/catalog sends.
@@ -21,9 +21,9 @@ import com.rmyndharis.openwa.model.SendProductRequest;
  * require an OPERATOR-level key.
  */
 public final class CatalogResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public CatalogResource(OpenWAClient client) {
+    public CatalogResource(IdaWhatsClient client) {
         this.client = client;
     }
 

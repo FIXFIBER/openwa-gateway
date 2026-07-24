@@ -93,7 +93,7 @@ export function Infrastructure() {
     port: '5432',
     username: 'postgres',
     password: '',
-    database: 'openwa',
+    database: 'idawhats',
     schema: 'public',
     poolSize: 10,
     sslEnabled: false,
@@ -176,7 +176,7 @@ export function Infrastructure() {
       ...prev,
       type: (infraStatus.database.type as 'sqlite' | 'postgres') || 'sqlite',
       host: infraStatus.database.host || 'localhost',
-      // builtIn reflects whether OpenWA's bundled container is actually running (live), not saved intent.
+      // builtIn reflects whether IdaWhats's bundled container is actually running (live), not saved intent.
       builtIn: infraStatus.database.builtIn,
     }));
     setRedisConfig(prev => ({
@@ -363,7 +363,7 @@ export function Infrastructure() {
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
-      a.download = `openwa-backup-${dump.exportedAt?.slice(0, 10) || 'data'}.json`;
+      a.download = `idawhats-backup-${dump.exportedAt?.slice(0, 10) || 'data'}.json`;
       a.click();
       URL.revokeObjectURL(url);
     } catch (err) {

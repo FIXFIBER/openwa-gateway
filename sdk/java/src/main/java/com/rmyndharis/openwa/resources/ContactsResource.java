@@ -1,22 +1,22 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.CheckNumberResponse;
-import com.rmyndharis.openwa.model.ContactPhoneResponse;
-import com.rmyndharis.openwa.model.ContactRecord;
-import com.rmyndharis.openwa.model.ListContactsQuery;
-import com.rmyndharis.openwa.model.ProfilePictureResponse;
-import com.rmyndharis.openwa.model.SuccessResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.CheckNumberResponse;
+import com.rmyndharis.idawhats.model.ContactPhoneResponse;
+import com.rmyndharis.idawhats.model.ContactRecord;
+import com.rmyndharis.idawhats.model.ListContactsQuery;
+import com.rmyndharis.idawhats.model.ProfilePictureResponse;
+import com.rmyndharis.idawhats.model.SuccessResult;
 import java.util.List;
 
 /** Contacts resource — contact lookup and management. */
 public final class ContactsResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public ContactsResource(OpenWAClient client) {
+    public ContactsResource(IdaWhatsClient client) {
         this.client = client;
     }
 

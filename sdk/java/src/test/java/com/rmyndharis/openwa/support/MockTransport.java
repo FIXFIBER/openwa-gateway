@@ -1,8 +1,8 @@
-package com.rmyndharis.openwa.support;
+package com.rmyndharis.idawhats.support;
 
-import com.rmyndharis.openwa.http.HttpRequestData;
-import com.rmyndharis.openwa.http.HttpResponseData;
-import com.rmyndharis.openwa.http.HttpTransport;
+import com.rmyndharis.idawhats.http.HttpRequestData;
+import com.rmyndharis.idawhats.http.HttpResponseData;
+import com.rmyndharis.idawhats.http.HttpTransport;
 import java.util.List;
 import java.util.Map;
 

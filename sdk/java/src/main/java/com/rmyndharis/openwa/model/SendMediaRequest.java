@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for sending image/video/document/sticker media. Provide {@code url} or {@code base64}. */
 public record SendMediaRequest(

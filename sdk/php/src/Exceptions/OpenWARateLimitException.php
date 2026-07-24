@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OpenWA\Exceptions;
+namespace IdaWhats\Exceptions;
 
 /** 429 Too Many Requests — rate limited. */
-class OpenWARateLimitException extends OpenWAApiException
+class IdaWhatsRateLimitException extends IdaWhatsApiException
 {
 }

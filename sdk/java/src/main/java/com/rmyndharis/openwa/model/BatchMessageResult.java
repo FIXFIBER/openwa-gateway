@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Per-message outcome within a batch result list. Optional fields are {@code null} when absent. */
 public record BatchMessageResult(

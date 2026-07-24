@@ -1,16 +1,16 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.SuccessResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.SuccessResult;
 
 /** Calls resource — incoming call handling. */
 public final class CallsResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public CallsResource(OpenWAClient client) {
+    public CallsResource(IdaWhatsClient client) {
         this.client = client;
     }
 

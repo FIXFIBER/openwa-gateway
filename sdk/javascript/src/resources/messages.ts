@@ -7,7 +7,7 @@
  */
 
 import { encodeSegment } from '../http.js';
-import type { OpenWAClient } from '../client.js';
+import type { IdaWhatsClient } from '../client.js';
 import type {
   BatchStatusResponse,
   BulkMessageResponse,
@@ -33,7 +33,7 @@ import type {
 } from '../types.js';
 
 export class MessagesResource {
-  constructor(private readonly client: OpenWAClient) {}
+  constructor(private readonly client: IdaWhatsClient) {}
 
   /** List messages, optionally filtered by chat or sender. Returns a `{ messages, total }` page. */
   list(sessionId: string, query?: ListMessagesQuery): Promise<MessageListResponse> {

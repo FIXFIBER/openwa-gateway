@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Item returned by {@code GET /sessions/:id/groups} (the slim list shape). */
 public record GroupSummary(

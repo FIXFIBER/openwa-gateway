@@ -4,7 +4,7 @@
 
 ```mermaid
 timeline
-    title OpenWA Release Timeline
+    title IdaWhats Release Timeline
 
     section v0.0.1 - MVP
         Month 1-3 : Foundation & Engine
@@ -262,7 +262,7 @@ flowchart TB
 
 ```
 v0.0.1 Release Package:
-├── Docker image (ghcr.io/rmyndharis/openwa:0.0.1)
+├── Docker image (ghcr.io/FIXFIBER/IdaWhats:0.0.1)
 ├── docker-compose.yml
 ├── Basic API documentation (Swagger)
 ├── README with quick start
@@ -372,7 +372,7 @@ gantt
 
 ```
 v0.0.2 Release Package:
-├── Docker image (ghcr.io/rmyndharis/openwa:0.0.2)
+├── Docker image (ghcr.io/FIXFIBER/IdaWhats:0.0.2)
 ├── docker-compose.yml (with PostgreSQL & Redis)
 ├── Web Dashboard
 ├── API authentication (API keys)
@@ -477,7 +477,7 @@ gantt
 
 ```
 v0.1.0 Release Package:
-├── Docker image (ghcr.io/rmyndharis/openwa:0.1.0)
+├── Docker image (ghcr.io/FIXFIBER/IdaWhats:0.1.0)
 ├── docker-compose.yml (production ready)
 ├── Full-featured Web Dashboard
 ├── Complete API documentation (Swagger)
@@ -557,9 +557,9 @@ Delivered additively whenever ready, per SemVer (not gated to one version). The 
 
 | Feature                | Priority | Status | Description                     |
 | ---------------------- | -------- | ------ | ------------------------------- |
-| JavaScript/Node.js SDK | P1       | ✅ Shipped (`@rmyndharis/openwa`) | Official client library |
-| Python SDK             | P2       | ✅ Shipped (`rmyndharis-openwa`) | Python client library |
-| PHP SDK                | P2       | ✅ Shipped (`rmyndharis/openwa`) | PHP client library |
+| JavaScript/Node.js SDK | P1       | ✅ Shipped (`@FIXFIBER/idawhats`) | Official client library |
+| Python SDK             | P2       | ✅ Shipped (`FIXFIBER-idawhats`) | Python client library |
+| PHP SDK                | P2       | ✅ Shipped (`FIXFIBER/idawhats`) | PHP client library |
 | Postman Collection     | P1       | ◐ cURL collection (doc 07); Postman export TBD | Ready-to-use API collection |
 | Docs Site              | P1       | ☐ Open | Documentation website |
 | Video Tutorials        | P2       | ☐ Open | Getting started video series    |
@@ -569,7 +569,7 @@ Delivered additively whenever ready, per SemVer (not gated to one version). The 
 
 | Feature                | Priority | Status | Description                      |
 | ---------------------- | -------- | ------ | -------------------------------- |
-| Prometheus Metrics     | P1       | ✅ Shipped (`GET /api/metrics`, `openwa_*`) | /metrics endpoint for monitoring |
+| Prometheus Metrics     | P1       | ✅ Shipped (`GET /api/metrics`, `idawhats_*`) | /metrics endpoint for monitoring |
 | Grafana Dashboard      | P2       | ☐ Open | Pre-built monitoring dashboard   |
 | OpenTelemetry Tracing  | P2       | ☐ Open | Distributed tracing support      |
 | Performance Benchmarks | P1       | ☐ Open | Documented performance metrics   |

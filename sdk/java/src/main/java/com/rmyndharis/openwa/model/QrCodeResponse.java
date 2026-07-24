@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Live QR code for authenticating a session. */
 public record QrCodeResponse(

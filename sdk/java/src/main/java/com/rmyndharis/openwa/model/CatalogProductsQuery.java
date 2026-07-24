@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Query parameters for listing catalog products. All fields optional; Gson omits nulls. */
 public record CatalogProductsQuery(Integer page, Integer limit) {

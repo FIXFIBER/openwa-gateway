@@ -22,7 +22,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Added
 
 - **Release images are now also published to Docker Hub.** Every release image is dual-published,
-  bit-identical, to `docker.io/rmyndharis/openwa` alongside `ghcr.io/rmyndharis/openwa` — the same
+  bit-identical, to `docker.io/FIXFIBER/IdaWhats` alongside `ghcr.io/FIXFIBER/IdaWhats` — the same
   `X.Y.Z` / `X.Y` / `latest` tags, with provenance and SBOM attestations, and both registries are
   verified publicly pullable before the release completes.
 
@@ -97,11 +97,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   its repository was archived in July 2026 — and its final release still bundles an outdated SQLite
   library. The gateway now uses the actively maintained `better-sqlite3` driver, which carries a current
   SQLite (3.53.x) including the recent FTS5 fixes the old line will never receive. Nothing changes in
-  how you configure or run OpenWA: `DATABASE_TYPE` keeps its `sqlite`/`postgres` values, existing
+  how you configure or run IdaWhats: `DATABASE_TYPE` keeps its `sqlite`/`postgres` values, existing
   database files are opened as-is, and all migrations apply unchanged. PostgreSQL deployments are
   affected only in the main (auth/audit) database, which has always been SQLite. Prebuilt binaries
   cover the same platforms as before, including Alpine/musl and arm64
-  ([#848](https://github.com/rmyndharis/OpenWA/issues/848)).
+  ([#848](https://github.com/FIXFIBER/IdaWhats/issues/848)).
 
 ### Fixed
 
@@ -119,7 +119,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
   enabled are started again once the gateway has finished coming up. A plugin that fails to start is
   logged and left disabled rather than holding up the gateway. Enabling still runs the plugin's full
   lifecycle, and a plugin you disabled stays disabled. Nothing to do on upgrade: a plugin that is
-  enabled when you upgrade is carried over automatically ([#856](https://github.com/rmyndharis/OpenWA/issues/856)).
+  enabled when you upgrade is carried over automatically ([#856](https://github.com/FIXFIBER/IdaWhats/issues/856)).
 - **Messages handled by a plugin are no longer missing from your history.** When an auto-reply plugin
   answered a message, it told the gateway to stop passing that message to the remaining plugins — and
   the gateway took that as a cue to forget the message entirely. It was never saved, never sent to your
@@ -255,7 +255,7 @@ of boolean and numeric request fields.
   first. Unknown or expired call ids return `404`.
 - **Docs: official plugin catalog is now discoverable.** The README feature table points to the
   first-party Integration Fabric plugins (Chatwoot, Typebot, …) in the
-  [OpenWA-plugins](https://github.com/rmyndharis/OpenWA-plugins) repo, and
+  [IdaWhats-plugins](https://github.com/FIXFIBER/IdaWhats-plugins) repo, and
   `docs/23-community-integrations.md` clarifies that it lists community projects only.
 
 ### Changed
@@ -304,7 +304,7 @@ of boolean and numeric request fields.
 
 - Running more than one session no longer corrupts the Chromium launch flags of every
   session started after the first. The whatsapp-web.js adapter appended its per-session
-  arguments (`--proxy-server`, and the `--openwa-session=<id>` process marker) directly
+  arguments (`--proxy-server`, and the `--idawhats-session=<id>` process marker) directly
   to the array returned by `engine.puppeteer.args` — but `ConfigService` hands back a
   live reference into the cached configuration tree, so every session shared one array
   and each start mutated it permanently. Three symptoms followed: the argument list grew
@@ -345,12 +345,12 @@ of boolean and numeric request fields.
 ### Added
 
 - The README gains an end-user-facing **"Before you connect a number"** section that consolidates
-  the recurring ban-risk / safe-sending questions: it states plainly that OpenWA is unofficial (it
+  the recurring ban-risk / safe-sending questions: it states plainly that IdaWhats is unofficial (it
   uses `whatsapp-web.js` and `@whiskeysockets/baileys`, not Meta's Cloud API), includes a per-engine
   ban-risk vs. resource-cost trade-off table, six practical safe-sending guardrails (warm-up,
   no cold-blast, rate-limit, opt-in recipients, keep a fallback, mind the hosting IP), calls out the
   known cold-contact first-send silent drop (tracked in #830) as server-side WhatsApp policy rather
-  than an OpenWA bug, and points regulated deployments to the official Cloud API. Responds to the
+  than an IdaWhats bug, and points regulated deployments to the official Cloud API. Responds to the
   ban-risk questions raised in discussions #87, #154, #436, #687, and #694.
 
 ### Fixed
@@ -386,7 +386,7 @@ of boolean and numeric request fields.
   use (lid resolution, webhook payloads, group ids). The composer send icon was also enlarged to
   better match its 48 px button.
 - The linked-device name shown in WhatsApp's Settings → Linked Devices is now brandable via the
-  optional `BAILEYS_BROWSER_NAME` env var (applies to new pairings; default unchanged: `OpenWA`).
+  optional `BAILEYS_BROWSER_NAME` env var (applies to new pairings; default unchanged: `IdaWhats`).
   Thanks @clicsoluciones. (#822)
 
 ### Fixed
@@ -407,13 +407,13 @@ of boolean and numeric request fields.
 ### Added
 
 - Reconnect-loop observability: every scheduled reconnect attempt is counted in the new
-  `openwa_session_reconnect_attempts_total` Prometheus counter, and every fifth consecutive attempt
+  `idawhats_session_reconnect_attempts_total` Prometheus counter, and every fifth consecutive attempt
   of an episode emits a `session.reconnect_loop` webhook event (`{ sessionId, attempts, nextDelayMs }`),
-  a structured warning log, and an `openwa_session_reconnect_loop_alerts_total` counter tick — a
+  a structured warning log, and an `idawhats_session_reconnect_loop_alerts_total` counter tick — a
   session stuck in a reconnect loop is now visible to operators instead of retrying silently forever.
   The episode streak re-arms after a stable connection, so recovered sessions do not keep alerting.
 - The whatsapp-web.js engine now sweeps orphaned Chromium processes before each (re)launch: browsers
-  are started with an `--openwa-session=<id>` marker arg, and any leftover browser process carrying
+  are started with an `--idawhats-session=<id>` marker arg, and any leftover browser process carrying
   this session's marker from a previous process lifetime (e.g. after the gateway itself was killed)
   is terminated before the new launch, alongside the existing stale Singleton-file cleanup.
 - Messages composed on a linked phone are now persisted to local history (previously only API
@@ -526,7 +526,7 @@ of boolean and numeric request fields.
 
 - ⚠️ **Breaking:** `GET /api/settings` no longer returns the incorrect, always-zero
   `general.sessionTimeout` field. Migration: remove reads, destructuring, or schema requirements for that
-  admin-only field; there is no replacement because OpenWA has no equivalent session-timeout setting.
+  admin-only field; there is no replacement because IdaWhats has no equivalent session-timeout setting.
 - Java SDK callers sending audio/voice notes now pass `SendAudioRequest` to `sendAudio`; other media sends
   continue to use `SendMediaRequest`. Bulk media uses the nested `BulkMediaRequest` type.
 - The PHP SDK's configured `timeout` now applies to every request, including calls made through an injected
@@ -551,7 +551,7 @@ of boolean and numeric request fields.
 
 - **Official Go SDK (`sdk/go`).** Hand-written, stdlib-only (no third-party dependencies) Go client
   covering the user-facing API surface, joining the JavaScript/Python/PHP/Java clients. Entry point is
-  `openwa.New(baseURL, apiKey, opts...)`, which returns a concurrency-safe `*Client` whose exported
+  `idawhats.New(baseURL, apiKey, opts...)`, which returns a concurrency-safe `*Client` whose exported
   fields group the API by domain (`Sessions`, `Messages`, `Contacts`, `Groups`, `Webhooks`, `Chats`,
   `Status`, `Labels`, `Channels`, `Catalog`, `Templates`, `Health`, `Search`, `Auth`). Every network
   method is context-first; configuration and dependency injection go through functional options
@@ -757,7 +757,7 @@ of boolean and numeric request fields.
   `500` get reported as a mystery `400` in #750. Fixes #750.
 
 - **A production boot that serves the dashboard over plain HTTP now warns about the CSP upgrade that
-  blanks it.** In production OpenWA emits `upgrade-insecure-requests`, which is correct behind a
+  blanks it.** In production IdaWhats emits `upgrade-insecure-requests`, which is correct behind a
   TLS-terminating reverse proxy — the shipped `docker-compose.yml` topology — but silently breaks a
   direct-HTTP deployment: the browser upgrades the dashboard's own script fetches to `https://`, the
   non-TLS server cannot answer them, no JavaScript runs, and the UI renders a blank white screen. The
@@ -946,7 +946,7 @@ of boolean and numeric request fields.
 - **SBOM attestation on published images.** Each image built by CI and on release now carries an
   in-toto SBOM attestation alongside the SLSA provenance that `docker/build-push-action` already
   generates by default. Both are verifiable with
-  `docker buildx imagetools inspect ghcr.io/rmyndharis/openwa:<tag>`. Provenance is now also pinned
+  `docker buildx imagetools inspect ghcr.io/FIXFIBER/IdaWhats:<tag>`. Provenance is now also pinned
   explicitly (`provenance: true`) so the attestation pair is self-documenting rather than reliant on
   the action default.
 
@@ -966,7 +966,7 @@ of boolean and numeric request fields.
 - **Engine capability matrix + drift gate.** A committed, source-verified matrix
   (`src/engine/engine-capability-matrix.ts`) records, for every `IWhatsAppEngine` method on each
   engine (whatsapp-web.js default, Baileys), whether it is `supported` or `not-available` — and for
-  the not-available ones, the root cause: `adapter-gap` (the underlying library supports it, OpenWA
+  the not-available ones, the root cause: `adapter-gap` (the underlying library supports it, IdaWhats
   just hasn't wired it — fixable) vs `library-limitation` (no first-class library API), with the
   cited library symbol as evidence. A drift gate fails when a method's throw-availability changes.
   `docs/engine-capability-matrix.md` inventories the unwired adapter-gaps as a prioritized capability
@@ -1135,7 +1135,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 
 - **`base64` media now takes precedence over `url` when both are provided on a media send.** A `send-image`/`send-video`/etc. request carrying both fields previously sent the URL — and because `@ValidateIf` skipped `@IsUrl` validation on `url` whenever `base64` was present, a stale `url` (e.g. an example default left in the body, or a client such as the n8n community node that sends both) was fetched unvalidated and could 404, silently shadowing the supplied base64 image. `buildMediaInput` now prefers `base64`, aligning the send path with the already-base64-first persisted message metadata. Both engine adapters (whatsapp-web.js and Baileys) already guard the remote fetch behind an `isHttpUrl` check, so the change covers both. [#670]
 
-- **Fresh Docker Compose dev installs no longer boot-loop with `SQLITE_CANTOPEN`.** `.env.example` ships `DATABASE_NAME=openwa` (a PostgreSQL db-name) which, in the SQLite dev compose, became the SQLite **file path** — SQLite tried to open a bare file on the read-only container rootfs and retried 9× per boot. The dev compose now forwards a blank `DATABASE_NAME` default (matching production), `.env.example` documents it as PostgreSQL-only, and env-validation rejects a bare SQLite name with a clear boot error. [#677] [#680]
+- **Fresh Docker Compose dev installs no longer boot-loop with `SQLITE_CANTOPEN`.** `.env.example` ships `DATABASE_NAME=idawhats` (a PostgreSQL db-name) which, in the SQLite dev compose, became the SQLite **file path** — SQLite tried to open a bare file on the read-only container rootfs and retried 9× per boot. The dev compose now forwards a blank `DATABASE_NAME` default (matching production), `.env.example` documents it as PostgreSQL-only, and env-validation rejects a bare SQLite name with a clear boot error. [#677] [#680]
 - **`DATABASE_TYPE=postgres` combined with `DATABASE_SYNCHRONIZE=true` is now rejected at boot.** On PostgreSQL the data connection runs migrations every boot, so `synchronize` immediately dropped the search migration's generated `body_ts` column and broke `/search` (501) on every restart; the misconfigured combination now fails fast. [#680]
 - **Resolved internal IPs are no longer leaked in SSRF-block error messages.** The webhook test response, delivery-failure/DLQ `lastError`, `webhook:error` hook payloads, and plugin-download errors now show a generic message instead of the resolved internal address (which was a server-side-recon oracle). The full detail is still logged server-side. [#680]
 - **`STORE_EPHEMERAL_MESSAGES=false` is now honored on Baileys history backfill.** Previously only the live inbound path enforced the opt-out, so disappearing-message history was silently persisted + indexed on every connect/reconnect despite the operator's opt-out. [#680]
@@ -1167,7 +1167,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 
 ### Added
 
-- **Prometheus counter for terminally-failed webhook deliveries.** `/api/metrics` now exposes `openwa_webhook_delivery_failures_total`, incremented once per delivery that exhausts all its retries (mirroring the durable `webhook_delivery_failures` dead-letter record, on both the queued and the queue-disabled direct path). It is an in-process monotonic counter — cheap, real-time, and resetting only on restart, which Prometheus `rate()`/`increase()` treat as a normal counter reset — so a `COUNT(*)` over the retention-pruned failure table isn't queried per scrape. Operators can now alert on webhook failure rate from the scrape instead of tailing the structured log or querying the dead-letter endpoint.
+- **Prometheus counter for terminally-failed webhook deliveries.** `/api/metrics` now exposes `idawhats_webhook_delivery_failures_total`, incremented once per delivery that exhausts all its retries (mirroring the durable `webhook_delivery_failures` dead-letter record, on both the queued and the queue-disabled direct path). It is an in-process monotonic counter — cheap, real-time, and resetting only on restart, which Prometheus `rate()`/`increase()` treat as a normal counter reset — so a `COUNT(*)` over the retention-pruned failure table isn't queried per scrape. Operators can now alert on webhook failure rate from the scrape instead of tailing the structured log or querying the dead-letter endpoint.
 
 ### Changed
 
@@ -1183,7 +1183,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 - **`PUT /infra/config` returns the real HTTP status for a rejected configuration.** A validation failure (an unknown engine type, or a value carrying a newline that would inject an extra env var) was caught and returned as HTTP 200 with `{ saved: false }`, so a client branching on the status code alone treated a rejected save as success. Such validation errors now surface as their real 4xx (`BadRequestException`); a genuine persistence fault (e.g. a disk/permission error while writing the env file) still returns `{ saved: false }` with 200, preserving the dashboard's `body.saved` handling.
 - **Deleting a session no longer orphans its webhooks, templates, or stored Baileys messages on SQLite.** `webhooks`, `templates`, and `baileys_stored_messages` declare an `ON DELETE CASCADE` foreign key to `sessions`, but the default `data` engine (SQLite) runs with `foreign_keys` OFF, so that cascade never fired — a session delete removed only the session, `messages`, and `message_batches` rows and left the rest behind indefinitely (orphaned `webhooks` rows in particular retain their signing secret and any custom headers). `delete()` now removes all CASCADE-FK child rows explicitly inside the same transaction (children before the parent), which is engine-agnostic — redundant-but-harmless on PostgreSQL, where the real cascade already handles it — and mirrors the ordering the data-restore path already uses.
 - **The `message:sending` moderation gate and `message:failed` notification now cover every outbound path.** Both hooks were wired only into the text `sendText` method, so a plugin registered on `message:sending` (the canonical pre-send moderation/compliance gate) saw no image/video/audio/document/sticker/location/contact/poll/reply/forward send and no bulk send at all, and a `message:failed` plugin saw only text-send failures. Every single sender now passes through a shared pre-send gate (a plugin can block or rewrite the payload) and a shared failure emitter, and `BulkMessageService` runs the same per-message gate (a block fails just that message, honoring `stopOnError`) and emits `message:failed` on a failed batch item. ⚠️ **Behavior change:** a `message:sending` plugin now receives — and can block/modify — media, extended, and bulk sends it previously never saw; the hook payload carries a `type` discriminator (`image`/`video`/`poll`/`reply`/… ) so a handler can scope its logic per send type, and its `error` field is sanitized so an SSRF-blocked media fetch does not expose the resolved internal address to plugins. A moderation block on a bulk item fails just that item (honoring `stopOnError`) without emitting `message:failed`, matching single-send where a block is a client error, not a delivery failure. `message:sent` is unchanged (still emitted once from the engine `message_create` path).
-- **Sibling webhooks subscribed to the same event now get distinct idempotency keys.** The per-event idempotency key was derived only from the event and its payload, so two _different_ webhook endpoints registered for the same event on the same session received an identical `X-OpenWA-Idempotency-Key`. A receiver sitting behind both (or a shared dedup store) could drop the second endpoint's delivery as a replay of the first. The key is now salted with the destination webhook's id, so each endpoint is dedup'd independently while retries of the _same_ delivery (including the queue-add→direct fallback) keep their stable key.
+- **Sibling webhooks subscribed to the same event now get distinct idempotency keys.** The per-event idempotency key was derived only from the event and its payload, so two _different_ webhook endpoints registered for the same event on the same session received an identical `X-IdaWhats-Idempotency-Key`. A receiver sitting behind both (or a shared dedup store) could drop the second endpoint's delivery as a replay of the first. The key is now salted with the destination webhook's id, so each endpoint is dedup'd independently while retries of the _same_ delivery (including the queue-add→direct fallback) keep their stable key.
 - **A session with auto-reconnect turned off no longer reports "reconnection failed after 0 attempts".** When a disconnect fired with the reconnect budget set to `0` (auto-reconnect disabled), the session was marked `FAILED` with the exhausted-retries message and a count of `0` — implying a retry loop had run and failed rather than a feature that is simply off. That case now records an explicit "Auto-reconnect is disabled" reason; the genuine exhausted-retries message (with its real attempt count) is unchanged.
 - **A failed inbound integration (ingress) delivery is no longer silently dropped on the inline path.** With the queue disabled (or Redis unreachable), an ingress delivery is dispatched inline; if the plugin handler threw, the error was swallowed and the event was stranded — the provider had already received its `202`, and the redrive tooling only scans the dead-letter table, which never got a row. The inline path now persists a dead-letter record (the same shape the queued path writes on its final failed attempt), so the event is redrivable. The write is best-effort: a failure to persist it is logged but never turns the `202` into a `5xx` (the delivery is already dedup-persisted, so the provider won't re-send).
 - **Plugin instance session bindings are re-derived on startup, so a binding lost while the plugin was momentarily unloaded self-heals.** Provisioning a plugin instance mirrors its config into the plugin runtime (per-session config + activation) so an ingress handler resolves the right `ctx.config`; if the plugin happened to be unloaded at that moment the bridge was skipped (only an INFO audit), leaving the instance marked enabled but resolving base config only — previously recoverable only by re-saving the instance. A boot-time reconciliation now re-applies every enabled instance's binding from the persisted `plugin_instances` rows (honoring each row's real `enabled` flag), so a restart restores it. The binding logic moved into a dedicated service shared by provisioning and the reconciler.
@@ -1193,7 +1193,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 
 ### Added
 
-- **PostgreSQL schema selection via `POSTGRES_SCHEMA`.** OpenWA's tables and the TypeORM migration ledger can now be placed in a dedicated Postgres schema (default `public` preserves historical behavior). Set `POSTGRES_SCHEMA` to isolate OpenWA from other apps sharing a database, or to use a managed-Postgres project schema. The schema must already exist (the built-in container creates it; for external Postgres run `CREATE SCHEMA <name>;` once). SQLite ignores this setting. The dashboard Infrastructure page exposes the field, and the environment variable is validated as a legal, non-reserved Postgres identifier at boot.
+- **PostgreSQL schema selection via `POSTGRES_SCHEMA`.** IdaWhats's tables and the TypeORM migration ledger can now be placed in a dedicated Postgres schema (default `public` preserves historical behavior). Set `POSTGRES_SCHEMA` to isolate IdaWhats from other apps sharing a database, or to use a managed-Postgres project schema. The schema must already exist (the built-in container creates it; for external Postgres run `CREATE SCHEMA <name>;` once). SQLite ignores this setting. The dashboard Infrastructure page exposes the field, and the environment variable is validated as a legal, non-reserved Postgres identifier at boot.
 
 ### Changed
 
@@ -1210,7 +1210,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 - **`POST /infra/import-data` no longer swallows a genuine database error while clearing tables.** The table-clearing step tolerated only a genuinely-absent table but previously used a blanket catch, so an I/O/lock error (or an aborted transaction) could let a restore commit a _merged_ rather than _replaced_ dataset on SQLite. Such errors now surface and roll the whole import back (a real fault returns a `500` carrying the actual cause); the intended tolerance for a missing table is preserved.
 - **A session no longer schedules a reconnect while the process is shutting down** — a disconnect during the drain window would otherwise launch a fresh Chromium racing the shutdown teardown. The session is left `DISCONNECTED` (a later start / auto-restore re-initializes it cleanly).
 - **Documentation & config accuracy.** `.env.example` now documents `PORT` (the port the app binds to on bare metal) distinctly from the Compose-only host-published `API_PORT`, and adds the `QUEUE_ENABLED`/`CACHE_ENABLED` toggles. `SECURITY.md`'s supported-versions table and the Java SDK install snippets are refreshed to the current releases. The unused `uuid`/`@types/uuid` dependency was removed, and stale "not yet wired" comments on the plugin ingress-manifest validation (which the loader has called since it shipped) were corrected.
-- **The bundled Docker Compose stack no longer kills Chromium mid-spawn under multi-session `whatsapp-web.js` workloads (#636).** The per-container `pids_limit` shipped at `512` since the `#243` hardening pass — a fork-bomb guard chosen without accounting for Chromium's multi-process model. `whatsapp-web.js` runs a full Chromium instance per session (browser + renderer + GPU + zygote + utilities), and WhatsApp Web is itself process-heavy, so ~4 concurrent sessions already approached 512 and the next session's Chromium was killed mid-spawn when `fork()` returned `EAGAIN` — surfacing in the API as a `Failed to launch the browser process: Code: null` launch failure with no useful log (the dbus/crashpad noise in the log is non-fatal). The default is now `2048` (fits ~8–10 sessions with startup-spike headroom), exposed as `OPENWA_PIDS_LIMIT` for larger fleets. The limit is a cgroup `pids.max` ceiling, not an allocation — raising it is a no-op for light containers, so this is safe for the `baileys` engine (single-process, no Chromium, a handful of PIDs regardless). The fork-bomb guard stays finite (`-1`/unlimited is explicitly discouraged). A new troubleshooting entry distinguishes the three causes of `Code: null` (PID exhaustion vs OOM-kill vs the XDG/crashpad crash already fixed earlier), since the cause isn't visible in the log without `docker stats` / `dmesg`.
+- **The bundled Docker Compose stack no longer kills Chromium mid-spawn under multi-session `whatsapp-web.js` workloads (#636).** The per-container `pids_limit` shipped at `512` since the `#243` hardening pass — a fork-bomb guard chosen without accounting for Chromium's multi-process model. `whatsapp-web.js` runs a full Chromium instance per session (browser + renderer + GPU + zygote + utilities), and WhatsApp Web is itself process-heavy, so ~4 concurrent sessions already approached 512 and the next session's Chromium was killed mid-spawn when `fork()` returned `EAGAIN` — surfacing in the API as a `Failed to launch the browser process: Code: null` launch failure with no useful log (the dbus/crashpad noise in the log is non-fatal). The default is now `2048` (fits ~8–10 sessions with startup-spike headroom), exposed as `IDAWHATS_PIDS_LIMIT` for larger fleets. The limit is a cgroup `pids.max` ceiling, not an allocation — raising it is a no-op for light containers, so this is safe for the `baileys` engine (single-process, no Chromium, a handful of PIDs regardless). The fork-bomb guard stays finite (`-1`/unlimited is explicitly discouraged). A new troubleshooting entry distinguishes the three causes of `Code: null` (PID exhaustion vs OOM-kill vs the XDG/crashpad crash already fixed earlier), since the cause isn't visible in the log without `docker stats` / `dmesg`.
 
 ## [0.8.9] - 2026-07-06
 
@@ -1279,7 +1279,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 ### Added
 
 - **Plugins can send media through `ctx.conversations.send`.** The conversation-send capability now accepts `image`, `video`, `audio`, and `file` envelopes that carry a `mediaUrl`, sending them by URL through the same media pipeline as the REST media endpoints (the caption comes from `text`). It stays under the existing `conversation:send` permission and the plugin's activated-session scope — the text/reply behavior is unchanged. A `replyTo` on a media envelope is rejected, since the engine media path cannot quote a message.
-- **Official Java SDK (`com.rmyndharis:openwa`).** A hand-written, synchronous Java 17 client covering the full REST surface — all 12 resources (sessions, messages, contacts, groups, webhooks, chats, labels, channels, catalog, status, templates, health) plus API-key validation — with typed request builders, immutable response records, a typed error hierarchy, and an injectable HTTP transport for testing. One runtime dependency (Gson); published to Maven Central as `com.rmyndharis:openwa:0.1.1`. Lives in `sdk/java` and is drift-tested against the backend DTOs like the JavaScript, Python, and PHP SDKs. (#602)
+- **Official Java SDK (`com.FIXFIBER:idawhats`).** A hand-written, synchronous Java 17 client covering the full REST surface — all 12 resources (sessions, messages, contacts, groups, webhooks, chats, labels, channels, catalog, status, templates, health) plus API-key validation — with typed request builders, immutable response records, a typed error hierarchy, and an injectable HTTP transport for testing. One runtime dependency (Gson); published to Maven Central as `com.FIXFIBER:idawhats:0.1.1`. Lives in `sdk/java` and is drift-tested against the backend DTOs like the JavaScript, Python, and PHP SDKs. (#602)
 
 ## [0.8.1] - 2026-07-02
 
@@ -1343,13 +1343,13 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 ### Fixed
 
 - **Incoming WhatsApp Business interactive messages no longer arrive with an empty body on the Baileys engine.** Messages sent as interactive/button/template shapes — which businesses use for one-time codes and verification prompts — were saved with `type: "unknown"` and a blank body, dropping the text (e.g. an OTP) entirely. The engine now extracts the display text from `interactiveMessage`, `buttonsMessage`, `templateMessage`, and `interactiveResponseMessage` into the message body and classifies them as `text`, so the content is retrievable over the standard messages API and rendered in the dashboard. (#562)
-- **Deleting a message "for everyone" now reliably flags it as revoked, and `message.revoked` carries the original message id.** On the whatsapp-web.js engine the revoke event's `id` is the _revocation notification_ — a distinct message whose id never matched the stored row — so the stored message was silently never marked revoked, and webhook/WebSocket consumers had no id to reconcile against. The `message.revoked` payload now includes an optional `revokedId` (the original deleted message's id) that both engines populate; OpenWA flags the stored message on `revokedId` (falling back to `id`), and consumers should match the same way. Purely additive and backward-compatible — on Baileys `id` and `revokedId` coincide. (#567) Thanks @JibayMcs.
+- **Deleting a message "for everyone" now reliably flags it as revoked, and `message.revoked` carries the original message id.** On the whatsapp-web.js engine the revoke event's `id` is the _revocation notification_ — a distinct message whose id never matched the stored row — so the stored message was silently never marked revoked, and webhook/WebSocket consumers had no id to reconcile against. The `message.revoked` payload now includes an optional `revokedId` (the original deleted message's id) that both engines populate; IdaWhats flags the stored message on `revokedId` (falling back to `id`), and consumers should match the same way. Purely additive and backward-compatible — on Baileys `id` and `revokedId` coincide. (#567) Thanks @JibayMcs.
 
 ## [0.7.17] - 2026-07-01
 
 ### Added
 
-- **Send true WhatsApp voice notes (PTT).** The `send-audio` endpoint, bulk send, and the `MessageSendAudio` agent tool now accept an optional `ptt` boolean; when set, the message is delivered as a real voice note — the microphone bubble with a waveform — instead of a plain audio file, on both the Baileys and whatsapp-web.js engines. Voice notes require `audio/ogg; codecs=opus` audio, so the server defaults the mimetype to that when `ptt` is set without one (supply OGG/Opus bytes for reliable playback), and stores the message as `type: "voice"`. Fulfills FR-MSG-004. (OpenWA-n8n #13)
+- **Send true WhatsApp voice notes (PTT).** The `send-audio` endpoint, bulk send, and the `MessageSendAudio` agent tool now accept an optional `ptt` boolean; when set, the message is delivered as a real voice note — the microphone bubble with a waveform — instead of a plain audio file, on both the Baileys and whatsapp-web.js engines. Voice notes require `audio/ogg; codecs=opus` audio, so the server defaults the mimetype to that when `ptt` is set without one (supply OGG/Opus bytes for reliable playback), and stores the message as `type: "voice"`. Fulfills FR-MSG-004. (IdaWhats-n8n #13)
 
 ### Fixed
 
@@ -1437,7 +1437,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 ### Security
 
 - **Hook re-entrancy is now blocked for sandboxed plugins too.** A plugin running in the worker-thread sandbox could re-fire the hook it was handling by issuing a capability call (for example, sending a message from within a `message:sending` handler), because the re-entrancy guard did not span the worker boundary — looping the event back into the plugin without bound. The host now runs each worker-initiated capability call inside the in-flight hook context, so such a re-fire is short-circuited exactly as it already was for in-process plugins. (#532)
-- **Docker container teardown is constrained to OpenWA-managed services.** The `POST /infra/restart` endpoint passed its `profilesToRemove` list straight to container removal, which resolved containers by a name substring — so an unrecognized or empty profile could stop and remove an unrelated container. Teardown is now restricted to the managed allowlist (`postgres`, `redis`, `minio`) and container resolution requires an exact `openwa-<service>` name match. (#534)
+- **Docker container teardown is constrained to IdaWhats-managed services.** The `POST /infra/restart` endpoint passed its `profilesToRemove` list straight to container removal, which resolved containers by a name substring — so an unrecognized or empty profile could stop and remove an unrelated container. Teardown is now restricted to the managed allowlist (`postgres`, `redis`, `minio`) and container resolution requires an exact `idawhats-<service>` name match. (#534)
 - **Failed API-key authentication attempts are now recorded in the audit log.** Rejected or denied keys (invalid, disabled/expired, IP- or session-scope-denied, or insufficient role) previously left no audit entry; the gateway now logs an `api_key_auth_failed` event with the client IP, method, path, and reason, giving administrators a forensic trail for credential probing. Audit logging stays best-effort and never affects the request outcome. (#535)
 - **The SSRF guard blocks the deprecated IPv6 site-local range (`fec0::/10`).** Webhook and server-side media URLs are now rejected when they resolve into `fec0::/10`, closing a gap alongside the already-blocked unique-local and link-local ranges. (#536)
 - **Session-scoped MCP tools require a session id before authorization.** A session-scoped tool invoked without a session id is now rejected, so a session-restricted API key can't be used to drive such a tool against a session outside its scope. (#536)
@@ -1475,7 +1475,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 - **Deleting a session now removes its message history and bulk batches.** The `messages` and `message_batches` tables had no cascade from `sessions`, so a deleted session left its rows behind — growing the largest tables without bound and skewing dashboard statistics. They are now removed in the same transaction as the session. (#504)
 - **Deleting a session while it is reconnecting no longer leaks its engine.** A delete that landed during the multi-second engine initialization of an in-flight reconnect (or start) could leave the freshly-launched browser/socket registered under the now-deleted session, still counting toward the concurrent-session limit. The post-init guard now re-checks that the session still exists before keeping the engine. (#521)
 - **Inbound media downloads are bounded by a wall-clock timeout.** A slow or stalled inbound media transfer could hold a download slot — and, on the Baileys engine, the entire inbound-message pipeline — open indefinitely. Downloads now time out (`MEDIA_DOWNLOAD_TIMEOUT_MS`, default 30s) and the message is delivered with the media omitted. (#510)
-- **Webhook delivery identifiers stay consistent with the signed body.** The `X-OpenWA-Idempotency-Key` / `X-OpenWA-Delivery-Id` headers could diverge from the signed payload when a `webhook:before` plugin returned a modified payload, and all webhooks for an event shared one `data` object. Each webhook now receives an isolated copy of the data and the server-generated identifiers are authoritative. (#512)
+- **Webhook delivery identifiers stay consistent with the signed body.** The `X-IdaWhats-Idempotency-Key` / `X-IdaWhats-Delivery-Id` headers could diverge from the signed payload when a `webhook:before` plugin returned a modified payload, and all webhooks for an event shared one `data` object. Each webhook now receives an isolated copy of the data and the server-generated identifiers are authoritative. (#512)
 - **`POST /auth/validate`** no longer double-counts key usage and now validates IP-restricted keys correctly (it previously reported a valid IP-pinned key as invalid). (#507)
 - **⚠️ `GET /settings` now requires an ADMIN key** (behavior change) — matching the rest of the configuration surface; it was previously readable by any authenticated key. A client that read settings with a non-admin key must switch to an ADMIN key. (#514)
 - **Bulk-message `batchId` uniqueness** is scoped per session, so two sessions can reuse a batch id and neither can probe the other's id namespace. (#515)
@@ -1555,14 +1555,14 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 - The Infrastructure page flags any database/redis/storage setting that is **pinned by an environment variable** (its running value differs from the saved config), so it's clear a dashboard change won't apply until that variable is unset, instead of the control silently having no effect. (#488)
 - The storage card now warns when **S3 is selected but unreachable** (a dead/misconfigured bucket no longer shows a misleading green badge), via a new `s3Available` field on `/infra/status`; the check re-probes (throttled) rather than latching the boot-time result, so a bundled MinIO that comes up after the app self-corrects. A backup import that exceeds the request size limit now reports an actionable message (raise `BODY_SIZE_LIMIT`) instead of a bare "Payload Too Large". (#488)
 - Data-loss & availability hardening for the new infra flows: importing a backup now **refuses an empty/garbage file** (it no longer wipes the database and reports success) and asks for confirmation first; selecting the **built-in Postgres/MinIO no longer crash-loops a production boot** on the default-secret guard (the bundled containers run on the internal-only network); and a transient failure fetching the WhatsApp Web version is no longer cached, so it retries instead of permanently falling back. (#488)
-- Human-readable console logs: the `LoggerService` now renders a colorized, NestJS-style line (`[OpenWA] <pid> - <timestamp> <LEVEL> [Context] <message>` with dimmed `key=value` metadata and stack traces on their own line) instead of always emitting raw JSON, so application logs line up visually with NestJS's own framework logs. The format defaults to structured JSON in production (`NODE_ENV=production`, for containers and log aggregators) and human-readable pretty everywhere else, and can be pinned with `LOG_FORMAT=pretty|json`. `NO_COLOR` / `FORCE_COLOR` are honored. JSON output is byte-for-byte unchanged when selected. (#469)
+- Human-readable console logs: the `LoggerService` now renders a colorized, NestJS-style line (`[IdaWhats] <pid> - <timestamp> <LEVEL> [Context] <message>` with dimmed `key=value` metadata and stack traces on their own line) instead of always emitting raw JSON, so application logs line up visually with NestJS's own framework logs. The format defaults to structured JSON in production (`NODE_ENV=production`, for containers and log aggregators) and human-readable pretty everywhere else, and can be pinned with `LOG_FORMAT=pretty|json`. `NO_COLOR` / `FORCE_COLOR` are honored. JSON output is byte-for-byte unchanged when selected. (#469)
 
 ### Fixed
 
 - whatsapp-web.js sessions that scanned the QR then immediately disconnected (looping `qr → authenticating → disconnected`) when no `WWEBJS_WEB_VERSION` was pinned — the common Docker default. The engine now auto-resolves the current known-good WhatsApp Web build from the wppconnect `wa-version` registry and pins it, instead of relying on whatsapp-web.js's auto-select which could latch onto an incompatible bleeding-edge build that authenticates but never reaches "ready". `WWEBJS_WEB_VERSION=off` keeps the old native auto-select; an explicit version still pins exactly. (#488)
 - Dashboard message-analytics charts no longer silently vanish on PostgreSQL: `/stats/messages` (top-chats) ordered by an unquoted mixed-case alias (`ORDER BY messageCount`), which PostgreSQL case-folds and rejects with `column "messagecount" does not exist` (500). It now orders by the aggregate directly, so the query — and the dashboard charts it feeds — work on PostgreSQL as they already did on SQLite. The chart section also shows a clear notice on a real error instead of rendering nothing (it previously treated every error as a non-admin 403 and hid itself). (#488)
 - The Infrastructure page now shows what is **actually running** for the database, Redis, storage, and engine — the badge/selected card follow the live `/infra/status` instead of the saved `data/.env.generated`, which could disagree when a setting is supplied via environment variable. Previously a stack running PostgreSQL via `DATABASE_TYPE=postgres` showed "SQLite" (the first-run default still in the saved file). `/infra/status` now also reports `redis.enabled`. (#488)
-- The "Use Built-in PostgreSQL/Redis/MinIO Container" toggles now reflect whether OpenWA's **bundled container is actually running** and backing the service (detected from the labeled container + the configured host), not just the saved intent — so a Postgres stack started via the `postgres` compose profile correctly shows built-in, and a stopped/external one shows off. Falls back to the saved flag when Docker isn't reachable. (#488)
+- The "Use Built-in PostgreSQL/Redis/MinIO Container" toggles now reflect whether IdaWhats's **bundled container is actually running** and backing the service (detected from the labeled container + the configured host), not just the saved intent — so a Postgres stack started via the `postgres` compose profile correctly shows built-in, and a stopped/external one shows off. Falls back to the saved flag when Docker isn't reachable. (#488)
 - Switching **away** from a built-in backend (built-in → external/disabled) now tears down the bundled container reliably even after a page reload: removal is derived server-side from the saved `*_BUILTIN` flags + the running labeled containers, instead of only trusting the browser's in-memory list (which reset on reload and left the container orphaned). Named volumes are preserved, so re-enabling reuses the data. (#488)
 - Dashboard "by type" message chart: each message type now gets a stable, distinct color keyed by type name (with a deterministic hash fallback) instead of a rotating array-index palette, so a slice keeps its color when the set of present types changes between requests and types past the eighth no longer collide. (#486)
 - Removed the oversized decorative watermark icons bleeding through the dashboard stat cards. (#488)
@@ -1588,7 +1588,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 - The dashboard recovers from a stale lazy-loaded chunk after a redeploy with a single guarded reload instead of replacing the whole UI with the error screen; the Content-Security-Policy `img-src` now allows `blob:` so the outgoing image-attachment preview renders. (#477)
 - The Baileys engine's number-check (`GET /sessions/:id/contacts/check/:number`) now returns a neutral `<phone>@c.us` id, matching the whatsapp-web.js engine, instead of a raw `@s.whatsapp.net` id. (#477)
 - The data export/import now includes the `lid_mappings` resolution cache, so a backup/restore or a SQLite↔PostgreSQL migration no longer drops it. (#477)
-- The JavaScript client SDK applies the JSON `Content-Type` and `X-API-Key` after caller-supplied headers, so they can no longer be overridden by `defaultHeaders` (matching the Python and PHP SDKs); an unfollowed redirect (HTTP status `0`) now raises a clear error instead of `OpenWA API 0`. (#478)
+- The JavaScript client SDK applies the JSON `Content-Type` and `X-API-Key` after caller-supplied headers, so they can no longer be overridden by `defaultHeaders` (matching the Python and PHP SDKs); an unfollowed redirect (HTTP status `0`) now raises a clear error instead of `IdaWhats API 0`. (#478)
 - The infrastructure status endpoint reports the active S3 bucket when storage is in S3 mode, instead of only the unused local media path. (#478)
 - The migration CLI now honors the dashboard-written `data/.env.generated`, so `migration:run:prod` targets the configured database (e.g. PostgreSQL) instead of silently defaulting to SQLite. (#479)
 - The first-run generated config writes `STORAGE_LOCAL_PATH` (the key the backend reads) instead of the dead `STORAGE_PATH`. (#479)
@@ -1634,7 +1634,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 ### Added
 
 - MCP server (opt-in, `MCP_ENABLED=true`): exposes a curated ~39-tool agent surface (sessions, messaging, contacts, basic group ops, webhook reads) over the Model Context Protocol at `POST /mcp`, on the existing single port. Off by default — the MCP SDK is not loaded unless enabled, and every REST route is unchanged. Tools call the existing services and reuse the same API-key auth, role, and per-session scoping as REST; reads vs writes are tiered and `MCP_READONLY=true` mounts read tools only. Destructive/privileged operations are deliberately excluded from the surface. (relates to #256; salvages result-shaping from #461 — thanks @tobiasstrebitzer)
-- Client SDKs: official, hand-written client libraries for the REST API in **JavaScript/TypeScript** (`@rmyndharis/openwa`), **Python** (`rmyndharis-openwa`), and **PHP** (`rmyndharis/openwa`), replacing the previous single-file stub (`sdk/`). Each exposes the same fluent resource surface — `sessions`, `messages`, `contacts`, `groups`, `chats`, `webhooks`, `labels`, `channels`, `catalog`, `status`, `templates`, `health` — over an injectable HTTP transport, with a typed error hierarchy mapping the NestJS error envelope (`401/403/404/409/429/501`) to typed exceptions and a timeout error. Request/response types mirror the server DTOs exactly. The JavaScript package ships dual CJS + ESM with bundled type declarations (consumable via both `require()` and native `import()`, guarded by a packaging smoke test); the Python package ships PEP 561 type information (`py.typed`); the PHP package is PSR-4 / Guzzle 7. Redirects are never auto-followed (so the API key is never re-sent to a redirect target), auth/JSON headers always take precedence over caller-supplied defaults, path segments are percent-encoded, and a base-URL path prefix (e.g. behind a reverse proxy) is preserved. The SDK does not retry — wrap calls with your own backoff. Published at `0.1.0` on npm (`@rmyndharis/openwa`), PyPI (`rmyndharis-openwa`), and Packagist (`rmyndharis/openwa`). (#463)
+- Client SDKs: official, hand-written client libraries for the REST API in **JavaScript/TypeScript** (`@FIXFIBER/idawhats`), **Python** (`FIXFIBER-idawhats`), and **PHP** (`FIXFIBER/idawhats`), replacing the previous single-file stub (`sdk/`). Each exposes the same fluent resource surface — `sessions`, `messages`, `contacts`, `groups`, `chats`, `webhooks`, `labels`, `channels`, `catalog`, `status`, `templates`, `health` — over an injectable HTTP transport, with a typed error hierarchy mapping the NestJS error envelope (`401/403/404/409/429/501`) to typed exceptions and a timeout error. Request/response types mirror the server DTOs exactly. The JavaScript package ships dual CJS + ESM with bundled type declarations (consumable via both `require()` and native `import()`, guarded by a packaging smoke test); the Python package ships PEP 561 type information (`py.typed`); the PHP package is PSR-4 / Guzzle 7. Redirects are never auto-followed (so the API key is never re-sent to a redirect target), auth/JSON headers always take precedence over caller-supplied defaults, path segments are percent-encoded, and a base-URL path prefix (e.g. behind a reverse proxy) is preserved. The SDK does not retry — wrap calls with your own backoff. Published at `0.1.0` on npm (`@FIXFIBER/idawhats`), PyPI (`FIXFIBER-idawhats`), and Packagist (`FIXFIBER/idawhats`). (#463)
 
 ### Changed
 
@@ -1646,7 +1646,7 @@ labelId)` instead of returning 501. WhatsApp-Business-only (rejects on personal 
 - Message timestamps are now consistently returned as a number on both SQLite and PostgreSQL. PostgreSQL previously returned the `bigint` column as a string, which broke strictly-typed SDK clients and arithmetic in non-coercing consumers.
 - A blank `DATABASE_PASSWORD` forwarded by the bundled Docker Compose file is now treated as unset, so an external-PostgreSQL password saved via the dashboard is applied instead of being shadowed by the empty value (a real host/`.env` value still keeps top precedence).
 - The Python and PHP SDKs now treat an unfollowed redirect (any `3xx`) as an error response, matching the JavaScript SDK. Redirects are never followed (so the API key is never re-sent to the target), which makes a `3xx` an unusable result rather than a fake success.
-- Duplicate inbound webhook deliveries: a single inbound WhatsApp message could reach a registered webhook (and the `messages` table) more than once because the engine can re-fire the message event. Inbound `message.received` is now de-duplicated server-side, enforced by a `UNIQUE(sessionId, waMessageId)` constraint (added with a lossless de-duplicating migration), so each message is persisted and dispatched once. The guard fails open — a transient DB error still delivers the message. Webhook delivery remains **at-least-once** (engines re-fire, failed deliveries retry), so handlers should still be idempotent on the `X-OpenWA-Idempotency-Key` header, now documented under Webhook Delivery Semantics. (#464)
+- Duplicate inbound webhook deliveries: a single inbound WhatsApp message could reach a registered webhook (and the `messages` table) more than once because the engine can re-fire the message event. Inbound `message.received` is now de-duplicated server-side, enforced by a `UNIQUE(sessionId, waMessageId)` constraint (added with a lossless de-duplicating migration), so each message is persisted and dispatched once. The guard fails open — a transient DB error still delivers the message. Webhook delivery remains **at-least-once** (engines re-fire, failed deliveries retry), so handlers should still be idempotent on the `X-IdaWhats-Idempotency-Key` header, now documented under Webhook Delivery Semantics. (#464)
 
 ## [0.7.2] - 2026-06-24
 
@@ -1736,7 +1736,7 @@ endpoint, and a batch of correctness/housekeeping fixes.
 
 ### Added
 
-- **Install plugins from a URL / catalog.** `POST /plugins/install-url` downloads a plugin `.zip` from an HTTP(S) URL through the SSRF guard (host validated, connection pinned, redirects refused, size-capped) and runs the exact same validate-write-load pipeline as an uploaded package. `GET /plugins/catalog` fetches a configured remote catalog (`PLUGIN_CATALOG_URL`, default the OpenWA-plugins `plugins.json`) and annotates each entry with `installed` / `installedVersion` / `updateAvailable`. The dashboard install modal gains a **Catalog** tab to browse and one-click install. Add a non-public catalog/release host to `SSRF_ALLOWED_HOSTS`. (#433)
+- **Install plugins from a URL / catalog.** `POST /plugins/install-url` downloads a plugin `.zip` from an HTTP(S) URL through the SSRF guard (host validated, connection pinned, redirects refused, size-capped) and runs the exact same validate-write-load pipeline as an uploaded package. `GET /plugins/catalog` fetches a configured remote catalog (`PLUGIN_CATALOG_URL`, default the IdaWhats-plugins `plugins.json`) and annotates each entry with `installed` / `installedVersion` / `updateAvailable`. The dashboard install modal gains a **Catalog** tab to browse and one-click install. Add a non-public catalog/release host to `SSRF_ALLOWED_HOSTS`. (#433)
 - **Update a plugin in place.** `POST /plugins/:id/update` downloads the new package (same SSRF-guarded path) and swaps it in while **preserving operator config and the enabled state** — it unloads the running plugin (keeping its registry entry, so config survives), writes the new files, reloads, and re-enables if it was enabled. The package id must match; the old version is backed up and restored if the update fails. The dashboard Catalog tab shows an **Update** button when a newer version is available. (#433)
 - Mark a chat as unread: `POST /sessions/:id/chats/unread` (and `sessionApi.markChatUnread` on the dashboard client), the inverse of mark-as-read, supported on both the whatsapp-web.js and Baileys engines. (#432)
 
@@ -2106,7 +2106,7 @@ consumer that stored or compared the old ids will see the new value.
 ### Added
 
 - **Opt-in deep chat history (`deep=true`).** `GET /sessions/:id/messages/:chatId/history` was capped at
-  100 messages per request — OpenWA's own bound, not a WhatsApp limit, since whatsapp-web.js can load
+  100 messages per request — IdaWhats's own bound, not a WhatsApp limit, since whatsapp-web.js can load
   earlier messages on demand. A new `deep=true` query raises the ceiling to 2000 so callers can reach
   weeks/months back. Deep mode is metadata-only (it ignores `includeMedia`, since base64 for up to 2000
   messages would be an enormous payload). The default path is unchanged (default 50, max 100). The Baileys
@@ -2193,7 +2193,7 @@ now returns `501` — settings are environment-derived and read-only at runtime 
 ### Documentation
 
 - **Documented chat-history limits.** A new guide explains the difference between the local message-history
-  endpoint (`GET /sessions/:id/messages`, reads OpenWA's database) and the bounded live-history endpoint
+  endpoint (`GET /sessions/:id/messages`, reads IdaWhats's database) and the bounded live-history endpoint
   (`GET /sessions/:id/messages/:chatId/history`, asks the engine): live history defaults to `limit=50` and is
   clamped to `[1, 100]` (so `limit=999` returns 100, not the full account history), and is a recent-history
   helper rather than a complete server-side import. (#356)
@@ -2262,7 +2262,7 @@ of silently falling back to the default.
 ### Documentation
 
 - Added a **phone-number pairing** example. (#343)
-- Documented the webhook `idempotencyKey`/`deliveryId` fields (body + `X-OpenWA-*` headers) and the dedup rule;
+- Documented the webhook `idempotencyKey`/`deliveryId` fields (body + `X-IdaWhats-*` headers) and the dedup rule;
   corrected the `.env.example` rate-limit variable names (`RATE_LIMIT_MEDIUM_TTL`/`_LIMIT`, in milliseconds). (#350)
 
 ## [0.4.2] - 2026-06-19
@@ -2393,7 +2393,7 @@ full` now starts the optional datastores (postgres, redis, minio). If you relied
 
 ## [0.3.0] - 2026-06-18
 
-Engine pluggability and plugin extensibility. OpenWA can now run on a second, browser-free WhatsApp engine
+Engine pluggability and plugin extensibility. IdaWhats can now run on a second, browser-free WhatsApp engine
 (Baileys) as a peer to whatsapp-web.js, and bot-shaped features can ship as first-party extension plugins
 on a scoped capability layer instead of living in core (#265).
 
@@ -2628,8 +2628,8 @@ singleton-lock container fixes.
 - **Duplicate outgoing messages in the dashboard Chats view.** A race between the optimistic placeholder
   and the realtime `message.sent` echo could render a sent message twice. Reconciliation is now race-safe.
   (Display-only — the recipient always received exactly one message.)
-- Dashboard (simple nginx image) proxied API/WebSocket requests to a `openwa` host that doesn't match the
-  backend service name; `dashboard/nginx.conf` now targets `openwa-api` for both `/api/` and `/socket.io/`,
+- Dashboard (simple nginx image) proxied API/WebSocket requests to a `idawhats` host that doesn't match the
+  backend service name; `dashboard/nginx.conf` now targets `idawhats-api` for both `/api/` and `/socket.io/`,
   matching the production compose and `Dockerfile.traefik`. Thanks @Abhishekrajpurohit (#259).
 - The container entrypoint now clears stale Chromium `SingletonLock`/`SingletonSocket`/`SingletonCookie` files
   from session profiles on start, so a session can re-launch after an unclean shutdown instead of failing with
@@ -2649,9 +2649,9 @@ Login language selector legible in dark mode.
 
 - Chromium no longer hard-crashes at launch (`Trace/breakpoint trap` / `chrome_crashpad_handler:
 --database is required`) on hardened `read_only` containers. Chromium resolves its home dir from the
-  passwd entry and ignores `$HOME`, so the home-less `openwa` user pointed it at a nonexistent
-  `/home/openwa`. It is now given writable, pre-created `XDG_CONFIG_HOME`/`XDG_CACHE_HOME` dirs (created
-  by the entrypoint, owned by `openwa`). This supersedes the ineffective `--crash-dumps-dir` approach
+  passwd entry and ignores `$HOME`, so the home-less `idawhats` user pointed it at a nonexistent
+  `/home/idawhats`. It is now given writable, pre-created `XDG_CONFIG_HOME`/`XDG_CACHE_HOME` dirs (created
+  by the entrypoint, owned by `idawhats`). This supersedes the ineffective `--crash-dumps-dir` approach
   from 0.2.5, which is a confirmed no-op for the crashpad database on Debian/Ubuntu system Chromium. (#254)
 - The Login screen's language `<select>` option popup is now legible in dark mode. The login route never
   sets `data-theme`, so it relied solely on the `prefers-color-scheme` media block, which set dark colors
@@ -2778,7 +2778,7 @@ defaults changed.
 - Message-event idempotency keys are session-scoped.
 - Response-envelope documentation corrected to the real raw-payload shape; the unused
   interceptor/filter were removed; horizontal-scaling docs marked single-instance.
-- **Headless Chromium now starts in the Docker image as the non-root `openwa` user** — `HOME`
+- **Headless Chromium now starts in the Docker image as the non-root `idawhats` user** — `HOME`
   points at a writable directory, so the engine no longer dies with
   `chrome_crashpad_handler: --database is required` on a fresh container. (closes #242)
 - Marking a 1:1 chat as read now accepts the newer `@lid` (privacy Linked ID) JID, not just
@@ -2801,12 +2801,12 @@ defaults changed.
 - **Webhook reads now require `OPERATOR`+** — a `VIEWER` key reading webhooks gets `403`.
 - **SSRF protection defaults ON** — deployments that deliver webhooks or fetch media from
   internal hosts must set `SSRF_ALLOWED_HOSTS` (comma-separated) or `WEBHOOK_SSRF_PROTECT=false`.
-- **Datastore secrets are now required** — there is no `openwa`/`minioadmin` default;
+- **Datastore secrets are now required** — there is no `idawhats`/`minioadmin` default;
   `docker compose --profile postgres/minio up` needs `DATABASE_PASSWORD` / `S3_*` set, and
   production refuses to boot with placeholder secrets.
 - **Bull Board `?apiKey=` removed** — authenticate via `X-API-Key`/`Authorization: Bearer`.
 - New env knobs: `SSRF_ALLOWED_HOSTS`, `MEDIA_DOWNLOAD_MAX_BYTES`, `MEDIA_DOWNLOAD_TIMEOUT_MS`,
-  `MAIN_DATABASE_SYNCHRONIZE`, `SHUTDOWN_DELAY_MS`, `OPENWA_MEM_LIMIT`, `METRICS_TOKEN`.
+  `MAIN_DATABASE_SYNCHRONIZE`, `SHUTDOWN_DELAY_MS`, `IDAWHATS_MEM_LIMIT`, `METRICS_TOKEN`.
 
 ## [0.2.1] - 2026-06-15
 
@@ -2940,7 +2940,7 @@ session lifecycle, and container runtime, and upgrades the WhatsApp engine. See
   `/storage/files/count`) now require an **ADMIN** key. (#221, #226)
 - **Docker:** The container reaches the Docker API through a least-privilege
   `docker-socket-proxy` over TCP (`DOCKER_HOST`) instead of mounting the socket
-  directly, and the Node process runs as a non-root `openwa` user via a `gosu`
+  directly, and the Node process runs as a non-root `idawhats` user via a `gosu`
   privilege-dropping entrypoint (`dumb-init` stays PID 1 for clean signal handling).
   Thanks @A831ARD0 (#227, #228; supersedes #129).
 - **Health:** `/api/health` is excluded from rate limiting so liveness probes do
@@ -2982,7 +2982,7 @@ webhook delivery deduplication. Backward compatible; defaults are unchanged.
 ### Fixed
 
 - **Database:** The runtime PostgreSQL TypeORM connection now honors `DATABASE_SSL` and `DATABASE_SSL_REJECT_UNAUTHORIZED`. Previously SSL was wired only into the migration CLI, so `DATABASE_SSL=true` was silently ignored on the live connection. Defaults are unchanged (`ssl: false`), so existing deployments are unaffected. Thanks @farrasyakila (#205, closes #204).
-- **Webhooks:** Fixed idempotency-key generation for `message.received`, `message.sent`, `message.ack`, and `message.revoked`. The dispatched payload is an `IncomingMessage` carrying `id` (not `messageId`), but the resolver short-circuited on a truthy `'unknown'` fallback and never read `id`, so every incoming-message webhook was keyed `msg_unknown` — collapsing all messages into one deduplication bucket for consumers relying on the `X-OpenWA-Idempotency-Key` header. The resolver now uses `id ?? messageId`, with regression tests for the id-only and both-present payload shapes. Thanks @Singh1106 (#179).
+- **Webhooks:** Fixed idempotency-key generation for `message.received`, `message.sent`, `message.ack`, and `message.revoked`. The dispatched payload is an `IncomingMessage` carrying `id` (not `messageId`), but the resolver short-circuited on a truthy `'unknown'` fallback and never read `id`, so every incoming-message webhook was keyed `msg_unknown` — collapsing all messages into one deduplication bucket for consumers relying on the `X-IdaWhats-Idempotency-Key` header. The resolver now uses `id ?? messageId`, with regression tests for the id-only and both-present payload shapes. Thanks @Singh1106 (#179).
 - **Dashboard:** The Login screen now derives the displayed version from `package.json` at build time instead of a hard-coded literal, so it always reflects the installed release rather than a stale placeholder (closes #88).
 
 ## [0.1.7] - 2026-06-13
@@ -3179,7 +3179,7 @@ bugs. Backward compatible except for the two upgrade notes below.
 
 ### 🎉 Initial Release
 
-OpenWA v0.1.0 is the first stable release featuring a complete WhatsApp API Gateway with all core functionality.
+IdaWhats v0.1.0 is the first stable release featuring a complete WhatsApp API Gateway with all core functionality.
 
 ### Core Features
 

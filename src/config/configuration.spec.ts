@@ -28,9 +28,9 @@ describe('configuration — Postgres database name', () => {
     else process.env.DATABASE_NAME = orig;
   });
 
-  it('resolves dataDatabase.name from DATABASE_NAME (matches the migration CLI), default openwa', () => {
+  it('resolves dataDatabase.name from DATABASE_NAME (matches the migration CLI), default idawhats', () => {
     delete process.env.DATABASE_NAME;
-    expect(configuration().dataDatabase.name).toBe('openwa');
+    expect(configuration().dataDatabase.name).toBe('idawhats');
     process.env.DATABASE_NAME = 'prod_db';
     expect(configuration().dataDatabase.name).toBe('prod_db');
   });

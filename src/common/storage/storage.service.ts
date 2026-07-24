@@ -45,7 +45,7 @@ export class StorageService {
   private readonly storageType: string;
   private readonly localPath: string;
   private s3Client: S3Client | null = null;
-  private s3Bucket = 'openwa';
+  private s3Bucket = 'idawhats';
   private s3Available = false;
 
   constructor(private readonly configService: ConfigService) {
@@ -77,7 +77,7 @@ export class StorageService {
           },
           ...(endpoint ? { forcePathStyle: true } : {}), // Required for path-style stores (MinIO)
         });
-        this.s3Bucket = process.env.S3_BUCKET || s3Config.bucket || 'openwa';
+        this.s3Bucket = process.env.S3_BUCKET || s3Config.bucket || 'idawhats';
         void this.initializeS3Bucket();
       }
     }

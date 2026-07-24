@@ -66,14 +66,14 @@ export default () => ({
   dataDatabase: {
     type: process.env.DATABASE_TYPE || 'sqlite',
     // SQLite path (used when type is sqlite)
-    database: process.env.DATABASE_NAME || './data/openwa.sqlite',
+    database: process.env.DATABASE_NAME || './data/idawhats.sqlite',
     // Postgres database NAME (used when type is postgres). Resolved from the same
     // DATABASE_NAME env as the migration CLI (data-source.ts) so the runtime factory and
     // migrations never target different databases. Distinct sqlite-vs-pg defaults.
-    name: process.env.DATABASE_NAME || 'openwa',
+    name: process.env.DATABASE_NAME || 'idawhats',
     // PostgreSQL schema (used when type is postgres). Default 'public' preserves the historical
-    // behavior; set POSTGRES_SCHEMA to place OpenWA's tables + the TypeORM migration ledger in a
-    // dedicated schema (e.g. a managed-Postgres project schema, or to isolate OpenWA from other
+    // behavior; set POSTGRES_SCHEMA to place IdaWhats's tables + the TypeORM migration ledger in a
+    // dedicated schema (e.g. a managed-Postgres project schema, or to isolate IdaWhats from other
     // apps sharing the database). The schema must already exist — a missing one fails fast at
     // migration time rather than silently falling back to public. SQLite ignores this.
     schema: process.env.POSTGRES_SCHEMA || 'public',
@@ -171,10 +171,10 @@ export default () => ({
   plugins: {
     // Where installed plugins live on disk (matches the plugin loader's default).
     dir: process.env.PLUGINS_DIR || './plugins',
-    // Remote catalog of installable plugins (JSON array; the OpenWA-plugins repo's plugins.json).
+    // Remote catalog of installable plugins (JSON array; the IdaWhats-plugins repo's plugins.json).
     // Fetched through the SSRF guard — add its host to SSRF_ALLOWED_HOSTS if it is not publicly resolvable.
     catalogUrl:
-      process.env.PLUGIN_CATALOG_URL || 'https://raw.githubusercontent.com/rmyndharis/OpenWA-plugins/main/plugins.json',
+      process.env.PLUGIN_CATALOG_URL || 'https://raw.githubusercontent.com/FIXFIBER/IdaWhats-plugins/main/plugins.json',
     // Cap on a plugin .zip downloaded by install-from-URL (matches the 5 MB upload limit). Fail-safe:
     // a non-numeric or non-positive value (parseInt → NaN/0/-n) falls back to the default rather than
     // silently disabling the cap (a downstream `??` would not catch NaN).

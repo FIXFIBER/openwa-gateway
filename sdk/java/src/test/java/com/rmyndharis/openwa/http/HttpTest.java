@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.http;
+package com.rmyndharis.idawhats.http;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;

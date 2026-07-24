@@ -1,23 +1,23 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.rmyndharis.openwa.ClientConfig;
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.SendImageStatusRequest;
-import com.rmyndharis.openwa.model.SendTextStatusRequest;
-import com.rmyndharis.openwa.model.SendVideoStatusRequest;
-import com.rmyndharis.openwa.model.StatusMediaInput;
-import com.rmyndharis.openwa.model.StatusRecord;
-import com.rmyndharis.openwa.support.MockTransport;
+import com.rmyndharis.idawhats.ClientConfig;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.SendImageStatusRequest;
+import com.rmyndharis.idawhats.model.SendTextStatusRequest;
+import com.rmyndharis.idawhats.model.SendVideoStatusRequest;
+import com.rmyndharis.idawhats.model.StatusMediaInput;
+import com.rmyndharis.idawhats.model.StatusRecord;
+import com.rmyndharis.idawhats.support.MockTransport;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
 class StatusResourceTest {
     final MockTransport tx = new MockTransport();
-    final OpenWAClient client = new OpenWAClient(
+    final IdaWhatsClient client = new IdaWhatsClient(
         ClientConfig.builder().baseUrl("http://h").apiKey("k").transport(tx).build());
     // The client's `status` field is wired separately; drive the resource directly here.
     final StatusResource status = new StatusResource(client);

@@ -49,11 +49,11 @@ A key may additionally be scoped to specific sessions (`allowedSessions`) and/or
 
 ### API-Key Lifecycle
 
-OpenWA seeds an initial admin key on first run (printed to the startup log and written to `data/.api-key`, or `/app/data/.api-key` in Docker). Use it to mint scoped, lower-privilege keys for integrations. Full key creation, listing, rotation, and revocation are documented under the auth resource in **§6.4.9 (API Keys)**.
+IdaWhats seeds an initial admin key on first run (printed to the startup log and written to `data/.api-key`, or `/app/data/.api-key` in Docker). Use it to mint scoped, lower-privilege keys for integrations. Full key creation, listing, rotation, and revocation are documented under the auth resource in **§6.4.9 (API Keys)**.
 
 ## 6.2 Response Format
 
-> **OpenWA returns the raw handler payload directly — there is NO `{ success, data, meta }` envelope.** A resource route returns the resource object as-is; a list route returns a **bare JSON array**. Read fields directly (`response.id`, not `response.data.id`).
+> **IdaWhats returns the raw handler payload directly — there is NO `{ success, data, meta }` envelope.** A resource route returns the resource object as-is; a list route returns a **bare JSON array**. Read fields directly (`response.id`, not `response.data.id`).
 
 ### Success Response
 
@@ -106,7 +106,7 @@ Validation failures (`statusCode: 400`) return `message` as an **array** of fiel
 
 ### Timestamp Conventions
 
-OpenWA uses **two** timestamp representations — be careful which a field is:
+IdaWhats uses **two** timestamp representations — be careful which a field is:
 
 - **Message timestamps are epoch numbers (Unix seconds), not ISO strings.** This applies to the `timestamp` field on messages returned by send responses, history, and persisted message records (the persisted column is stored as a bigint and surfaced as a `number`).
 - **Entity audit fields use ISO-8601 UTC strings** (example: `2026-02-02T10:00:00.000Z`). This applies to `createdAt` / `updatedAt` on persisted entities, `expiresAt`, batch `startedAt` / `completedAt`, and similar metadata fields.
@@ -753,7 +753,7 @@ Get persisted message history for a session from the local DB (paginated, filter
       "chatId": "628123456789@c.us",
       "from": "628123456789@c.us",
       "to": "628987654321@c.us",
-      "body": "Hello from OpenWA!",
+      "body": "Hello from IdaWhats!",
       "type": "text",
       "direction": "outgoing",
       "timestamp": 1719312000,
@@ -908,7 +908,7 @@ Send a plain text message.
 | mentions | string[] | No | array of WIDs | WIDs to @mention (e.g. `["62811@c.us"]`). See **Mentions** below |
 
 ```json
-{ "chatId": "628123456789@c.us", "text": "Hello from OpenWA!" }
+{ "chatId": "628123456789@c.us", "text": "Hello from IdaWhats!" }
 ```
 
 ```json
@@ -2171,7 +2171,7 @@ Bare `Template[]` array (no pagination, no envelope). Ordered by `createdAt` DES
     "sessionId": "9b1c0e2a-3d4f-5a6b-7c8d-9e0f1a2b3c4d",
     "name": "order-confirmation",
     "body": "Hi {{customer}}, your order {{orderId}} has shipped.",
-    "header": "OpenWA Store",
+    "header": "IdaWhats Store",
     "footer": "Reply STOP to unsubscribe.",
     "createdAt": "2026-06-25T10:15:00.000Z",
     "updatedAt": "2026-06-25T10:15:00.000Z"
@@ -2204,7 +2204,7 @@ Raw `Template` entity (no envelope).
   "sessionId": "9b1c0e2a-3d4f-5a6b-7c8d-9e0f1a2b3c4d",
   "name": "order-confirmation",
   "body": "Hi {{customer}}, your order {{orderId}} has shipped.",
-  "header": "OpenWA Store",
+  "header": "IdaWhats Store",
   "footer": "Reply STOP to unsubscribe.",
   "createdAt": "2026-06-25T10:15:00.000Z",
   "updatedAt": "2026-06-25T10:15:00.000Z"
@@ -2238,7 +2238,7 @@ Create a message template for the session (with `{{variable}}` placeholders in t
 {
   "name": "order-confirmation",
   "body": "Hi {{customer}}, your order {{orderId}} has shipped.",
-  "header": "OpenWA Store",
+  "header": "IdaWhats Store",
   "footer": "Reply STOP to unsubscribe."
 }
 ```
@@ -2253,7 +2253,7 @@ Returns the saved `Template` entity raw (no envelope). The lazy `session` relati
   "sessionId": "9b1c0e2a-3d4f-5a6b-7c8d-9e0f1a2b3c4d",
   "name": "order-confirmation",
   "body": "Hi {{customer}}, your order {{orderId}} has shipped.",
-  "header": "OpenWA Store",
+  "header": "IdaWhats Store",
   "footer": "Reply STOP to unsubscribe.",
   "createdAt": "2026-06-25T10:15:00.000Z",
   "updatedAt": "2026-06-25T10:15:00.000Z"
@@ -2301,7 +2301,7 @@ Loads via lookup (`404` if missing), patches the provided fields, saves, and ret
   "sessionId": "9b1c0e2a-3d4f-5a6b-7c8d-9e0f1a2b3c4d",
   "name": "order-confirmation",
   "body": "Hi {{customer}}, your order {{orderId}} is out for delivery.",
-  "header": "OpenWA Store",
+  "header": "IdaWhats Store",
   "footer": "Thanks for shopping with us.",
   "createdAt": "2026-06-25T10:15:00.000Z",
   "updatedAt": "2026-06-25T11:02:00.000Z"
@@ -2542,7 +2542,7 @@ List all channels/newsletters the session is subscribed to.
 [
   {
     "id": "120363000000000000@newsletter",
-    "name": "OpenWA Updates",
+    "name": "IdaWhats Updates",
     "description": "Release notes and tips",
     "inviteCode": "ABC123xyz",
     "subscriberCount": 1042,
@@ -2575,7 +2575,7 @@ Get a single channel/newsletter by its id.
 ```json
 {
   "id": "120363000000000000@newsletter",
-  "name": "OpenWA Updates",
+  "name": "IdaWhats Updates",
   "description": "Release notes and tips",
   "inviteCode": "ABC123xyz",
   "subscriberCount": 1042,
@@ -2651,7 +2651,7 @@ Subscribe to a channel using its invite code.
 ```json
 {
   "id": "120363000000000000@newsletter",
-  "name": "OpenWA Updates",
+  "name": "IdaWhats Updates",
   "description": "Release notes and tips",
   "inviteCode": "ABC123xyz",
   "subscriberCount": 1042,
@@ -2914,7 +2914,7 @@ Post a text status (story) to the session's status feed. The recipients allow-li
 | font | integer | no | integer `0`–`5` | Font index |
 
 ```json
-{ "text": "Hello from OpenWA!", "recipients": ["6281234567890@c.us"], "backgroundColor": "#25D366", "font": 2 }
+{ "text": "Hello from IdaWhats!", "recipients": ["6281234567890@c.us"], "backgroundColor": "#25D366", "font": 2 }
 ```
 
 **Response** `201`
@@ -3052,7 +3052,7 @@ The service returns `void`; the controller returns a fixed success object. DELET
 
 Webhooks are configured per session and managed under `/api/sessions/:sessionId/webhooks` (handled by `WebhookController`). A separate cross-session list endpoint lives at `/api/webhooks` (handled by `WebhooksListController`). Every route requires an API key with **OPERATOR** role or higher.
 
-Two fields — `secret` and `headers` — are **write-only**: they are accepted on create/update but are **never** returned in any response (the response DTO has no `@Expose` for them, so `fromEntity` drops them). The `secret` is used to compute the `X-OpenWA-Signature: sha256=<hex>` HMAC-SHA256 header on deliveries.
+Two fields — `secret` and `headers` — are **write-only**: they are accepted on create/update but are **never** returned in any response (the response DTO has no `@Expose` for them, so `fromEntity` drops them). The `secret` is used to compute the `X-IdaWhats-Signature: sha256=<hex>` HMAC-SHA256 header on deliveries.
 
 The `events` array accepts these members plus the `*` wildcard: `message.received`, `message.sent`, `message.ack`, `message.failed`, `message.revoked`, `message.reaction`, `message.edited`, `session.status`, `session.qr`, `session.authenticated`, `session.disconnected`, `session.reconnect_loop`, `group.join`, `group.leave`, `group.update`, `call.received`. All of them are actively dispatched by the engines.
 
@@ -3177,8 +3177,8 @@ Create a webhook for the session.
 | --- | --- | --- | --- | --- |
 | url | string | yes | `@IsUrl({ require_tld: false })` (allows hostnames without a dot, e.g. `http://localhost:3000`); also run through the SSRF guard, which can reject with `400`. Entity column max 2048 chars. | Webhook URL to receive events. |
 | events | string[] | no | `@IsArray`, `@ArrayMinSize(1)`, `@IsIn([...WEBHOOK_EVENTS, '*'], { each: true })` | Event names to subscribe to (see allowed set above). Defaults to `["message.received"]` when omitted. |
-| secret | string | no | `@IsString`, `@MaxLength(255)` | HMAC-SHA256 signing key. **Write-only** — never returned. Used for `X-OpenWA-Signature`. Defaults to `null`. |
-| headers | Record<string,string> | no | `@IsHeaderMap()` — flat object (not array), ≤50 entries, names match `/^[A-Za-z0-9-]+$/`, values are strings ≤1024 chars with no C0 control/DEL (CR/LF injection guard). | Custom headers added to deliveries. **Write-only** — never returned. At delivery, `content-type` and `x-openwa-*` names are stripped. Defaults to `{}`. |
+| secret | string | no | `@IsString`, `@MaxLength(255)` | HMAC-SHA256 signing key. **Write-only** — never returned. Used for `X-IdaWhats-Signature`. Defaults to `null`. |
+| headers | Record<string,string> | no | `@IsHeaderMap()` — flat object (not array), ≤50 entries, names match `/^[A-Za-z0-9-]+$/`, values are strings ≤1024 chars with no C0 control/DEL (CR/LF injection guard). | Custom headers added to deliveries. **Write-only** — never returned. At delivery, `content-type` and `x-idawhats-*` names are stripped. Defaults to `{}`. |
 | filters | WebhookFilters \| null | no | `@IsValidWebhookFilters()` — `{ conditions: [...] }`; each condition `{ field, operator('is'\|'isNot'\|'contains'\|'equals'), value(string\|string[]\|boolean), caseSensitive?:boolean }`; bounds: max 20 conditions, 100 values/condition, 1000-char text values. Message fields: `sender`, `recipient`, `body`, `type`, `isGroup`, `fromMe`, `hasMedia`, `mentions`. | Optional AND pre-filter; **all** conditions must match for the webhook to fire. Omit/null = fire on every subscribed event. Defaults to `null`. |
 | retryCount | number (int) | no | `@IsInt`, `@Min(0)`, `@Max(5)` | Delivery retry attempts on failure. Defaults to `3`. |
 
@@ -3298,7 +3298,7 @@ Send a synthetic test payload to the webhook URL and report the result. No reque
 { "success": true, "statusCode": 200 }
 ```
 
-On a reachable endpoint the response is `{ success: <response.ok>, statusCode: <response.status> }` — so a non-2xx target returns `200` HTTP with `success: false` and the target's `statusCode`. On an SSRF/timeout/network error the response is `{ "success": false, "error": "<message>" }`. The endpoint never throws on delivery failure; the failure is reflected in the body, not the HTTP status. The test POST sends `{ "event": "test", ... }` with headers `Content-Type`, `User-Agent: OpenWA-Webhook/1.0.0`, `X-OpenWA-Event: test`, `X-OpenWA-Idempotency-Key`, `X-OpenWA-Delivery-Id`, `X-OpenWA-Retry-Count: 0`, and `X-OpenWA-Signature` when a secret is set. Timeout defaults to 10000 ms (`webhook.timeout` config).
+On a reachable endpoint the response is `{ success: <response.ok>, statusCode: <response.status> }` — so a non-2xx target returns `200` HTTP with `success: false` and the target's `statusCode`. On an SSRF/timeout/network error the response is `{ "success": false, "error": "<message>" }`. The endpoint never throws on delivery failure; the failure is reflected in the body, not the HTTP status. The test POST sends `{ "event": "test", ... }` with headers `Content-Type`, `User-Agent: IdaWhats-Webhook/1.0.0`, `X-IdaWhats-Event: test`, `X-IdaWhats-Idempotency-Key`, `X-IdaWhats-Delivery-Id`, `X-IdaWhats-Retry-Count: 0`, and `X-IdaWhats-Signature` when a secret is set. Timeout defaults to 10000 ms (`webhook.timeout` config).
 
 **Errors:** `401` missing/invalid API key · `403` insufficient role · `404` webhook not found in this session
 
@@ -3619,7 +3619,7 @@ During shutdown the `details` instead read `{ "shutdown": { "status": "draining"
 
 #### GET /api/metrics
 
-Prometheus exposition scrape of OpenWA process + session + message metrics; gated by a `METRICS_TOKEN` bearer (disabled when the token is unset).
+Prometheus exposition scrape of IdaWhats process + session + message metrics; gated by a `METRICS_TOKEN` bearer (disabled when the token is unset).
 
 **Auth:** Bearer METRICS_TOKEN — `Authorization: Bearer <METRICS_TOKEN>`. This route is `@Public()` (it bypasses the `X-API-Key` guard); access is instead validated inside the service with a constant-time compare. The `Bearer ` prefix is stripped case-insensitively. Hidden from Swagger.
 
@@ -3628,27 +3628,27 @@ Prometheus exposition scrape of OpenWA process + session + message metrics; gate
 Content-Type `text/plain; version=0.0.4; charset=utf-8`, `Cache-Control: no-store`. Raw text (no JSON envelope):
 
 ```
-# HELP openwa_up 1 if the OpenWA process is running
-# TYPE openwa_up gauge
-openwa_up 1
-# TYPE openwa_process_uptime_seconds gauge
-openwa_process_uptime_seconds 3600
-# TYPE openwa_process_resident_memory_bytes gauge
-openwa_process_resident_memory_bytes 187432960
-# TYPE openwa_process_heap_used_bytes gauge
-openwa_process_heap_used_bytes 64512000
-# TYPE openwa_sessions_total gauge
-openwa_sessions_total 3
-# TYPE openwa_sessions_active gauge
-openwa_sessions_active 2
-# TYPE openwa_sessions gauge
-openwa_sessions{status="ready"} 2
-openwa_sessions{status="disconnected"} 1
-# TYPE openwa_messages_total gauge
-openwa_messages_total{direction="outgoing"} 1280
-openwa_messages_total{direction="incoming"} 940
-# TYPE openwa_messages_failed_total gauge
-openwa_messages_failed_total 4
+# HELP idawhats_up 1 if the IdaWhats process is running
+# TYPE idawhats_up gauge
+idawhats_up 1
+# TYPE idawhats_process_uptime_seconds gauge
+idawhats_process_uptime_seconds 3600
+# TYPE idawhats_process_resident_memory_bytes gauge
+idawhats_process_resident_memory_bytes 187432960
+# TYPE idawhats_process_heap_used_bytes gauge
+idawhats_process_heap_used_bytes 64512000
+# TYPE idawhats_sessions_total gauge
+idawhats_sessions_total 3
+# TYPE idawhats_sessions_active gauge
+idawhats_sessions_active 2
+# TYPE idawhats_sessions gauge
+idawhats_sessions{status="ready"} 2
+idawhats_sessions{status="disconnected"} 1
+# TYPE idawhats_messages_total gauge
+idawhats_messages_total{direction="outgoing"} 1280
+idawhats_messages_total{direction="incoming"} 940
+# TYPE idawhats_messages_failed_total gauge
+idawhats_messages_failed_total 4
 ```
 
 Values come from `StatsService.getOverview()` plus `process.memoryUsage()`/`process.uptime()`. The render is memoized for 5000 ms to avoid re-running the overview query on every scrape.
@@ -3946,7 +3946,7 @@ Merge-save infrastructure config to `data/.env.generated` (a `0600` secret file)
 | `database` | object | No | — | DB section (see nested) |
 | `database.type` | `'sqlite' \| 'postgres'` | If `database` is present | enum | `sqlite` drops stale postgres keys; `postgres` writes connection keys |
 | `database.builtIn` | boolean | No | — | When `true`+postgres, forces the bundled `postgres` container creds + pushes `postgres` Docker profile |
-| `database.host` / `.port` / `.username` / `.database` | string | No | `port` is a string | External postgres connection (defaults `localhost`/`5432`/`postgres`/`openwa`) |
+| `database.host` / `.port` / `.username` / `.database` | string | No | `port` is a string | External postgres connection (defaults `localhost`/`5432`/`postgres`/`idawhats`) |
 | `database.password` | string | No | secret | Empty/omitted keeps the existing stored secret |
 | `database.poolSize` | number | No | — | Default 10 |
 | `database.sslEnabled` | boolean | No | — | Default false |
@@ -3967,7 +3967,7 @@ Merge-save infrastructure config to `data/.env.generated` (a `0600` secret file)
 
 ```json
 {
-  "database": { "type": "postgres", "builtIn": false, "host": "db.example.com", "port": "5432", "username": "openwa", "password": "s3cret", "database": "openwa", "poolSize": 10, "sslEnabled": true, "sslRejectUnauthorized": false },
+  "database": { "type": "postgres", "builtIn": false, "host": "db.example.com", "port": "5432", "username": "idawhats", "password": "s3cret", "database": "idawhats", "poolSize": 10, "sslEnabled": true, "sslRejectUnauthorized": false },
   "redis": { "enabled": true, "builtIn": true },
   "queue": { "enabled": true },
   "storage": { "type": "s3", "builtIn": false, "s3Bucket": "my-bucket", "s3Region": "ap-southeast-1", "s3AccessKey": "AKIA...", "s3SecretKey": "...", "s3Endpoint": "https://s3.example.com" },
@@ -4172,7 +4172,7 @@ List all loaded plugins (built-in + installed), with secret config values redact
     "version": "1.0.0",
     "type": "extension",
     "description": "Visual reply flows",
-    "author": "openwa-plugins",
+    "author": "idawhats-plugins",
     "status": "enabled",
     "config": { "apiKey": "********" },
     "builtIn": false,
@@ -4207,8 +4207,8 @@ List the remote plugin catalog annotated with this instance's install state. (De
     "version": "1.2.0",
     "type": "extension",
     "description": "Auto-translate group messages",
-    "author": "openwa-plugins",
-    "download": "https://github.com/openwa-plugins/group-translate/releases/download/v1.2.0/group-translate.zip",
+    "author": "idawhats-plugins",
+    "download": "https://github.com/idawhats-plugins/group-translate/releases/download/v1.2.0/group-translate.zip",
     "installed": true,
     "installedVersion": "1.1.0",
     "updateAvailable": true
@@ -4314,7 +4314,7 @@ Install a plugin by downloading its `.zip` from an HTTP(S) URL (SSRF-guarded fet
 | `url` | string | Yes | `@IsUrl({ protocols:['http','https'], require_protocol:true })` | Absolute http(s) URL of the package |
 
 ```json
-{ "url": "https://github.com/openwa-plugins/chat-flow/releases/download/v1.0.0/chat-flow.zip" }
+{ "url": "https://github.com/idawhats-plugins/chat-flow/releases/download/v1.0.0/chat-flow.zip" }
 ```
 
 **Response** `201` — the newly installed `PluginDto`.
@@ -4860,11 +4860,11 @@ Every registered webhook receives an HTTP `POST` with a JSON body of this shape:
 }
 ```
 
-`event`, `timestamp` (ISO-8601 dispatch time), `sessionId`, `idempotencyKey`, and `deliveryId` are always present; `data` holds the event-specific payload. The same values are mirrored into request headers (below). The HMAC `signature` is **not** in the body — it travels in the `X-OpenWA-Signature` header.
+`event`, `timestamp` (ISO-8601 dispatch time), `sessionId`, `idempotencyKey`, and `deliveryId` are always present; `data` holds the event-specific payload. The same values are mirrored into request headers (below). The HMAC `signature` is **not** in the body — it travels in the `X-IdaWhats-Signature` header.
 
 ### Event catalog
 
-These are the events OpenWA actually emits. A webhook is registered with an `events` list; an event is delivered to a webhook when its `events` array includes the event name or `"*"`.
+These are the events IdaWhats actually emits. A webhook is registered with an `events` list; an event is delivered to a webhook when its `events` array includes the event name or `"*"`.
 
 | Event | When it fires | `data` payload sketch |
 | --- | --- | --- |
@@ -4898,14 +4898,14 @@ Webhook delivery is **at-least-once**. A consumer can legitimately receive the s
 - The underlying WhatsApp engine can re-fire an event for a single message.
 - A failed delivery (non-2xx response, timeout, or network error) is retried.
 
-**Design your handler to be idempotent**, keyed on the `X-OpenWA-Idempotency-Key` header (see below). As a server-side safety net, OpenWA de-duplicates inbound `message.received` before dispatch (a re-fired event for an already-persisted message is dropped), so one webhook normally sees each inbound message once — but this is best-effort defense-in-depth and does not remove the need for consumer-side idempotency.
+**Design your handler to be idempotent**, keyed on the `X-IdaWhats-Idempotency-Key` header (see below). As a server-side safety net, IdaWhats de-duplicates inbound `message.received` before dispatch (a re-fired event for an already-persisted message is dropped), so one webhook normally sees each inbound message once — but this is best-effort defense-in-depth and does not remove the need for consumer-side idempotency.
 
 ### HMAC signature
 
 When a webhook is registered with a `secret`, each delivery carries:
 
 ```
-X-OpenWA-Signature: sha256=<hex>
+X-IdaWhats-Signature: sha256=<hex>
 ```
 
 The hex is an HMAC-SHA256 computed over the **raw JSON request body** (exactly the bytes sent) using the webhook's `secret`. Verify by recomputing over the raw body — not over a re-serialized parse — and compare in constant time:
@@ -4919,7 +4919,7 @@ function verify(rawBody, header, secret) {
 }
 ```
 
-If no `secret` is configured the `X-OpenWA-Signature` header is omitted entirely.
+If no `secret` is configured the `X-IdaWhats-Signature` header is omitted entirely.
 
 ### Idempotency & delivery headers
 
@@ -4927,11 +4927,11 @@ Every delivery includes:
 
 | Header | Meaning |
 | --- | --- |
-| `X-OpenWA-Event` | The event name (mirrors `event`) |
-| `X-OpenWA-Idempotency-Key` | Content-derived key; **stable across retries** of the same occurrence — dedupe on this |
-| `X-OpenWA-Delivery-Id` | A fresh `dlv_<uuid>` generated **per delivery** (differs per retry and per webhook) — for tracing, not dedup |
-| `X-OpenWA-Retry-Count` | Retry attempt number (`0` = first attempt) |
-| `X-OpenWA-Signature` | HMAC (only when a secret is set) |
+| `X-IdaWhats-Event` | The event name (mirrors `event`) |
+| `X-IdaWhats-Idempotency-Key` | Content-derived key; **stable across retries** of the same occurrence — dedupe on this |
+| `X-IdaWhats-Delivery-Id` | A fresh `dlv_<uuid>` generated **per delivery** (differs per retry and per webhook) — for tracing, not dedup |
+| `X-IdaWhats-Retry-Count` | Retry attempt number (`0` = first attempt) |
+| `X-IdaWhats-Signature` | HMAC (only when a secret is set) |
 
 **Idempotency key derivation.** The key is content-derived so duplicates of the same logical event collapse to one value:
 
@@ -4953,8 +4953,8 @@ Recurring lifecycle events (and `message.reaction` / `message.edited`) carry the
 
 ### Retries with exponential backoff
 
-When the queue is enabled, a non-2xx response, timeout (`WEBHOOK_TIMEOUT`, default `10000` ms), or network error schedules a retry. The number of attempts comes from the webhook's `retryCount` (default `3`) and the delay grows **exponentially** from a base of `WEBHOOK_RETRY_DELAY` (default `5000` ms). Each retry reuses the same `idempotencyKey` and increments `X-OpenWA-Retry-Count`. If Redis/BullMQ rejects the initial enqueue, OpenWA logs a `webhook:error` hook event and falls back to direct delivery with the same inline retry budget. When the queue is disabled, delivery is direct with the same retry budget applied inline.
+When the queue is enabled, a non-2xx response, timeout (`WEBHOOK_TIMEOUT`, default `10000` ms), or network error schedules a retry. The number of attempts comes from the webhook's `retryCount` (default `3`) and the delay grows **exponentially** from a base of `WEBHOOK_RETRY_DELAY` (default `5000` ms). Each retry reuses the same `idempotencyKey` and increments `X-IdaWhats-Retry-Count`. If Redis/BullMQ rejects the initial enqueue, IdaWhats logs a `webhook:error` hook event and falls back to direct delivery with the same inline retry budget. When the queue is disabled, delivery is direct with the same retry budget applied inline.
 
 ### SSRF guard on registration
 
-Webhook URLs are validated at **registration time**, not just at delivery. When SSRF protection is enabled (the default), creating or updating a webhook with a URL that resolves to a private/internal/loopback address is rejected synchronously with `400 Bad Request` instead of failing silently later at delivery. The `SSRF_ALLOWED_HOSTS` escape-hatch applies equally to registration and delivery. Operator-supplied custom headers that target reserved names (`Content-Type` or any `X-OpenWA-*`) are stripped, so a webhook config cannot forge the signature, event, or idempotency headers.
+Webhook URLs are validated at **registration time**, not just at delivery. When SSRF protection is enabled (the default), creating or updating a webhook with a URL that resolves to a private/internal/loopback address is rejected synchronously with `400 Bad Request` instead of failing silently later at delivery. The `SSRF_ALLOWED_HOSTS` escape-hatch applies equally to registration and delivery. Operator-supplied custom headers that target reserved names (`Content-Type` or any `X-IdaWhats-*`) are stripped, so a webhook config cannot forge the signature, event, or idempotency headers.

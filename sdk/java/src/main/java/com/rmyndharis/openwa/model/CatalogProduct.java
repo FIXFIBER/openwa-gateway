@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** A single catalog product. Optional fields are {@code null} when absent. */
 public record CatalogProduct(

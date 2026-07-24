@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for subscribing to a channel by its invite code. */
 public record SubscribeChannelRequest(String inviteCode) {

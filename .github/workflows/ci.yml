@@ -110,13 +110,13 @@ jobs:
       postgres:
         image: postgres:16-alpine
         env:
-          POSTGRES_USER: openwa
-          POSTGRES_PASSWORD: openwa
-          POSTGRES_DB: openwa
+          POSTGRES_USER: idawhats
+          POSTGRES_PASSWORD: idawhats
+          POSTGRES_DB: idawhats
         ports:
           - 5432:5432
         options: >-
-          --health-cmd "pg_isready -U openwa"
+          --health-cmd "pg_isready -U idawhats"
           --health-interval 10s
           --health-timeout 5s
           --health-retries 5
@@ -143,9 +143,9 @@ jobs:
           DATABASE_TYPE: postgres
           DATABASE_HOST: localhost
           DATABASE_PORT: '5432'
-          DATABASE_USERNAME: openwa
-          DATABASE_PASSWORD: openwa
-          DATABASE_NAME: openwa
+          DATABASE_USERNAME: idawhats
+          DATABASE_PASSWORD: idawhats
+          DATABASE_NAME: idawhats
 
       # Runtime-proves BuiltInFtsProvider on Postgres (websearch_to_tsquery + ts_headline against the
       # STORED body_ts tsvector). The spec self-skips unless DATABASE_TYPE=postgres, so it is a no-op
@@ -156,9 +156,9 @@ jobs:
           DATABASE_TYPE: postgres
           DATABASE_HOST: localhost
           DATABASE_PORT: '5432'
-          DATABASE_USERNAME: openwa
-          DATABASE_PASSWORD: openwa
-          DATABASE_NAME: openwa
+          DATABASE_USERNAME: idawhats
+          DATABASE_PASSWORD: idawhats
+          DATABASE_NAME: idawhats
 
   dashboard:
     name: Dashboard

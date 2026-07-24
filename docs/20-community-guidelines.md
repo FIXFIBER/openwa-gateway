@@ -4,7 +4,7 @@
 
 ### Our Pledge
 
-OpenWA is committed to providing a welcoming and inclusive environment for everyone. We pledge to make participation in our project and community a harassment-free experience for all, regardless of:
+IdaWhats is committed to providing a welcoming and inclusive environment for everyone. We pledge to make participation in our project and community a harassment-free experience for all, regardless of:
 
 - Age, body size, disability, ethnicity, sex characteristics
 - Gender identity and expression
@@ -57,11 +57,11 @@ flowchart LR
 # 1. Fork the repository on GitHub
 
 # 2. Clone your fork
-git clone https://github.com/YOUR_USERNAME/openwa.git
-cd openwa
+git clone https://github.com/YOUR_USERNAME/idawhats.git
+cd idawhats
 
 # 3. Add upstream remote
-git remote add upstream https://github.com/rmyndharis/OpenWA.git
+git remote add upstream https://github.com/FIXFIBER/IdaWhats.git
 
 # 4. Install dependencies
 npm install
@@ -214,13 +214,13 @@ async function sendTextMessage(sessionId: string, phone: string, text: string): 
 
 Before opening an Issue, decide whether it belongs here or in **GitHub Discussions**.
 Most misrouted reports are configuration, provider, or environment questions rather than
-defects in OpenWA — routing them correctly upfront saves time for everyone (faster answers
+defects in IdaWhats — routing them correctly upfront saves time for everyone (faster answers
 for you, cleaner triage for maintainers). When in doubt, open a Discussion first; it can
 always be promoted to an Issue once a real defect is confirmed.
 
 | Open an **Issue**                                                        | Open a **Discussion**                                                       |
 | ------------------------------------------------------------------------ | --------------------------------------------------------------------------- |
-| Reproducible defect in OpenWA code with clear steps, expected vs. actual | Setup / configuration help ("my proxy doesn't work, how do I configure X?") |
+| Reproducible defect in IdaWhats code with clear steps, expected vs. actual | Setup / configuration help ("my proxy doesn't work, how do I configure X?") |
 | Crash, panic, wrong API response, regression after upgrade               | Provider-specific quirks (webshare, IPRoyal, brightdata, Twilio, etc.)      |
 | Documented behavior contradicted by actual behavior                      | "Is X possible?" / "What's the best way to Y?"                              |
 | Security issue (use `SECURITY.md`, not a public issue)                   | Hosting-platform / network / firewall questions                             |
@@ -228,7 +228,7 @@ always be promoted to an Issue once a real defect is confirmed.
 **Common gray-zone examples (these go to Discussions, not Issues):**
 
 - "My proxy works on first start but fails after pod restart" → almost always a
-  provider-side IP allowlist, not an OpenWA bug. See `docs/12-troubleshooting-faq.md`.
+  provider-side IP allowlist, not an IdaWhats bug. See `docs/12-troubleshooting-faq.md`.
 - "WhatsApp blocked my number" → provider/WhatsApp policy, not a code defect.
 - "How do I deploy behind nginx/Traefik?" → configuration, use Discussions.
 - "Why is my QR not showing?" → start with the troubleshooting FAQ; open an Issue only
@@ -249,7 +249,7 @@ Clear and concise description of the bug
 
 ## Environment
 
-- OpenWA Version:
+- IdaWhats Version:
 - Node.js Version:
 - OS:
 - Docker Version (if applicable):
@@ -316,7 +316,7 @@ Any other relevant information, mockups, or examples
 | `help wanted`         | Extra attention needed                                                          |
 | `question`            | Further information requested                                                   |
 | `needs-info`          | Awaiting reporter input to proceed                                              |
-| `not-a-bug`           | External/environmental cause (provider, network, hosting); not an OpenWA defect |
+| `not-a-bug`           | External/environmental cause (provider, network, hosting); not an IdaWhats defect |
 | `move-to-discussions` | Belongs in GitHub Discussions, not Issues — see §20.3 Issue vs. Discussions     |
 | `invalid`             | This doesn't seem right                                                         |
 | `wontfix`             | This will not be worked on                                                      |
@@ -324,7 +324,7 @@ Any other relevant information, mockups, or examples
 | `security`            | Security-related                                                                |
 | `design`              | Architecture / design discussion                                                |
 | `engine:baileys`      | Baileys engine specific                                                         |
-| `upstream-blocked`    | Blocked on upstream library/WhatsApp behavior; no OpenWA-side fix               |
+| `upstream-blocked`    | Blocked on upstream library/WhatsApp behavior; no IdaWhats-side fix               |
 
 ## 20.4 Community Channels
 
@@ -340,9 +340,9 @@ Primary community forum for:
 Categories:
 
 - **Announcements**: Official announcements from maintainers
-- **Q&A**: Questions about using OpenWA
+- **Q&A**: Questions about using IdaWhats
 - **Ideas**: Feature suggestions and brainstorming
-- **Show and Tell**: Share your projects using OpenWA
+- **Show and Tell**: Share your projects using IdaWhats
 - **General**: General discussion
 
 ### Discord Server (Optional)
@@ -356,10 +356,10 @@ Real-time chat for:
 Channels:
 
 - `#general` - General discussion
-- `#support` - Help with OpenWA
+- `#support` - Help with IdaWhats
 - `#development` - Development discussions
 - `#showcase` - Share your projects
-- `#off-topic` - Non-OpenWA discussions
+- `#off-topic` - Non-IdaWhats discussions
 
 ### Support Priority
 
@@ -477,7 +477,7 @@ We value all contributions:
 ```markdown
 ## Contributors
 
-Thanks to all the people who have contributed to OpenWA!
+Thanks to all the people who have contributed to IdaWhats!
 
 <!-- ALL-CONTRIBUTORS-LIST:START -->
 <!-- ALL-CONTRIBUTORS-LIST:END -->
@@ -493,7 +493,7 @@ This project follows the [all-contributors](https://github.com/all-contributors/
 
 Instead:
 
-1. Email: security@openwa.dev
+1. Email: security@idawhats.dev
 2. Use GitHub Security Advisories (private)
 
 Include:

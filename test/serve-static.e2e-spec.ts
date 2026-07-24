@@ -9,8 +9,8 @@ import { tmpdir } from 'os';
 import { join } from 'path';
 
 // Throwaway dashboard build, evaluated before the module decorator (forRoot reads rootPath eagerly).
-const distDir = mkdtempSync(join(tmpdir(), 'openwa-dash-'));
-writeFileSync(join(distDir, 'index.html'), '<!doctype html><title>OpenWA Dashboard</title>');
+const distDir = mkdtempSync(join(tmpdir(), 'idawhats-dash-'));
+writeFileSync(join(distDir, 'index.html'), '<!doctype html><title>IdaWhats Dashboard</title>');
 mkdirSync(join(distDir, 'assets'));
 writeFileSync(join(distDir, 'assets', 'app.js'), 'console.log(1)');
 
@@ -58,7 +58,7 @@ describe('Dashboard serve-static (e2e)', () => {
     const res = await request(app.getHttpServer()).get('/');
     expect(res.status).toBe(200);
     expect(res.headers['content-type']).toMatch(/html/);
-    expect(res.text).toContain('OpenWA Dashboard');
+    expect(res.text).toContain('IdaWhats Dashboard');
   });
 
   it('serves index.html for client-side routes (SPA fallback)', async () => {
@@ -82,6 +82,6 @@ describe('Dashboard serve-static (e2e)', () => {
     const res = await request(app.getHttpServer()).get('/api/does-not-exist');
     expect(res.status).toBe(404);
     expect(res.headers['content-type']).toMatch(/json/);
-    expect(res.text).not.toContain('OpenWA Dashboard');
+    expect(res.text).not.toContain('IdaWhats Dashboard');
   });
 });

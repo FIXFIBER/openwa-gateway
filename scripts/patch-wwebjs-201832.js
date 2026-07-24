@@ -4,14 +4,14 @@
  *
  * Background: WhatsApp Web build 2.3000.x (rolled out ~2026-07-14) renamed the
  * serialized message-id property `id._serialized` to `id.$1` (a minifier-mangled
- * name). whatsapp-web.js 1.34.7 (what OpenWA pins) reads `_serialized` in the
+ * name). whatsapp-web.js 1.34.7 (what IdaWhats pins) reads `_serialized` in the
  * Message constructor and ~40 downstream sites, so message ids, acks, quoted-
  * message resolution, and media downloads all break. Upstream fix #201832 adds a
  * `Base._normalizeId()` helper and reapplies it across the model constructors.
  * This script backports that fix into node_modules at image build time.
  *
  * Self-removing: it no-ops once the installed whatsapp-web.js already defines
- * `Base._normalizeId` (i.e. upstream shipped #201832 and OpenWA bumped its dep).
+ * `Base._normalizeId` (i.e. upstream shipped #201832 and IdaWhats bumped its dep).
  *
  * Why `patch` and not `git apply`: a bare `git -C node_modules/whatsapp-web.js
  * apply` silently no-ops ("Skipped / 0 files changed") because the parent repo's
@@ -105,7 +105,7 @@ function applyBackport(wwjsDir = DEFAULT_WWJS, patchFile = DEFAULT_PATCH) {
   }
   // Self-removal: once the installed whatsapp-web.js normalizes ids itself, this backport steps
   // aside. Detect on the id-normalizing READ in the Message constructor rather than on Base.js's
-  // helper: Message.js is the load-bearing site (OpenWA reads `msg.id._serialized` in ~40 places),
+  // helper: Message.js is the load-bearing site (IdaWhats reads `msg.id._serialized` in ~40 places),
   // and keying off Base.js alone would treat a half-patched tree — helper present, constructor not —
   // as "already fixed" and ship it. Matched loosely (`Base._normalizeId(` OR an inline `$1` fallback)
   // so a future upstream release that fixes this differently still stands the patcher down.

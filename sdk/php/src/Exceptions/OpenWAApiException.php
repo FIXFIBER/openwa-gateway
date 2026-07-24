@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace OpenWA\Exceptions;
+namespace IdaWhats\Exceptions;
 
 /**
  * Raised when the API responds with a non-2xx status.
@@ -10,7 +10,7 @@ namespace OpenWA\Exceptions;
  * Carries the HTTP status code and the parsed error body. Use the named
  * subclass for common statuses, or branch on getStatus().
  */
-class OpenWAApiException extends OpenWAException
+class IdaWhatsApiException extends IdaWhatsException
 {
     private int $status;
     /** @var mixed */
@@ -45,20 +45,20 @@ class OpenWAApiException extends OpenWAException
     }
 
     /**
-     * Build the most specific OpenWAApiException subclass for a status code.
+     * Build the most specific IdaWhatsApiException subclass for a status code.
      *
      * @param mixed $body
      */
-    public static function classify(int $status, string $message, $body, ?string $errorKind): OpenWAApiException
+    public static function classify(int $status, string $message, $body, ?string $errorKind): IdaWhatsApiException
     {
         return match ($status) {
-            401 => new OpenWAAuthException($message, $status, $body, $errorKind),
-            403 => new OpenWAForbiddenException($message, $status, $body, $errorKind),
-            404 => new OpenWANotFoundException($message, $status, $body, $errorKind),
-            409 => new OpenWAConflictException($message, $status, $body, $errorKind),
-            429 => new OpenWARateLimitException($message, $status, $body, $errorKind),
-            501 => new OpenWANotImplementedException($message, $status, $body, $errorKind),
-            default => new OpenWAApiException($message, $status, $body, $errorKind),
+            401 => new IdaWhatsAuthException($message, $status, $body, $errorKind),
+            403 => new IdaWhatsForbiddenException($message, $status, $body, $errorKind),
+            404 => new IdaWhatsNotFoundException($message, $status, $body, $errorKind),
+            409 => new IdaWhatsConflictException($message, $status, $body, $errorKind),
+            429 => new IdaWhatsRateLimitException($message, $status, $body, $errorKind),
+            501 => new IdaWhatsNotImplementedException($message, $status, $body, $errorKind),
+            default => new IdaWhatsApiException($message, $status, $body, $errorKind),
         };
     }
 }

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 import java.util.List;
 import java.util.Map;
@@ -38,7 +38,7 @@ public record UpdateWebhookRequest(
             return this;
         }
 
-        /** HMAC secret; signed as {@code X-OpenWA-Signature: sha256=…}. */
+        /** HMAC secret; signed as {@code X-IdaWhats-Signature: sha256=…}. */
         public Builder secret(String v) {
             this.secret = v;
             return this;

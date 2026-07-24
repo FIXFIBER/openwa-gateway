@@ -1,6 +1,6 @@
-package com.rmyndharis.openwa.http;
+package com.rmyndharis.idawhats.http;
 
-import com.rmyndharis.openwa.errors.OpenWATimeoutError;
+import com.rmyndharis.idawhats.errors.IdaWhatsTimeoutError;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -27,7 +27,7 @@ public final class DefaultHttpTransport implements HttpTransport {
             HttpResponse<String> res = client.send(b.build(), HttpResponse.BodyHandlers.ofString());
             return new HttpResponseData(res.statusCode(), res.headers().map(), res.body());
         } catch (HttpTimeoutException e) {
-            throw new OpenWATimeoutError(req.timeout().toMillis());
+            throw new IdaWhatsTimeoutError(req.timeout().toMillis());
         }
     }
 }

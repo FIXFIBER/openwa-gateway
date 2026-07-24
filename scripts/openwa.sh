@@ -1,5 +1,5 @@
 #!/bin/bash
-# OpenWA Smart Orchestration Script
+# IdaWhats Smart Orchestration Script
 # Reads .env and activates appropriate Docker profiles
 
 set -e
@@ -37,7 +37,7 @@ load_env() {
 get_profiles() {
     local profiles=""
 
-    # Dashboard is bundled into the openwa-api image and served by NestJS on the API port —
+    # Dashboard is bundled into the idawhats-api image and served by NestJS on the API port —
     # no separate container/profile needed. Put your own TLS proxy in front if required.
 
     # PostgreSQL (built-in)
@@ -92,9 +92,9 @@ validate_engine() {
     exit 1
 }
 
-# Start OpenWA
+# Start IdaWhats
 cmd_start() {
-    log_info "Starting OpenWA..."
+    log_info "Starting IdaWhats..."
     load_env
     validate_engine
 
@@ -108,20 +108,20 @@ cmd_start() {
     docker compose $profiles up -d
 
     echo ""
-    log_success "OpenWA started successfully!"
+    log_success "IdaWhats started successfully!"
     echo ""
     log_info "Dashboard & API: http://localhost:${API_PORT:-2785}"
 }
 
-# Stop OpenWA
+# Stop IdaWhats
 cmd_stop() {
-    log_info "Stopping OpenWA..."
+    log_info "Stopping IdaWhats..."
     cd "$PROJECT_DIR"
     docker compose --profile full down
-    log_success "OpenWA stopped"
+    log_success "IdaWhats stopped"
 }
 
-# Restart OpenWA
+# Restart IdaWhats
 cmd_restart() {
     cmd_stop
     cmd_start
@@ -129,7 +129,7 @@ cmd_restart() {
 
 # Show status
 cmd_status() {
-    log_info "OpenWA container status:"
+    log_info "IdaWhats container status:"
     echo ""
     cd "$PROJECT_DIR"
     docker compose ps --format "table {{.Name}}\t{{.Status}}\t{{.Ports}}"
@@ -137,7 +137,7 @@ cmd_status() {
 
 # Show logs
 cmd_logs() {
-    local service="${1:-openwa-api}"
+    local service="${1:-idawhats-api}"
     local lines="${2:-100}"
     cd "$PROJECT_DIR"
     docker compose logs -f --tail="$lines" "$service"
@@ -145,7 +145,7 @@ cmd_logs() {
 
 # Build images
 cmd_build() {
-    log_info "Building OpenWA images..."
+    log_info "Building IdaWhats images..."
     load_env
     local profiles=$(get_profiles)
     cd "$PROJECT_DIR"
@@ -155,7 +155,7 @@ cmd_build() {
 
 # Update (pull + build + restart)
 cmd_update() {
-    log_info "Updating OpenWA..."
+    log_info "Updating IdaWhats..."
     cd "$PROJECT_DIR"
     git pull
     cmd_build
@@ -166,16 +166,16 @@ cmd_update() {
 # Show help
 cmd_help() {
     echo ""
-    echo "OpenWA Smart Orchestration Script"
+    echo "IdaWhats Smart Orchestration Script"
     echo ""
     echo "Usage: $0 <command> [options]"
     echo ""
     echo "Commands:"
-    echo "  start       Start OpenWA with auto-detected profiles"
-    echo "  stop        Stop all OpenWA containers"
-    echo "  restart     Restart OpenWA"
+    echo "  start       Start IdaWhats with auto-detected profiles"
+    echo "  stop        Stop all IdaWhats containers"
+    echo "  restart     Restart IdaWhats"
     echo "  status      Show container status"
-    echo "  logs        Show logs (default: openwa-api)"
+    echo "  logs        Show logs (default: idawhats-api)"
     echo "  build       Build Docker images"
     echo "  update      Pull latest code and restart"
     echo "  help        Show this help"

@@ -1,28 +1,28 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.CreateGroupRequest;
-import com.rmyndharis.openwa.model.GroupDescriptionRequest;
-import com.rmyndharis.openwa.model.GroupInfo;
-import com.rmyndharis.openwa.model.GroupSettings;
-import com.rmyndharis.openwa.model.GroupSubjectRequest;
-import com.rmyndharis.openwa.model.GroupSummary;
-import com.rmyndharis.openwa.model.InviteCodeResponse;
-import com.rmyndharis.openwa.model.JoinGroupRequest;
-import com.rmyndharis.openwa.model.JoinGroupResponse;
-import com.rmyndharis.openwa.model.ListGroupsQuery;
-import com.rmyndharis.openwa.model.ParticipantsRequest;
-import com.rmyndharis.openwa.model.SuccessResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.CreateGroupRequest;
+import com.rmyndharis.idawhats.model.GroupDescriptionRequest;
+import com.rmyndharis.idawhats.model.GroupInfo;
+import com.rmyndharis.idawhats.model.GroupSettings;
+import com.rmyndharis.idawhats.model.GroupSubjectRequest;
+import com.rmyndharis.idawhats.model.GroupSummary;
+import com.rmyndharis.idawhats.model.InviteCodeResponse;
+import com.rmyndharis.idawhats.model.JoinGroupRequest;
+import com.rmyndharis.idawhats.model.JoinGroupResponse;
+import com.rmyndharis.idawhats.model.ListGroupsQuery;
+import com.rmyndharis.idawhats.model.ParticipantsRequest;
+import com.rmyndharis.idawhats.model.SuccessResult;
 import java.util.List;
 
 /** Groups resource — WhatsApp group management. */
 public final class GroupsResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public GroupsResource(OpenWAClient client) {
+    public GroupsResource(IdaWhatsClient client) {
         this.client = client;
     }
 

@@ -1,15 +1,15 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-import com.rmyndharis.openwa.ClientConfig;
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.CreateWebhookRequest;
-import com.rmyndharis.openwa.model.UpdateWebhookRequest;
-import com.rmyndharis.openwa.model.WebhookEvent;
-import com.rmyndharis.openwa.support.MockTransport;
+import com.rmyndharis.idawhats.ClientConfig;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.CreateWebhookRequest;
+import com.rmyndharis.idawhats.model.UpdateWebhookRequest;
+import com.rmyndharis.idawhats.model.WebhookEvent;
+import com.rmyndharis.idawhats.support.MockTransport;
 import java.util.List;
 import org.junit.jupiter.api.Test;
 
@@ -19,7 +19,7 @@ class WebhooksResourceTest {
             + "\"active\":true,\"retryCount\":3,\"lastTriggeredAt\":null,\"createdAt\":\"t\",\"updatedAt\":\"t\"}";
 
     final MockTransport tx = new MockTransport();
-    final OpenWAClient client = new OpenWAClient(
+    final IdaWhatsClient client = new IdaWhatsClient(
         ClientConfig.builder().baseUrl("http://h").apiKey("k").transport(tx).build());
 
     @Test

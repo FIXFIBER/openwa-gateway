@@ -40,7 +40,7 @@ import { randomUUID } from 'crypto';
 import * as dotenv from 'dotenv';
 
 interface InfraStatus {
-  // `builtIn` reflects whether OpenWA's own bundled container is actually running and backing this
+  // `builtIn` reflects whether IdaWhats's own bundled container is actually running and backing this
   // service (detected live from the labeled container), not merely the saved intent. Falls back to the
   // saved flag when Docker is unavailable. (#488)
   database: { connected: boolean; type: string; host: string; builtIn: boolean };
@@ -761,9 +761,9 @@ export class InfraController {
             // Built-in PostgreSQL - use container name as host
             updates.DATABASE_HOST = 'postgres';
             updates.DATABASE_PORT = '5432';
-            updates.DATABASE_USERNAME = 'openwa';
-            updates.DATABASE_PASSWORD = 'openwa';
-            updates.DATABASE_NAME = 'openwa';
+            updates.DATABASE_USERNAME = 'idawhats';
+            updates.DATABASE_PASSWORD = 'idawhats';
+            updates.DATABASE_NAME = 'idawhats';
             // Built-in Postgres is initialized with the default 'public' schema (see
             // scripts/postgres-init-schema.sh). Pin it so a later switch from a custom-schema
             // external DB to built-in doesn't carry a stale POSTGRES_SCHEMA forward.
@@ -775,7 +775,7 @@ export class InfraController {
             updates.DATABASE_PORT = config.database.port || '5432';
             updates.DATABASE_USERNAME = config.database.username || 'postgres';
             setSecret('DATABASE_PASSWORD', config.database.password);
-            updates.DATABASE_NAME = config.database.database || 'openwa';
+            updates.DATABASE_NAME = config.database.database || 'idawhats';
             updates.POSTGRES_SCHEMA = config.database.schema || 'public';
           }
           updates.DATABASE_POOL_SIZE = String(config.database.poolSize || 10);
@@ -843,7 +843,7 @@ export class InfraController {
             updates.S3_ENDPOINT = 'http://minio:9000';
             updates.S3_ACCESS_KEY_ID = 'minioadmin';
             updates.S3_SECRET_ACCESS_KEY = 'minioadmin';
-            updates.S3_BUCKET = 'openwa';
+            updates.S3_BUCKET = 'idawhats';
             updates.S3_REGION = 'us-east-1';
             profiles.push('minio');
           } else {
@@ -899,7 +899,7 @@ export class InfraController {
         .sort()
         .map(key => `${key}=${merged[key]}`);
       const contents = [
-        '# OpenWA Configuration',
+        '# IdaWhats Configuration',
         `# Generated at ${new Date().toISOString()}`,
         '# Managed via Dashboard > Infrastructure. Values in process env or project .env take precedence.',
         '',
@@ -976,7 +976,7 @@ export class InfraController {
       // otherwise tear down the very backend the app is running on. (Known minor limitation: switching
       // away from a built-in backend and then reloading the page before restarting can leave the old
       // container running until the next explicit change.)
-      // Only ever tear down OpenWA-managed services. An arbitrary profile name (or the empty string)
+      // Only ever tear down IdaWhats-managed services. An arbitrary profile name (or the empty string)
       // would otherwise reach removeService and, via container-name matching, could stop an unrelated
       // container — so constrain teardown to the managed allowlist and drop anything else.
       const requested = profilesToRemove.filter(p => !profiles.includes(p));

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for joining a group via an invite code. */
 public record JoinGroupRequest(String inviteCode) {

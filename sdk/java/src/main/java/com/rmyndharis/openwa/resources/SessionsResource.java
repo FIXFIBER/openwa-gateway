@@ -1,22 +1,22 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.CreateSessionRequest;
-import com.rmyndharis.openwa.model.PairingCodeResponse;
-import com.rmyndharis.openwa.model.QrCodeResponse;
-import com.rmyndharis.openwa.model.RequestPairingCodeRequest;
-import com.rmyndharis.openwa.model.SessionResponse;
-import com.rmyndharis.openwa.model.SessionStatsOverview;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.CreateSessionRequest;
+import com.rmyndharis.idawhats.model.PairingCodeResponse;
+import com.rmyndharis.idawhats.model.QrCodeResponse;
+import com.rmyndharis.idawhats.model.RequestPairingCodeRequest;
+import com.rmyndharis.idawhats.model.SessionResponse;
+import com.rmyndharis.idawhats.model.SessionStatsOverview;
 import java.util.List;
 
 /** Sessions resource — lifecycle management for WhatsApp sessions. */
 public final class SessionsResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public SessionsResource(OpenWAClient client) {
+    public SessionsResource(IdaWhatsClient client) {
         this.client = client;
     }
 

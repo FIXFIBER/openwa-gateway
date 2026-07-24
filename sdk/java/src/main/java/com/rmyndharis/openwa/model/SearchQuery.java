@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /**
  * Query parameters for {@code GET /search}. {@code q} is required and non-empty; all other

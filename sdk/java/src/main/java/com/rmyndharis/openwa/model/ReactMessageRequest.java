@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for reacting to a message (an empty {@code emoji} removes the reaction). */
 public record ReactMessageRequest(String chatId, String messageId, String emoji) {

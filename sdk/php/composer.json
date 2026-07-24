@@ -1,18 +1,18 @@
 {
-    "name": "rmyndharis/openwa",
-    "description": "Official PHP SDK for OpenWA WhatsApp API Gateway",
+    "name": "rmyndharis/idawhats",
+    "description": "Official PHP SDK for IdaWhats WhatsApp API Gateway",
     "type": "library",
     "license": "MIT",
     "keywords": [
         "whatsapp",
         "api",
         "sdk",
-        "openwa",
+        "idawhats",
         "gateway"
     ],
     "authors": [
         {
-            "name": "OpenWA Contributors"
+            "name": "IdaWhats Contributors"
         }
     ],
     "require": {
@@ -24,12 +24,12 @@
     },
     "autoload": {
         "psr-4": {
-            "OpenWA\\": "src/"
+            "IdaWhats\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "OpenWA\\Tests\\": "tests/"
+            "IdaWhats\\Tests\\": "tests/"
         }
     },
     "config": {

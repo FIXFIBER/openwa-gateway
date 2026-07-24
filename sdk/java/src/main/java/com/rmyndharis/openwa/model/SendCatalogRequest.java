@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for sending a catalog link message. Requires an OPERATOR-level key. */
 public record SendCatalogRequest(String chatId, String body) {

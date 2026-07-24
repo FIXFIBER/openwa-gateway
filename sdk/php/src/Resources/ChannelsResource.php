@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace OpenWA\Resources;
+namespace IdaWhats\Resources;
 
-use OpenWA\Http\HttpExecutor;
+use IdaWhats\Http\HttpExecutor;
 
 /**
  * Channels resource — WhatsApp Channels / Newsletters.

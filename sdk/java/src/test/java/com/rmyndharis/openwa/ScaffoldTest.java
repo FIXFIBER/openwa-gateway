@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa;
+package com.rmyndharis.idawhats;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 

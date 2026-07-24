@@ -1,5 +1,5 @@
 # ============================================================================
-# OpenWA on Render (free tier) — deploy manifest
+# IdaWhats on Render (free tier) — deploy manifest
 # ----------------------------------------------------------------------------
 # Why Render: free, no credit card, Node 22, WebSocket-friendly, GitHub-linked.
 # Catch: free web services sleep after 15 min idle -> a pinger must hit the
@@ -8,11 +8,11 @@
 # ============================================================================
 services:
   - type: web
-    name: openwa-gateway
+    name: idawhats-gateway
     runtime: node
     plan: free
     branch: main
-    repo: https://github.com/FIXFIBER/openwa-gateway.git
+    repo: https://github.com/FIXFIBER/idawhats-gateway.git
     # Build: skip Chromium (baileys engine), compile TS + dashboard
     buildCommand: |
       export PUPPETEER_SKIP_DOWNLOAD=true
@@ -22,7 +22,7 @@ services:
       npm run dashboard:build
     startCommand: node dist/main
     healthCheckPath: /api/sessions
-    # Render injects PORT; OpenWA binds process.env.PORT || 2785 (see src/main.ts)
+    # Render injects PORT; IdaWhats binds process.env.PORT || 2785 (see src/main.ts)
     envVars:
       - key: NODE_VERSION
         value: "22"

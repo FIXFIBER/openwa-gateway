@@ -1,23 +1,23 @@
-# rmyndharis-openwa
+# FIXFIBER-idawhats
 
-Official Python SDK for the [OpenWA](https://github.com/rmyndharis/OpenWA) WhatsApp API Gateway.
+Official Python SDK for the [IdaWhats](https://github.com/FIXFIBER/IdaWhats) WhatsApp API Gateway.
 
 A synchronous client built on [httpx](https://www.python-httpx.org/), with bundled type hints (PEP 561).
 
 ## Install
 
 ```bash
-pip install rmyndharis-openwa
+pip install FIXFIBER-idawhats
 ```
 
-Requires Python 3.9+. The importable module is `openwa`.
+Requires Python 3.9+. The importable module is `idawhats`.
 
 ## Usage
 
 ```python
-from openwa import OpenWAClient
+from idawhats import IdaWhatsClient
 
-client = OpenWAClient(
+client = IdaWhatsClient(
     base_url="https://your-gateway.example.com",
     api_key="owa_k1_…",
 )
@@ -26,7 +26,7 @@ client.sessions.start("my-session")
 
 result = client.messages.send_text("my-session", {
     "chatId": "628123456789@c.us",
-    "text": "Hello from the OpenWA Python SDK!",
+    "text": "Hello from the IdaWhats Python SDK!",
 })
 print(result["messageId"])
 ```
@@ -34,7 +34,7 @@ print(result["messageId"])
 The client is also a context manager (it closes the underlying connection pool on exit):
 
 ```python
-with OpenWAClient(base_url="…", api_key="…") as client:
+with IdaWhatsClient(base_url="…", api_key="…") as client:
     client.messages.send_text("my-session", {"chatId": "…@c.us", "text": "hi"})
 ```
 
@@ -42,7 +42,7 @@ For tests, pass an httpx transport — no global monkey-patching required:
 
 ```python
 import httpx
-client = OpenWAClient(base_url="…", api_key="…", transport=httpx.MockTransport(handler))
+client = IdaWhatsClient(base_url="…", api_key="…", transport=httpx.MockTransport(handler))
 ```
 
 ## Search
@@ -65,17 +65,17 @@ for hit in res["hits"]:
 
 ## Errors
 
-A non-2xx response raises a typed `OpenWAApiError` subclass — `OpenWAAuthError` (401),
-`OpenWAForbiddenError` (403), `OpenWANotFoundError` (404), `OpenWAConflictError` (409),
-`OpenWARateLimitError` (429), `OpenWANotImplementedError` (501) — each carrying `.status`
-and the parsed `.body`. A timeout raises `OpenWATimeoutError`.
+A non-2xx response raises a typed `IdaWhatsApiError` subclass — `IdaWhatsAuthError` (401),
+`IdaWhatsForbiddenError` (403), `IdaWhatsNotFoundError` (404), `IdaWhatsConflictError` (409),
+`IdaWhatsRateLimitError` (429), `IdaWhatsNotImplementedError` (501) — each carrying `.status`
+and the parsed `.body`. A timeout raises `IdaWhatsTimeoutError`.
 
 ```python
-from openwa import OpenWANotFoundError
+from idawhats import IdaWhatsNotFoundError
 
 try:
     client.sessions.get("missing")
-except OpenWANotFoundError as e:
+except IdaWhatsNotFoundError as e:
     print(e.status)  # 404
 ```
 

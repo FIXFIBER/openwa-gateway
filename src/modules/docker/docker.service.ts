@@ -2,7 +2,7 @@ import { Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import Docker from 'dockerode';
 
 /**
- * The only Docker profiles OpenWA manages (and may start/stop/remove). Used to bound teardown so a
+ * The only Docker profiles IdaWhats manages (and may start/stop/remove). Used to bound teardown so a
  * caller-supplied profile name can never reach removeService for an unrelated container.
  */
 export const MANAGED_DOCKER_PROFILES: readonly string[] = ['postgres', 'redis', 'minio'];
@@ -124,7 +124,7 @@ export class DockerService implements OnModuleInit {
   }
 
   /**
-   * List all OpenWA-related containers
+   * List all IdaWhats-related containers
    */
   async listContainers(): Promise<ContainerInfo[]> {
     if (!this.docker || !this.isAvailable) {
@@ -135,9 +135,9 @@ export class DockerService implements OnModuleInit {
       const containers = await this.docker.listContainers({ all: true });
       return containers
         .filter(c => {
-          // Filter by OpenWA labels or name prefix
+          // Filter by IdaWhats labels or name prefix
           const labels = c.Labels || {};
-          return labels['com.openwa.service'] || c.Names?.some(n => n.startsWith('/openwa-'));
+          return labels['com.idawhats.service'] || c.Names?.some(n => n.startsWith('/idawhats-'));
         })
         .map(c => ({
           id: c.Id.substring(0, 12),
@@ -153,8 +153,8 @@ export class DockerService implements OnModuleInit {
   }
 
   /**
-   * Which bundled (OpenWA-managed) service containers are currently RUNNING, keyed by the
-   * `com.openwa.service` label (`database` | `cache` | `storage`). Lets the dashboard show the real
+   * Which bundled (IdaWhats-managed) service containers are currently RUNNING, keyed by the
+   * `com.idawhats.service` label (`database` | `cache` | `storage`). Lets the dashboard show the real
    * built-in state instead of the saved intent. All false when Docker is unavailable or none run.
    */
   async getRunningBuiltinServices(): Promise<{ database: boolean; cache: boolean; storage: boolean }> {
@@ -162,7 +162,7 @@ export class DockerService implements OnModuleInit {
     const isRunning = (svc: string): boolean =>
       containers.some(
         c =>
-          c.labels['com.openwa.service'] === svc && c.labels['com.openwa.builtin'] === 'true' && c.state === 'running',
+          c.labels['com.idawhats.service'] === svc && c.labels['com.idawhats.builtin'] === 'true' && c.state === 'running',
       );
     return { database: isRunning('database'), cache: isRunning('cache'), storage: isRunning('storage') };
   }
@@ -179,7 +179,7 @@ export class DockerService implements OnModuleInit {
       const containers = await this.docker.listContainers({
         all: true,
         filters: {
-          label: [`com.openwa.service=${service}`],
+          label: [`com.idawhats.service=${service}`],
         },
       });
 
@@ -188,8 +188,8 @@ export class DockerService implements OnModuleInit {
       }
 
       // Fallback: try by EXACT name (never a substring — a substring, and especially the empty
-      // string, would resolve an arbitrary container). OpenWA-managed containers are `openwa-<service>`.
-      const target = `openwa-${service}`;
+      // string, would resolve an arbitrary container). IdaWhats-managed containers are `idawhats-<service>`.
+      const target = `idawhats-${service}`;
       const allContainers = await this.docker.listContainers({ all: true });
       const match = allContainers.find(c => c.Names?.some(n => n === target || n === `/${target}`));
 
@@ -222,10 +222,10 @@ export class DockerService implements OnModuleInit {
     const specs: Record<string, ReturnType<typeof this.getContainerSpec>> = {
       redis: {
         image: 'redis:7-alpine',
-        name: 'openwa-redis',
+        name: 'idawhats-redis',
         alias: 'redis', // DNS alias for resolution
         cmd: ['redis-server', '--appendonly', 'yes'],
-        volumes: [{ name: 'openwa_redis-data', path: '/data' }],
+        volumes: [{ name: 'idawhats_redis-data', path: '/data' }],
         healthcheck: {
           test: ['CMD', 'redis-cli', 'ping'],
           interval: 5000000000, // 5s in nanoseconds
@@ -233,31 +233,31 @@ export class DockerService implements OnModuleInit {
           retries: 5,
         },
         labels: {
-          'com.openwa.service': 'cache',
-          'com.openwa.builtin': 'true',
+          'com.idawhats.service': 'cache',
+          'com.idawhats.builtin': 'true',
         },
       },
       postgres: {
         image: 'postgres:16-alpine',
-        name: 'openwa-postgres',
+        name: 'idawhats-postgres',
         alias: 'postgres',
         // Use hardcoded defaults for built-in container (don't inherit SQLite paths)
-        env: ['POSTGRES_USER=openwa', 'POSTGRES_PASSWORD=openwa', 'POSTGRES_DB=openwa'],
-        volumes: [{ name: 'openwa_postgres-data', path: '/var/lib/postgresql/data' }],
+        env: ['POSTGRES_USER=idawhats', 'POSTGRES_PASSWORD=idawhats', 'POSTGRES_DB=idawhats'],
+        volumes: [{ name: 'idawhats_postgres-data', path: '/var/lib/postgresql/data' }],
         healthcheck: {
-          test: ['CMD-SHELL', 'pg_isready -U openwa'],
+          test: ['CMD-SHELL', 'pg_isready -U idawhats'],
           interval: 5000000000,
           timeout: 3000000000,
           retries: 5,
         },
         labels: {
-          'com.openwa.service': 'database',
-          'com.openwa.builtin': 'true',
+          'com.idawhats.service': 'database',
+          'com.idawhats.builtin': 'true',
         },
       },
       minio: {
         image: 'minio/minio',
-        name: 'openwa-minio',
+        name: 'idawhats-minio',
         alias: 'minio',
         cmd: ['server', '/data', '--console-address', ':9001'],
         env: [
@@ -266,7 +266,7 @@ export class DockerService implements OnModuleInit {
           `MINIO_ROOT_USER=${process.env.S3_ACCESS_KEY_ID || process.env.S3_ACCESS_KEY || 'minioadmin'}`,
           `MINIO_ROOT_PASSWORD=${process.env.S3_SECRET_ACCESS_KEY || process.env.S3_SECRET_KEY || 'minioadmin'}`,
         ],
-        volumes: [{ name: 'openwa_minio-data', path: '/data' }],
+        volumes: [{ name: 'idawhats_minio-data', path: '/data' }],
         ports: [
           { container: 9000, host: 9000 },
           { container: 9001, host: 9001 },
@@ -278,8 +278,8 @@ export class DockerService implements OnModuleInit {
           retries: 3,
         },
         labels: {
-          'com.openwa.service': 'storage',
-          'com.openwa.builtin': 'true',
+          'com.idawhats.service': 'storage',
+          'com.idawhats.builtin': 'true',
         },
       },
     };
@@ -350,7 +350,7 @@ export class DockerService implements OnModuleInit {
         Env: spec.env,
         Labels: spec.labels,
         HostConfig: {
-          NetworkMode: 'openwa-network',
+          NetworkMode: 'idawhats-network',
           RestartPolicy: { Name: 'unless-stopped' },
           Binds: spec.volumes?.map(v => `${v.name}:${v.path}`),
           PortBindings: spec.ports?.reduce<Record<string, { HostIp: string; HostPort: string }[]>>((acc, p) => {
@@ -368,7 +368,7 @@ export class DockerService implements OnModuleInit {
           : undefined,
         NetworkingConfig: {
           EndpointsConfig: {
-            'openwa-network': {
+            'idawhats-network': {
               Aliases: [spec.alias, profile], // Add DNS aliases for network resolution
             },
           },

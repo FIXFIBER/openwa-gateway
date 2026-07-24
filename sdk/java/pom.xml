@@ -4,14 +4,14 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <groupId>com.rmyndharis</groupId>
-  <artifactId>openwa</artifactId>
+  <groupId>com.FIXFIBER</groupId>
+  <artifactId>idawhats</artifactId>
   <version>0.1.1</version>
   <packaging>jar</packaging>
 
-  <name>OpenWA Java SDK</name>
-  <description>Official Java SDK for the OpenWA WhatsApp API Gateway</description>
-  <url>https://github.com/rmyndharis/OpenWA</url>
+  <name>IdaWhats Java SDK</name>
+  <description>Official Java SDK for the IdaWhats WhatsApp API Gateway</description>
+  <url>https://github.com/FIXFIBER/IdaWhats</url>
 
   <licenses>
     <license>
@@ -21,13 +21,13 @@
   </licenses>
   <developers>
     <developer>
-      <name>OpenWA Contributors</name>
+      <name>IdaWhats Contributors</name>
     </developer>
   </developers>
   <scm>
-    <connection>scm:git:https://github.com/rmyndharis/OpenWA.git</connection>
-    <developerConnection>scm:git:ssh://git@github.com/rmyndharis/OpenWA.git</developerConnection>
-    <url>https://github.com/rmyndharis/OpenWA</url>
+    <connection>scm:git:https://github.com/FIXFIBER/IdaWhats.git</connection>
+    <developerConnection>scm:git:ssh://git@github.com/FIXFIBER/IdaWhats.git</developerConnection>
+    <url>https://github.com/FIXFIBER/IdaWhats</url>
   </scm>
 
   <properties>

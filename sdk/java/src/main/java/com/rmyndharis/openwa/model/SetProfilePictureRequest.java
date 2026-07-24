@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for setting the account profile picture. Provide {@code url} or {@code base64}. */
 public record SetProfilePictureRequest(String url, String base64, String mimetype) {

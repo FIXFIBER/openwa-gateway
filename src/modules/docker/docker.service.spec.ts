@@ -9,7 +9,7 @@ describe('DockerService.getRunningBuiltinServices', () => {
     name,
     state,
     status: state,
-    labels: { 'com.openwa.service': service, 'com.openwa.builtin': 'true' },
+    labels: { 'com.idawhats.service': service, 'com.idawhats.builtin': 'true' },
   });
 
   it('reports a service built-in only when its labeled container is actually running', async () => {
@@ -17,8 +17,8 @@ describe('DockerService.getRunningBuiltinServices', () => {
     jest
       .spyOn(service, 'listContainers')
       .mockResolvedValue([
-        container('openwa-postgres', 'database', 'running'),
-        container('openwa-redis', 'cache', 'exited'),
+        container('idawhats-postgres', 'database', 'running'),
+        container('idawhats-redis', 'cache', 'exited'),
       ]);
 
     expect(await service.getRunningBuiltinServices()).toEqual({ database: true, cache: false, storage: false });
@@ -73,7 +73,7 @@ describe('DockerService.buildDockerOptions', () => {
 
 describe('DockerService.getContainerByService exact-name fallback', () => {
   // Label lookup returns nothing → exercises the name fallback. The fallback must match the exact
-  // OpenWA-managed container name, never a substring (a substring — and especially the empty string —
+  // IdaWhats-managed container name, never a substring (a substring — and especially the empty string —
   // would let an arbitrary container be resolved and torn down).
   function withFakeDocker(containers: Array<{ Id: string; Names: string[] }>) {
     const service = new DockerService();
@@ -90,22 +90,22 @@ describe('DockerService.getContainerByService exact-name fallback', () => {
   }
 
   it('does not resolve any container for an empty service name', async () => {
-    const { service, getContainer } = withFakeDocker([{ Id: 'abc', Names: ['/openwa-postgres'] }]);
+    const { service, getContainer } = withFakeDocker([{ Id: 'abc', Names: ['/idawhats-postgres'] }]);
     expect(await service.getContainerByService('')).toBeNull();
     expect(getContainer).not.toHaveBeenCalled();
   });
 
   it('does not resolve a container by substring of its name', async () => {
-    const { service, getContainer } = withFakeDocker([{ Id: 'abc', Names: ['/openwa-postgres-primary'] }]);
-    // 'postgres' is a substring of 'openwa-postgres-primary' but not the exact managed name.
+    const { service, getContainer } = withFakeDocker([{ Id: 'abc', Names: ['/idawhats-postgres-primary'] }]);
+    // 'postgres' is a substring of 'idawhats-postgres-primary' but not the exact managed name.
     expect(await service.getContainerByService('postgres')).toBeNull();
     expect(getContainer).not.toHaveBeenCalled();
   });
 
-  it('resolves the exact openwa-<service> container', async () => {
+  it('resolves the exact idawhats-<service> container', async () => {
     const { service, getContainer } = withFakeDocker([
-      { Id: 'p', Names: ['/openwa-postgres'] },
-      { Id: 'r', Names: ['/openwa-redis'] },
+      { Id: 'p', Names: ['/idawhats-postgres'] },
+      { Id: 'r', Names: ['/idawhats-redis'] },
     ]);
     const result = await service.getContainerByService('redis');
     expect(getContainer).toHaveBeenCalledWith('r');

@@ -1,4 +1,4 @@
-package openwa
+package idawhats
 
 // SetProfileNameRequest sets the account display name (WhatsApp limit: 25
 // chars).

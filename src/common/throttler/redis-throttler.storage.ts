@@ -51,7 +51,7 @@ export class RedisThrottlerStorage implements ThrottlerStorage {
     blockDuration: number,
     throttlerName: string,
   ): Promise<ThrottlerRecord> {
-    const redisKey = `openwa:throttle:${throttlerName}:${key}`;
+    const redisKey = `idawhats:throttle:${throttlerName}:${key}`;
     try {
       const [hits, ttlMs] = (await this.redis.eval(INCREMENT_WITH_TTL_LUA, 1, redisKey, String(ttl))) as [
         number,

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for updating a group description. */
 public record GroupDescriptionRequest(String description) {

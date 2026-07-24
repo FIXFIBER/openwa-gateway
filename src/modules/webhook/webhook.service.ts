@@ -247,7 +247,7 @@ export class WebhookService implements OnModuleInit, OnModuleDestroy {
       idempotencyKey: generateIdempotencyKey('test', { webhookId: webhook.id }),
       deliveryId: generateDeliveryId(),
       data: {
-        message: 'This is a test webhook from OpenWA',
+        message: 'This is a test webhook from IdaWhats',
         webhookId: webhook.id,
         url: webhook.url,
       },
@@ -258,15 +258,15 @@ export class WebhookService implements OnModuleInit, OnModuleDestroy {
       // Custom headers FIRST so the system headers below always win.
       ...this.sanitizeCustomHeaders(webhook.headers),
       'Content-Type': 'application/json',
-      'User-Agent': 'OpenWA-Webhook/1.0.0',
-      'X-OpenWA-Event': 'test',
-      'X-OpenWA-Idempotency-Key': testPayload.idempotencyKey,
-      'X-OpenWA-Delivery-Id': testPayload.deliveryId,
-      'X-OpenWA-Retry-Count': '0',
+      'User-Agent': 'IdaWhats-Webhook/1.0.0',
+      'X-IdaWhats-Event': 'test',
+      'X-IdaWhats-Idempotency-Key': testPayload.idempotencyKey,
+      'X-IdaWhats-Delivery-Id': testPayload.deliveryId,
+      'X-IdaWhats-Retry-Count': '0',
     };
 
     if (webhook.secret) {
-      headers['X-OpenWA-Signature'] = this.generateSignature(body, webhook.secret);
+      headers['X-IdaWhats-Signature'] = this.generateSignature(body, webhook.secret);
     }
 
     try {
@@ -399,11 +399,11 @@ export class WebhookService implements OnModuleInit, OnModuleDestroy {
         headers = {
           ...this.sanitizeCustomHeaders(webhook.headers),
           'Content-Type': 'application/json',
-          'User-Agent': 'OpenWA-Webhook/1.0.0',
-          'X-OpenWA-Event': event,
-          'X-OpenWA-Idempotency-Key': idempotencyKey,
-          'X-OpenWA-Delivery-Id': deliveryId,
-          'X-OpenWA-Retry-Count': '0',
+          'User-Agent': 'IdaWhats-Webhook/1.0.0',
+          'X-IdaWhats-Event': event,
+          'X-IdaWhats-Idempotency-Key': idempotencyKey,
+          'X-IdaWhats-Delivery-Id': deliveryId,
+          'X-IdaWhats-Retry-Count': '0',
         };
       } catch (error) {
         await recordUndelivered(webhook, deliveryId, idempotencyKey, error, 'webhook_dispatch_preflight_failed');
@@ -420,7 +420,7 @@ export class WebhookService implements OnModuleInit, OnModuleDestroy {
           const signature = webhook.secret ? this.generateSignature(JSON.stringify(finalPayload), webhook.secret) : '';
 
           if (webhook.secret) {
-            headers['X-OpenWA-Signature'] = signature;
+            headers['X-IdaWhats-Signature'] = signature;
           }
 
           const jobData: WebhookJobData = {
@@ -471,7 +471,7 @@ export class WebhookService implements OnModuleInit, OnModuleDestroy {
           // Fallback: deliver directly when the queue add failed (e.g. Redis unreachable with the
           // producer's enableOfflineQueue:false). This is at-least-once — if add() actually reached
           // Redis before rejecting, the queued job AND this fallback may both POST. Both paths carry the
-          // same X-OpenWA-Idempotency-Key / X-OpenWA-Delivery-Id, so a conformant receiver dedupes.
+          // same X-IdaWhats-Idempotency-Key / X-IdaWhats-Delivery-Id, so a conformant receiver dedupes.
           try {
             await this.deliverWebhook(webhook, finalPayload, headers);
 
@@ -569,11 +569,11 @@ export class WebhookService implements OnModuleInit, OnModuleDestroy {
     const body = JSON.stringify(payload);
 
     // Update retry count header
-    headers['X-OpenWA-Retry-Count'] = String(attempt - 1);
+    headers['X-IdaWhats-Retry-Count'] = String(attempt - 1);
 
     // Add signature if secret is configured and not already present
-    if (webhook.secret && !headers['X-OpenWA-Signature']) {
-      headers['X-OpenWA-Signature'] = this.generateSignature(body, webhook.secret);
+    if (webhook.secret && !headers['X-IdaWhats-Signature']) {
+      headers['X-IdaWhats-Signature'] = this.generateSignature(body, webhook.secret);
     }
 
     try {
@@ -637,13 +637,13 @@ export class WebhookService implements OnModuleInit, OnModuleDestroy {
 
   /**
    * Drop operator-supplied custom headers that target reserved names (Content-Type or any
-   * X-OpenWA-* header) so a webhook config cannot forge the signature/event/idempotency
+   * X-IdaWhats-* header) so a webhook config cannot forge the signature/event/idempotency
    * headers. Spread the result BEFORE the system headers so system always wins.
    */
   private sanitizeCustomHeaders(custom: Record<string, string> | null | undefined): Record<string, string> {
     const safe: Record<string, string> = {};
     for (const [key, value] of Object.entries(custom ?? {})) {
-      if (!/^(content-type|x-openwa-)/i.test(key)) {
+      if (!/^(content-type|x-idawhats-)/i.test(key)) {
         safe[key] = value;
       }
     }

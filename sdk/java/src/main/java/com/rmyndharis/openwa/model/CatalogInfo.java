@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** WhatsApp Business catalog metadata. Optional fields are {@code null} when absent. */
 public record CatalogInfo(

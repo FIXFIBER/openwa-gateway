@@ -2,7 +2,7 @@
 
 ## 11.1 Overview
 
-This document contains Standard Operating Procedures (SOP) for OpenWA operations, including incident response, maintenance procedures, and troubleshooting guides.
+This document contains Standard Operating Procedures (SOP) for IdaWhats operations, including incident response, maintenance procedures, and troubleshooting guides.
 
 ### Runbook Structure
 
@@ -38,7 +38,7 @@ Each runbook follows this format:
 docker compose ps
 
 # 2. Check container logs
-docker compose logs --tail=100 openwa
+docker compose logs --tail=100 idawhats
 
 # 3. Check system resources
 docker stats --no-stream
@@ -47,18 +47,18 @@ free -m
 
 # 4. Identify root cause
 # A. Container crashed
-docker compose logs openwa 2>&1 | grep -i "error\|fatal\|crash"
+docker compose logs idawhats 2>&1 | grep -i "error\|fatal\|crash"
 
 # B. Out of memory
-docker compose logs openwa 2>&1 | grep -i "oom\|memory"
+docker compose logs idawhats 2>&1 | grep -i "oom\|memory"
 
 # C. Database connection
-docker compose logs openwa 2>&1 | grep -i "database\|connection refused"
+docker compose logs idawhats 2>&1 | grep -i "database\|connection refused"
 
 # 5. Apply fix based on cause:
 
 # A. Simple restart
-docker compose restart openwa
+docker compose restart idawhats
 
 # B. Full restart with cleanup
 docker compose down
@@ -72,7 +72,7 @@ docker compose up -d
 docker compose restart postgres
 # Wait for postgres to be ready
 sleep 10
-docker compose restart openwa
+docker compose restart idawhats
 ```
 
 **Verification:**
@@ -114,7 +114,7 @@ curl -H "X-API-Key: $API_KEY" \
   http://localhost:2785/api/sessions/{sessionId}
 
 # 2. Check if auto-reconnect is working
-docker compose logs openwa 2>&1 | grep -i "{sessionId}" | tail -20
+docker compose logs idawhats 2>&1 | grep -i "{sessionId}" | tail -20
 
 # 3. Try session restart (stop then start — there is no /restart route)
 curl -X POST -H "X-API-Key: $API_KEY" \
@@ -174,26 +174,26 @@ curl -X POST http://localhost:2785/api/sessions/{sessionId}/messages/send-text \
 
 ```bash
 # 1. Check current memory usage
-docker stats --no-stream openwa
+docker stats --no-stream idawhats
 free -m
 
 # 2. Identify memory consumers
 # Process-wide memory: scrape /api/metrics (Prometheus text, Bearer METRICS_TOKEN)
 curl -H "Authorization: Bearer $METRICS_TOKEN" \
   http://localhost:2785/api/metrics \
-  | grep -E "openwa_process_resident_memory_bytes|openwa_process_heap_used_bytes"
+  | grep -E "idawhats_process_resident_memory_bytes|idawhats_process_heap_used_bytes"
 
 # 3. Check for memory leaks
-docker compose logs openwa 2>&1 | grep -i "heap\|memory\|gc"
+docker compose logs idawhats 2>&1 | grep -i "heap\|memory\|gc"
 
 # 4. Immediate actions:
 
 # A. Clear the in-process cache (no runtime cache-clear API — restart the container;
 #    if using Redis, flush via redis-cli)
-docker compose restart openwa
+docker compose restart idawhats
 
 # B. Restart container (will reconnect sessions)
-docker compose restart openwa
+docker compose restart idawhats
 
 # C. If caused by too many sessions:
 # List sessions (no sort param); process memory is in stats/overview (memoryUsage, MB)
@@ -211,7 +211,7 @@ curl -H "X-API-Key: $API_KEY" \
 
 ```bash
 # Memory below threshold
-docker stats --no-stream openwa
+docker stats --no-stream idawhats
 # Expected: Memory usage < 80%
 
 # All sessions still connected
@@ -244,21 +244,21 @@ curl -H "X-API-Key: $API_KEY" \
 
 # 2. Check recent webhook deliveries
 # There is no webhook-delivery log API — inspect the server logs / audit trail instead:
-docker compose logs openwa 2>&1 | grep -i "webhook" | tail -20
+docker compose logs idawhats 2>&1 | grep -i "webhook" | tail -20
 
 # 3. Identify failure reason:
 # A. Endpoint not responding
-curl -v https://your-webhook-endpoint.com/openwa
+curl -v https://your-webhook-endpoint.com/idawhats
 
 # B. SSL certificate issues
-curl -v --insecure https://your-webhook-endpoint.com/openwa
+curl -v --insecure https://your-webhook-endpoint.com/idawhats
 
 # C. Timeout
-curl -v --max-time 30 https://your-webhook-endpoint.com/openwa
+curl -v --max-time 30 https://your-webhook-endpoint.com/idawhats
 
 # D. Authentication failed
 curl -v -H "Authorization: Bearer token" \
-  https://your-webhook-endpoint.com/openwa
+  https://your-webhook-endpoint.com/idawhats
 
 # 4. Test webhook delivery
 curl -X POST -H "X-API-Key: $API_KEY" \
@@ -303,7 +303,7 @@ curl -X POST -H "X-API-Key: $API_KEY" \
 
 # Recent deliveries successful
 # No delivery-log API — confirm via the server logs / audit trail:
-docker compose logs openwa 2>&1 | grep -i "webhook" | tail -5
+docker compose logs idawhats 2>&1 | grep -i "webhook" | tail -5
 ```
 
 ---
@@ -335,7 +335,7 @@ docker stats --no-stream
 ./scripts/backup.sh
 
 # Verify backup
-ls -la /backups/openwa/$(date +%Y%m%d)/
+ls -la /backups/idawhats/$(date +%Y%m%d)/
 
 # 4. Stop accepting new requests (if using load balancer)
 # Remove from load balancer or set to maintenance mode
@@ -404,18 +404,18 @@ curl -H "X-API-Key: $API_KEY" \
 
 # 2. Create backup
 ./scripts/backup.sh
-BACKUP_DIR="/backups/openwa/$(date +%Y%m%d-%H%M%S)"
+BACKUP_DIR="/backups/idawhats/$(date +%Y%m%d-%H%M%S)"
 
 # 3. Export current state
-docker compose exec openwa npm run export -- --output /tmp/export.json
-docker cp openwa:/tmp/export.json $BACKUP_DIR/
+docker compose exec idawhats npm run export -- --output /tmp/export.json
+docker cp idawhats:/tmp/export.json $BACKUP_DIR/
 
 # 4. Stop services
 docker compose down
 
 # 5. Update version in docker-compose.yml
-# Change: image: ghcr.io/rmyndharis/openwa:0.1.0
-# To:     image: ghcr.io/rmyndharis/openwa:0.7.3
+# Change: image: ghcr.io/FIXFIBER/IdaWhats:0.1.0
+# To:     image: ghcr.io/FIXFIBER/IdaWhats:0.7.3
 
 # 6. Pull new image
 docker compose pull
@@ -423,7 +423,7 @@ docker compose pull
 # 7. Run database migrations (if any)
 # Use migration:run:prod in the production image — `migration:run` needs ts-node + the TS
 # source, both stripped from the prod image by `npm ci --omit=dev`.
-docker compose run --rm openwa npm run migration:run:prod
+docker compose run --rm idawhats npm run migration:run:prod
 
 # 8. Start services
 docker compose up -d
@@ -494,28 +494,28 @@ User-managed files outside that list (for example the project-level `.env`) must
 ```bash
 # scripts/backup.sh captures:
 #   - main.sqlite   — auth (API keys) + audit log   (ALWAYS SQLite)
-#   - openwa.sqlite — user data                      (or a pg_dump when DATABASE_TYPE=postgres)
+#   - idawhats.sqlite — user data                      (or a pg_dump when DATABASE_TYPE=postgres)
 #   - sessions/     — whatsapp-web.js state (SESSION_DATA_PATH)
 #   - baileys/      — Baileys credentials (BAILEYS_AUTH_DIR)
 #   - media/        — local media                    (skipped automatically when STORAGE_TYPE=s3)
 #   - plugin-packages/ — installed plugin code from PLUGINS_DIR
-#   - plugin-state/    — registry + ctx.storage state under OPENWA_DATA_DIR
+#   - plugin-state/    — registry + ctx.storage state under IDAWHATS_DATA_DIR
 #   - .env.generated / .api-key — generated configuration and bootstrap secret
 
 # Run from the repo root (operates on the data dir, default ./data):
 ./scripts/backup.sh
 
 # Customize via environment:
-OPENWA_DATA_DIR=/srv/openwa/data \
-  BACKUP_DIR=/backups/openwa \
-  DATABASE_TYPE=postgres DATABASE_URL=postgres://user:pass@host:5432/openwa \
+IDAWHATS_DATA_DIR=/srv/idawhats/data \
+  BACKUP_DIR=/backups/idawhats \
+  DATABASE_TYPE=postgres DATABASE_URL=postgres://user:pass@host:5432/idawhats \
   ./scripts/backup.sh
 ```
 
-> The data directory is a Docker **named volume** (`openwa-data`) in the production
-> compose. Run the script where that volume is mounted — e.g. point `OPENWA_DATA_DIR`
+> The data directory is a Docker **named volume** (`idawhats-data`) in the production
+> compose. Run the script where that volume is mounted — e.g. point `IDAWHATS_DATA_DIR`
 > at the volume's mountpoint, or run it inside a container with `/app/data` mounted. When operating
-> directly on the host mount, also set any path that does not use its default below `OPENWA_DATA_DIR`
+> directly on the host mount, also set any path that does not use its default below `IDAWHATS_DATA_DIR`
 > (notably compose's colocated `PLUGINS_DIR`) to the corresponding host-visible path.
 
 **Verification:**
@@ -523,7 +523,7 @@ OPENWA_DATA_DIR=/srv/openwa/data \
 ```bash
 # The archive MUST contain main.sqlite, the configured data store, and the auth directory for the
 # selected engine (sessions/ for whatsapp-web.js or baileys/ for Baileys).
-tar -tzf ./backups/openwa-backup-*.tar.gz
+tar -tzf ./backups/idawhats-backup-*.tar.gz
 ```
 
 > Backup archives contain API keys, provider credentials, WhatsApp auth state, and plugin secrets.
@@ -554,8 +554,8 @@ the current data dir first so a bad restore can be undone:
 docker compose down
 
 # 2. Restore from an archive produced by scripts/backup.sh
-#    (operates on the data dir, default ./data; override with OPENWA_DATA_DIR)
-./scripts/restore.sh ./backups/openwa-backup-<timestamp>.tar.gz
+#    (operates on the data dir, default ./data; override with IDAWHATS_DATA_DIR)
+./scripts/restore.sh ./backups/idawhats-backup-<timestamp>.tar.gz
 
 # 3. (Postgres only) the archive contains database.sql — import it manually:
 #    psql "$DATABASE_URL" < ./data/database.sql
@@ -661,7 +661,7 @@ find /backups -name "*.tar.gz" -mtime +30 -delete
 find ./data/media -mtime +30 -delete
 
 # E. Truncate large log files
-truncate -s 0 ./logs/openwa.log
+truncate -s 0 ./logs/idawhats.log
 
 # 4. Verify
 df -h

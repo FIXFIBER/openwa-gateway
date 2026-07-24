@@ -5739,13 +5739,13 @@
     }
   },
   "info": {
-    "title": "OpenWA API",
+    "title": "IdaWhats API",
     "description": "Open Source WhatsApp API Gateway - Free, Self-Hosted HTTP API",
     "version": "0.10.8",
     "contact": {
-      "name": "OpenWA",
-      "url": "https://github.com/rmyndharis/OpenWA",
-      "email": "yudhi@rmyndharis.com"
+      "name": "IdaWhats",
+      "url": "https://github.com/FIXFIBER/IdaWhats",
+      "email": "yudhi@FIXFIBER.com"
     }
   },
   "tags": [
@@ -6549,7 +6549,7 @@
           "text": {
             "type": "string",
             "description": "Text message content",
-            "example": "Hello from OpenWA!",
+            "example": "Hello from IdaWhats!",
             "maxLength": 4096
           },
           "mentions": {
@@ -7106,7 +7106,7 @@
           "header": {
             "type": "string",
             "description": "Optional header text, prepended to the rendered body",
-            "example": "OpenWA Store",
+            "example": "IdaWhats Store",
             "maxLength": 1024
           },
           "footer": {

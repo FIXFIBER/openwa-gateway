@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Request body for sending a contact card. */
 public record SendContactRequest(String chatId, String contactName, String contactNumber) {

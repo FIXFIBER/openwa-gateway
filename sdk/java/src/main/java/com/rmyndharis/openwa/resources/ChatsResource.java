@@ -1,15 +1,15 @@
-package com.rmyndharis.openwa.resources;
+package com.rmyndharis.idawhats.resources;
 
-import static com.rmyndharis.openwa.http.Http.encodeSegment;
+import static com.rmyndharis.idawhats.http.Http.encodeSegment;
 
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.http.HttpMethod;
-import com.rmyndharis.openwa.model.ChatSummary;
-import com.rmyndharis.openwa.model.DeleteChatRequest;
-import com.rmyndharis.openwa.model.ListChatsQuery;
-import com.rmyndharis.openwa.model.MarkChatRequest;
-import com.rmyndharis.openwa.model.SendChatStateRequest;
-import com.rmyndharis.openwa.model.SuccessResult;
+import com.rmyndharis.idawhats.IdaWhatsClient;
+import com.rmyndharis.idawhats.http.HttpMethod;
+import com.rmyndharis.idawhats.model.ChatSummary;
+import com.rmyndharis.idawhats.model.DeleteChatRequest;
+import com.rmyndharis.idawhats.model.ListChatsQuery;
+import com.rmyndharis.idawhats.model.MarkChatRequest;
+import com.rmyndharis.idawhats.model.SendChatStateRequest;
+import com.rmyndharis.idawhats.model.SuccessResult;
 import java.util.List;
 
 /**
@@ -20,9 +20,9 @@ import java.util.List;
  * resource for clarity.
  */
 public final class ChatsResource {
-    private final OpenWAClient client;
+    private final IdaWhatsClient client;
 
-    public ChatsResource(OpenWAClient client) {
+    public ChatsResource(IdaWhatsClient client) {
         this.client = client;
     }
 

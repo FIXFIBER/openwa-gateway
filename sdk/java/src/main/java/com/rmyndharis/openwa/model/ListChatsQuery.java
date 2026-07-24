@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /** Query parameters for listing chats. Null fields are omitted from the URL. */
 public record ListChatsQuery(Integer limit, Integer offset) {

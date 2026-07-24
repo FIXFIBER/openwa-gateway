@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.model;
+package com.rmyndharis.idawhats.model;
 
 /**
  * A WhatsApp Channel / Newsletter. Mirrors the backend {@code Channel} — returned by the engine

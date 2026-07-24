@@ -3,7 +3,7 @@
 ## 8.1 Project Structure
 
 ```
-openwa/
+idawhats/
 ├── src/
 │   ├── main.ts                    # Application entry
 │   ├── app.module.ts              # Root module
@@ -612,8 +612,8 @@ export class AllExceptionsFilter implements ExceptionFilter {
 
 ```bash
 # 1. Clone repository
-git clone https://github.com/rmyndharis/OpenWA.git
-cd OpenWA
+git clone https://github.com/FIXFIBER/IdaWhats.git
+cd IdaWhats
 
 # 2. Install dependencies (also installs dashboard dependencies)
 npm install
@@ -676,7 +676,7 @@ docker compose --profile full up -d
 
 ### Environment Variables
 
-OpenWA supports multiple infrastructure configurations. Choose based on your needs:
+IdaWhats supports multiple infrastructure configurations. Choose based on your needs:
 
 #### Minimal Profile (Development / Single Session)
 
@@ -688,7 +688,7 @@ LOG_LEVEL=debug
 
 # Database: SQLite (zero config)
 DATABASE_TYPE=sqlite
-DATABASE_NAME=./data/openwa.sqlite
+DATABASE_NAME=./data/idawhats.sqlite
 DATABASE_SYNCHRONIZE=true
 
 # Storage: Local filesystem
@@ -699,7 +699,7 @@ STORAGE_LOCAL_PATH=./data/media
 REDIS_ENABLED=false
 QUEUE_ENABLED=false
 
-# Optional: seed a known admin key. If omitted, OpenWA generates a random key and writes data/.api-key.
+# Optional: seed a known admin key. If omitted, IdaWhats generates a random key and writes data/.api-key.
 API_MASTER_KEY=
 
 # Session
@@ -725,9 +725,9 @@ LOG_LEVEL=info
 DATABASE_TYPE=postgres
 DATABASE_HOST=postgres
 DATABASE_PORT=5432
-DATABASE_USERNAME=openwa
+DATABASE_USERNAME=idawhats
 DATABASE_PASSWORD=<set-a-strong-password>
-DATABASE_NAME=openwa
+DATABASE_NAME=idawhats
 DATABASE_SYNCHRONIZE=false
 DATABASE_POOL_SIZE=10
 
@@ -1108,7 +1108,7 @@ constructor(
 
 **Check logs:**
 ```bash
-docker compose logs openwa-api --tail 100
+docker compose logs idawhats-api --tail 100
 ```
 
 **Common causes:**
@@ -1121,13 +1121,13 @@ docker compose logs openwa-api --tail 100
 **Solution:**
 ```dockerfile
 # Add shared memory size
-docker run --shm-size=2gb openwa
+docker run --shm-size=2gb idawhats
 ```
 
 Or in docker-compose.yml:
 ```yaml
 services:
-  openwa-api:
+  idawhats-api:
     shm_size: '2gb'
 ```
 ```

@@ -1,4 +1,4 @@
-package com.rmyndharis.openwa.http;
+package com.rmyndharis.idawhats.http;
 
 import java.time.Duration;
 import java.util.Map;

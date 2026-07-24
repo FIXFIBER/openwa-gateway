@@ -1,6 +1,6 @@
-# OpenWA Java SDK
+# IdaWhats Java SDK
 
-Official Java client for the [OpenWA](https://github.com/rmyndharis/OpenWA)
+Official Java client for the [IdaWhats](https://github.com/FIXFIBER/IdaWhats)
 WhatsApp API Gateway.
 
 Hand-written against the exact API surface (paths, DTOs, response shapes) and
@@ -14,8 +14,8 @@ Java 17+, one runtime dependency ([Gson](https://github.com/google/gson)).
 
 ```xml
 <dependency>
-  <groupId>com.rmyndharis</groupId>
-  <artifactId>openwa</artifactId>
+  <groupId>com.FIXFIBER</groupId>
+  <artifactId>idawhats</artifactId>
   <version>0.1.1</version>
 </dependency>
 ```
@@ -23,24 +23,24 @@ Java 17+, one runtime dependency ([Gson](https://github.com/google/gson)).
 **Gradle**
 
 ```groovy
-implementation 'com.rmyndharis:openwa:0.1.1'
+implementation 'com.FIXFIBER:idawhats:0.1.1'
 ```
 
 ## Quickstart
 
 ```java
-import com.rmyndharis.openwa.OpenWAClient;
-import com.rmyndharis.openwa.model.MessageResponse;
-import com.rmyndharis.openwa.model.SendTextRequest;
+import com.FIXFIBER.idawhats.IdaWhatsClient;
+import com.FIXFIBER.idawhats.model.MessageResponse;
+import com.FIXFIBER.idawhats.model.SendTextRequest;
 
-OpenWAClient client = new OpenWAClient("http://localhost:2785", "owa_k1_…");
+IdaWhatsClient client = new IdaWhatsClient("http://localhost:2785", "owa_k1_…");
 
 client.sessions.start("my-session");
 
 MessageResponse result = client.messages.sendText("my-session",
     SendTextRequest.builder()
         .chatId("628123456789@c.us")
-        .text("Hello from the OpenWA Java SDK!")
+        .text("Hello from the IdaWhats Java SDK!")
         .build());
 
 System.out.println(result.messageId());
@@ -50,10 +50,10 @@ For full control over configuration (timeout, default headers, a custom
 transport), build a `ClientConfig`:
 
 ```java
-import com.rmyndharis.openwa.ClientConfig;
+import com.FIXFIBER.idawhats.ClientConfig;
 import java.time.Duration;
 
-OpenWAClient client = new OpenWAClient(ClientConfig.builder()
+IdaWhatsClient client = new IdaWhatsClient(ClientConfig.builder()
     .baseUrl("https://wa.example.com")
     .apiKey("owa_k1_…")
     .timeout(Duration.ofSeconds(15))
@@ -79,30 +79,30 @@ Errors are a typed, unchecked hierarchy — branch with `instanceof` or on
 `.status()`:
 
 ```java
-import com.rmyndharis.openwa.errors.OpenWAConflictError;
-import com.rmyndharis.openwa.errors.OpenWANotFoundError;
+import com.FIXFIBER.idawhats.errors.IdaWhatsConflictError;
+import com.FIXFIBER.idawhats.errors.IdaWhatsNotFoundError;
 
 try {
     client.messages.sendText("my-session", body);
-} catch (OpenWAConflictError e) {
+} catch (IdaWhatsConflictError e) {
     // 409 — engine not ready
-} catch (OpenWANotFoundError e) {
+} catch (IdaWhatsNotFoundError e) {
     // 404 — session or chat not found
 }
 ```
 
 | Class                        | HTTP | Meaning                                  |
 | ---------------------------- | ---- | ---------------------------------------- |
-| `OpenWAAuthError`            | 401  | Missing or invalid API key               |
-| `OpenWAForbiddenError`       | 403  | API key role insufficient                |
-| `OpenWANotFoundError`        | 404  | Resource not found                       |
-| `OpenWAConflictError`        | 409  | Engine not ready                         |
-| `OpenWARateLimitError`       | 429  | Rate limited                             |
-| `OpenWANotImplementedError`  | 501  | Active engine does not support the call  |
-| `OpenWAApiError`             | —    | Any other non-2xx (carries `.status()`)  |
-| `OpenWATimeoutError`         | —    | Request exceeded the configured timeout  |
+| `IdaWhatsAuthError`            | 401  | Missing or invalid API key               |
+| `IdaWhatsForbiddenError`       | 403  | API key role insufficient                |
+| `IdaWhatsNotFoundError`        | 404  | Resource not found                       |
+| `IdaWhatsConflictError`        | 409  | Engine not ready                         |
+| `IdaWhatsRateLimitError`       | 429  | Rate limited                             |
+| `IdaWhatsNotImplementedError`  | 501  | Active engine does not support the call  |
+| `IdaWhatsApiError`             | —    | Any other non-2xx (carries `.status()`)  |
+| `IdaWhatsTimeoutError`         | —    | Request exceeded the configured timeout  |
 
-All extend `OpenWAError` (a `RuntimeException`).
+All extend `IdaWhatsError` (a `RuntimeException`).
 
 ## Reliability & security
 
@@ -112,7 +112,7 @@ All extend `OpenWAError` (a `RuntimeException`).
 - **No automatic retries.** A failed request throws immediately; wrap calls in
   your own backoff if you need retries (especially for `429`). Inject a custom
   `HttpTransport` for retry or observability middleware.
-- **Redirects are never followed.** A `3xx` surfaces as an `OpenWAApiError`
+- **Redirects are never followed.** A `3xx` surfaces as an `IdaWhatsApiError`
   rather than being followed, so the API key is never re-sent to a redirect
   target.
 - **Default per-request timeout** is 30 s (configurable). Path segments (chat /

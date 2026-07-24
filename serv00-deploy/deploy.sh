@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 # ============================================================================
-# OpenWA deploy script for serv00.com (free, no-card, 24/7)
+# IdaWhats deploy script for serv00.com (free, no-card, 24/7)
 # ----------------------------------------------------------------------------
 # Model (research-backed, see serv00 docs):
 #   - serv00 Node runs under Phusion Passenger by default, BUT a 24/7 WhatsApp
 #     gateway needs a raw long-lived process (baileys holds a live WS socket).
 #     So we enable Binexec and run `node dist/main` ourselves, then keep it
 #     alive with a cron (serv00 kills idle apps after 24h).
-#   - Node 22 is the serv00 default (`node22`) = satisfies OpenWA >=22.13.
+#   - Node 22 is the serv00 default (`node22`) = satisfies IdaWhats >=22.13.
 #   - Native module better-sqlite3 needs Binexec + clang to compile.
 #
 # USAGE on serv00 (after `devil binexec on` + SSH re-login):
@@ -21,7 +21,7 @@ set -e
 LOGIN="${SERV00_LOGIN:-yourlogin}"          # serv00 account login
 DOMAIN="${SERV00_DOMAIN:-yourdomain.com}"   # the WWW domain you added as 'nodejs' type
 APP_DIR="$HOME/domains/$DOMAIN/public_nodejs"
-REPO_DIR="$APP_DIR/openwa"                  # where the code lives
+REPO_DIR="$APP_DIR/idawhats"                  # where the code lives
 DATA_DIR="$REPO_DIR/data"
 
 echo "==> [1/6] ensure node22 + npm22 on PATH"
@@ -36,7 +36,7 @@ mkdir -p "$APP_DIR"
 if [ -d "$REPO_DIR/.git" ]; then
   cd "$REPO_DIR" && git pull --ff-only
 else
-  git clone https://github.com/rmyndharis/OpenWA.git "$REPO_DIR"
+  git clone https://github.com/FIXFIBER/IdaWhats.git "$REPO_DIR"
   cd "$REPO_DIR"
 fi
 
@@ -59,7 +59,7 @@ AUTO_START_SESSIONS=true
 ENGINE_TYPE=baileys
 SESSION_DATA_PATH=./data/sessions
 DATABASE_TYPE=sqlite
-DATABASE_NAME=./data/openwa.sqlite
+DATABASE_NAME=./data/idawhats.sqlite
 DATABASE_SYNCHRONIZE=true
 STORAGE_TYPE=local
 STORAGE_LOCAL_PATH=./data/media
@@ -76,8 +76,8 @@ EOF
 echo "==> [6/6] (re)start the server under nohup"
 pkill -f "node dist/main" 2>/dev/null || true
 cd "$REPO_DIR"
-nohup node dist/main > "$DATA_DIR/openwa.log" 2>&1 &
+nohup node dist/main > "$DATA_DIR/idawhats.log" 2>&1 &
 echo "started pid $!"
 sleep 4
 curl -fsS http://localhost:2785/api/sessions -H "X-API-Key: ${API_MASTER_KEY:-none}" -o /dev/null \
-  && echo "HEALTH OK" || echo "WARN: health check failed (see $DATA_DIR/openwa.log)"
+  && echo "HEALTH OK" || echo "WARN: health check failed (see $DATA_DIR/idawhats.log)"
