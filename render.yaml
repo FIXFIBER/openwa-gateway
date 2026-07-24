@@ -1,0 +1,56 @@
+# ============================================================================
+# OpenWA on Render (free tier) — deploy manifest
+# ----------------------------------------------------------------------------
+# Why Render: free, no credit card, Node 22, WebSocket-friendly, GitHub-linked.
+# Catch: free web services sleep after 15 min idle -> a pinger must hit the
+#   health URL every <15 min to keep it awake (see KEEPALIVE below).
+# Deploy: `render blueprint launch` (or New -> Blueprint -> pick this repo).
+# ============================================================================
+services:
+  - type: web
+    name: openwa-gateway
+    runtime: node
+    plan: free
+    branch: main
+    repo: https://github.com/FIXFIBER/openwa-gateway.git
+    # Build: skip Chromium (baileys engine), compile TS + dashboard
+    buildCommand: |
+      export PUPPETEER_SKIP_DOWNLOAD=true
+      export PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true
+      npm install
+      npm run build
+      npm run dashboard:build
+    startCommand: node dist/main
+    healthCheckPath: /api/sessions
+    # Render injects PORT; OpenWA binds process.env.PORT || 2785 (see src/main.ts)
+    envVars:
+      - key: NODE_VERSION
+        value: "22"
+      - key: ENGINE_TYPE
+        value: baileys
+      - key: AUTO_START_SESSIONS
+        value: "true"
+      - key: DATABASE_TYPE
+        value: sqlite
+      - key: DATABASE_SYNCHRONIZE
+        value: "true"
+      - key: STORAGE_TYPE
+        value: local
+      - key: REDIS_ENABLED
+        value: "false"
+      - key: QUEUE_ENABLED
+        value: "false"
+      - key: CACHE_ENABLED
+        value: "false"
+      - key: POSTGRES_BUILTIN
+        value: "false"
+      - key: MINIO_BUILTIN
+        value: "false"
+      - key: MCP_ENABLED
+        value: "true"
+      - key: MCP_READONLY
+        value: "false"
+      # NOTE: set a strong API_MASTER_KEY in the Render dashboard (Secret) before
+      # first deploy, OR it will seed a random key you must read from the log.
+      - key: API_MASTER_KEY
+        sync: false   # set manually in Render dashboard as a secret
