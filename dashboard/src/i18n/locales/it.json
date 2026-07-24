@@ -157,7 +157,7 @@
     "connectionError": "Impossibile connettersi al server. Riprova.",
     "help": "Serve aiuto?",
     "viewDocs": "Visualizza la documentazione",
-    "footer": "Fatto con il ❤️ da Yudhi AFIXFIBER e dalla Community di IdaWhats",
+    "footer": "IdaWhats di Idris Adeleke",
     "version": "v{{version}} · {{date}}"
   },
   "dashboard": {

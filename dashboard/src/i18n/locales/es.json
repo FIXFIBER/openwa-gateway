@@ -157,7 +157,7 @@
     "connectionError": "No se puede conectar al servidor. Por favor, inténtalo de nuevo.",
     "help": "¿Necesitas ayuda?",
     "viewDocs": "Ver documentación",
-    "footer": "Hecho con ❤️ por Yudhi AFIXFIBER y la comunidad IdaWhats",
+    "footer": "IdaWhats por Idris Adeleke",
     "version": "v{{version}} · {{date}}"
   },
   "dashboard": {

@@ -58,7 +58,7 @@ export function Login({ onLogin }: LoginProps) {
     <div className="login-container">
       <div className="login-card">
         <div className="login-logo">
-          <img src="/idawhats_logo.webp" alt="IdaWhats" className="logo-icon" />
+          <img src="/idawhats_logo.png" alt="IdaWhats" className="logo-icon" />
           <span className="version-info">
             {t('login.version', {
               version: __APP_VERSION__,

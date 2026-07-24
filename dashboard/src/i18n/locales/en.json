@@ -157,7 +157,7 @@
     "connectionError": "Unable to connect to server. Please try again.",
     "help": "Need help?",
     "viewDocs": "View Documentation",
-    "footer": "Made with ❤️ by Yudhi AFIXFIBER and the IdaWhats Community",
+    "footer": "IdaWhats by Idris Adeleke",
     "version": "v{{version}} · {{date}}"
   },
   "dashboard": {
