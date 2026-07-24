@@ -884,6 +884,36 @@
   font-style: italic;
   font-size: 0.9em;
   margin-bottom: 0.25rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+.chats-page .chat-media-retry {
+  background: var(--primary);
+  color: #fff;
+  border: none;
+  border-radius: 50%;
+  width: 22px;
+  height: 22px;
+  font-size: 0.75rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  line-height: 1;
+  transition: background 0.15s, transform 0.1s;
+  flex-shrink: 0;
+}
+
+.chats-page .chat-media-retry:hover {
+  background: var(--primary-hover);
+  transform: scale(1.15);
+}
+
+.chats-page .chat-media-retry:active {
+  transform: scale(0.9);
 }
 
 .chats-page .chat-video-media {

@@ -183,6 +183,16 @@ export function Chats() {
   // Lightbox state for media viewer
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
+  // Track media load failures so the user can retry with a button
+  const [failedMedia, setFailedMedia] = useState<Set<string>>(new Set());
+  const clearMediaFailure = useCallback((id: string) => {
+    setFailedMedia(prev => {
+      const next = new Set(prev);
+      next.delete(id);
+      return next;
+    });
+  }, []);
+
   // File attachments
   const [attachment, setAttachment] = useState<{
     file: File;
@@ -1292,9 +1302,10 @@ export function Chats() {
                             return (
                               <div className="message-media-image">
                                 <img
-                                  src={mediaSrc}
+                                  src={failedMedia.has(msg.id) ? '' : mediaSrc}
                                   alt={mediaInfo.filename || t('chats.media.image')}
                                   className="chat-image-media"
+                                  data-media-id={msg.id}
                                   onLoad={onMediaLoad}
                                   onError={(e) => {
                                     const target = e.target as HTMLImageElement;
@@ -1303,8 +1314,14 @@ export function Chats() {
                                     if (wrapper) {
                                       const placeholder = document.createElement('span');
                                       placeholder.className = 'message-media-omitted';
-                                      placeholder.textContent = '🖼️ ' + (mediaInfo.filename || t('chats.media.image'));
+                                      placeholder.textContent = '🖼️ ' + (mediaInfo.filename || t('chats.media.image')) + ' ';
                                       wrapper.appendChild(placeholder);
+                                      const retryBtn = document.createElement('button');
+                                      retryBtn.className = 'chat-media-retry';
+                                      retryBtn.textContent = '↻';
+                                      retryBtn.title = 'Retry loading media';
+                                      retryBtn.addEventListener('click', () => clearMediaFailure(msg.id));
+                                      wrapper.appendChild(retryBtn);
                                     }
                                   }}
                                   onClick={() => {
@@ -1318,9 +1335,10 @@ export function Chats() {
                             return (
                               <div className="message-media-video">
                                 <video
-                                  src={mediaSrc}
+                                  src={failedMedia.has(msg.id) ? '' : mediaSrc}
                                   controls
                                   className="chat-video-media"
+                                  data-media-id={msg.id}
                                   onLoadedData={onMediaLoad}
                                   onError={(e) => {
                                     const target = e.target as HTMLVideoElement;
@@ -1329,8 +1347,14 @@ export function Chats() {
                                     if (wrapper) {
                                       const placeholder = document.createElement('span');
                                       placeholder.className = 'message-media-omitted';
-                                      placeholder.textContent = '🎬 ' + (mediaInfo.filename || t('chats.media.video'));
+                                      placeholder.textContent = '🎬 ' + (mediaInfo.filename || t('chats.media.video')) + ' ';
                                       wrapper.appendChild(placeholder);
+                                      const retryBtn = document.createElement('button');
+                                      retryBtn.className = 'chat-media-retry';
+                                      retryBtn.textContent = '↻';
+                                      retryBtn.title = 'Retry loading media';
+                                      retryBtn.addEventListener('click', () => clearMediaFailure(msg.id));
+                                      wrapper.appendChild(retryBtn);
                                     }
                                   }}
                                 />
@@ -1341,9 +1365,10 @@ export function Chats() {
                             return (
                               <div className="message-media-audio">
                                 <audio
-                                  src={mediaSrc}
+                                  src={failedMedia.has(msg.id) ? '' : mediaSrc}
                                   controls
                                   className="chat-audio-media"
+                                  data-media-id={msg.id}
                                   onError={(e) => {
                                     const target = e.target as HTMLAudioElement;
                                     target.style.display = 'none';
@@ -1351,8 +1376,14 @@ export function Chats() {
                                     if (wrapper) {
                                       const placeholder = document.createElement('span');
                                       placeholder.className = 'message-media-omitted';
-                                      placeholder.textContent = '🎵 ' + (mediaInfo.filename || t('chats.media.audio'));
+                                      placeholder.textContent = '🎵 ' + (mediaInfo.filename || t('chats.media.audio')) + ' ';
                                       wrapper.appendChild(placeholder);
+                                      const retryBtn = document.createElement('button');
+                                      retryBtn.className = 'chat-media-retry';
+                                      retryBtn.textContent = '↻';
+                                      retryBtn.title = 'Retry loading media';
+                                      retryBtn.addEventListener('click', () => clearMediaFailure(msg.id));
+                                      wrapper.appendChild(retryBtn);
                                     }
                                   }}
                                 />
