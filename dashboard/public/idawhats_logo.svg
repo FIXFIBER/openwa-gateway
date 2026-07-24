@@ -6,15 +6,25 @@
     </linearGradient>
     <filter id="glow" x="-20%" y="-20%" width="140%" height="140%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="8" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
     <filter id="softGlow" x="-15%" y="-15%" width="130%" height="130%">
       <feGaussianBlur in="SourceGraphic" stdDeviation="4" result="blur"/>
-      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
     </filter>
   </defs>
+
+  <!-- Dark navy background -->
   <rect width="2588" height="2584" rx="60" fill="url(#bg)"/>
   <rect width="2588" height="2584" rx="60" fill="none" stroke="#1a2040" stroke-width="2"/>
+
+  <!-- Subtle grid dots -->
   <g opacity="0.035" fill="#3b82f6">
     <circle cx="100" cy="100" r="1.5"/><circle cx="280" cy="100" r="1.5"/><circle cx="460" cy="100" r="1.5"/>
     <circle cx="100" cy="260" r="1.5"/><circle cx="280" cy="260" r="1.5"/><circle cx="460" cy="260" r="1.5"/>
@@ -23,17 +33,31 @@
     <circle cx="2100" cy="260" r="1.5"/><circle cx="2280" cy="260" r="1.5"/><circle cx="2460" cy="260" r="1.5"/>
     <circle cx="2100" cy="420" r="1.5"/><circle cx="2280" cy="420" r="1.5"/><circle cx="2460" cy="420" r="1.5"/>
   </g>
-  <path d="M680 520 h1228 a60 60 0 0 1 60 60 v600 a60 60 0 0 1 -60 60 H960 l-160 150 v-150 H680 a60 60 0 0 1 -60 -60 V580 a60 60 0 0 1 60 -60z" fill="none" stroke="#32ff7e" stroke-width="16" filter="url(#glow)" opacity="0.2"/>
-  <path d="M700 520 h1188 a44 44 0 0 1 44 44 v600 a44 44 0 0 1 -44 44 H980 l-160 150 v-150 H700 a44 44 0 0 1 -44 -44 V564 a44 44 0 0 1 44 -44z" fill="none" stroke="#32ff7e" stroke-width="10" filter="url(#softGlow)" opacity="0.9"/>
+
+  <!-- Speech bubble - double outline with tail pointing bottom-left -->
+  <path d="M680 520 h1228 a60 60 0 0 1 60 60 v600 a60 60 0 0 1 -60 60 H960 l-160 150 v-150 H680 a60 60 0 0 1 -60 -60 V580 a60 60 0 0 1 60 -60z"
+        fill="none" stroke="#32ff7e" stroke-width="16" filter="url(#glow)" opacity="0.2"/>
+  <path d="M700 520 h1188 a44 44 0 0 1 44 44 v600 a44 44 0 0 1 -44 44 H980 l-160 150 v-150 H700 a44 44 0 0 1 -44 -44 V564 a44 44 0 0 1 44 -44z"
+        fill="none" stroke="#32ff7e" stroke-width="10" filter="url(#softGlow)" opacity="0.9"/>
+
+  <!-- IDAWHATS text — serif font, bold, neon green -->
   <text x="1294" y="790" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="200" font-weight="bold" fill="#32ff7e" letter-spacing="22" filter="url(#glow)">IDAWHATS</text>
+
+  <!-- Face icon — eyes + smile, centered, subtle -->
   <g transform="translate(1294, 1080)" opacity="0.55" fill="none" stroke="#32ff7e" stroke-width="6" stroke-linecap="round" filter="url(#softGlow)">
+    <!-- Left eye -->
     <ellipse cx="-40" cy="-40" rx="18" ry="22"/>
+    <!-- Right eye -->
     <ellipse cx="40" cy="-40" rx="18" ry="22"/>
+    <!-- Mouth (smile) -->
     <path d="M-50 30 Q0 70 50 30"/>
   </g>
+
+  <!-- Bottom-right sparkle (4-pointed star) -->
   <g transform="translate(2390, 2370)" opacity="0.1" fill="#ffffff" filter="url(#softGlow)">
     <path d="M0 -22 L5 -5 L22 0 L5 5 L0 22 L-5 5 L-22 0 L-5 -5 Z"/>
   </g>
+  <!-- Secondary smaller sparkle -->
   <g transform="translate(1880, 2180)" opacity="0.05" fill="#ffffff">
     <path d="M0 -14 L3 -3 L14 0 L3 3 L0 14 L-3 3 L-14 0 L-3 -3 Z"/>
   </g>
