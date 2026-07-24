@@ -1292,6 +1292,17 @@ export function Chats() {
                                   alt={mediaInfo.filename || t('chats.media.image')}
                                   className="chat-image-media"
                                   onLoad={onMediaLoad}
+                                  onError={(e) => {
+                                    const target = e.target as HTMLImageElement;
+                                    target.style.display = 'none';
+                                    const wrapper = target.parentElement;
+                                    if (wrapper) {
+                                      const placeholder = document.createElement('span');
+                                      placeholder.className = 'message-media-omitted';
+                                      placeholder.textContent = '🖼️ ' + (mediaInfo.filename || t('chats.media.image'));
+                                      wrapper.appendChild(placeholder);
+                                    }
+                                  }}
                                   onClick={() => {
                                     const idx = imageMedia.findIndex(x => x.id === msg.id);
                                     if (idx >= 0) setLightboxIndex(idx);
@@ -1307,6 +1318,17 @@ export function Chats() {
                                   controls
                                   className="chat-video-media"
                                   onLoadedData={onMediaLoad}
+                                  onError={(e) => {
+                                    const target = e.target as HTMLVideoElement;
+                                    target.style.display = 'none';
+                                    const wrapper = target.parentElement;
+                                    if (wrapper) {
+                                      const placeholder = document.createElement('span');
+                                      placeholder.className = 'message-media-omitted';
+                                      placeholder.textContent = '🎬 ' + (mediaInfo.filename || t('chats.media.video'));
+                                      wrapper.appendChild(placeholder);
+                                    }
+                                  }}
                                 />
                               </div>
                             );
@@ -1314,7 +1336,22 @@ export function Chats() {
                           case 'voice':
                             return (
                               <div className="message-media-audio">
-                                <audio src={mediaSrc} controls className="chat-audio-media" />
+                                <audio
+                                  src={mediaSrc}
+                                  controls
+                                  className="chat-audio-media"
+                                  onError={(e) => {
+                                    const target = e.target as HTMLAudioElement;
+                                    target.style.display = 'none';
+                                    const wrapper = target.parentElement;
+                                    if (wrapper) {
+                                      const placeholder = document.createElement('span');
+                                      placeholder.className = 'message-media-omitted';
+                                      placeholder.textContent = '🎵 ' + (mediaInfo.filename || t('chats.media.audio'));
+                                      wrapper.appendChild(placeholder);
+                                    }
+                                  }}
+                                />
                               </div>
                             );
                           case 'document':
