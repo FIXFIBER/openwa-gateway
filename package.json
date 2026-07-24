@@ -57,10 +57,10 @@
     "migration:show:main:prod": "npm run typeorm:prod -- migration:show -d dist/database/data-source-main.js"
   },
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.1093.0",
-    "@bull-board/api": "^8.1.2",
-    "@bull-board/express": "^8.1.2",
-    "@bull-board/nestjs": "^8.1.2",
+    "@aws-sdk/client-s3": "^3.1094.0",
+    "@bull-board/api": "^8.3.0",
+    "@bull-board/express": "^8.3.0",
+    "@bull-board/nestjs": "^8.3.0",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@nestjs/bullmq": "^11.0.4",
     "@nestjs/common": "^11.1.28",
@@ -77,7 +77,7 @@
     "adm-zip": "^0.6.0",
     "archiver": "^8.0.0",
     "better-sqlite3": "^12.11.1",
-    "bullmq": "^5.80.10",
+    "bullmq": "^5.81.1",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.15.1",
     "dockerode": "^5.0.1",
