@@ -58,6 +58,7 @@ const mediaAccept: Record<(typeof messageTypes)[number], string> = {
   contact: '*/*',
   sticker: 'image/*',
   poll: '*/*',
+  list: '*/*',
   forward: '*/*',
   bulk: '*/*',
 };
@@ -74,6 +75,7 @@ const fallbackMime: Record<(typeof messageTypes)[number], string> = {
   contact: 'application/octet-stream',
   sticker: 'image/webp',
   poll: 'application/octet-stream',
+  list: 'application/octet-stream',
   forward: 'application/octet-stream',
   bulk: 'application/octet-stream',
 };
@@ -230,6 +232,14 @@ export function MessageTester() {
   const isMediaMessageType = mediaMessageTypes.includes(messageType);
   const bulkRecipientList = parseBulkRecipients(bulkRecipients);
   const pollOptionsFilled = pollOptions.map(o => o.trim()).filter(o => o.length > 0);
+  const listSectionsFilled = listSections
+    .map(s => ({
+      title: s.title.trim(),
+      rows: s.rows
+        .map(r => ({ title: r.title.trim(), description: r.description.trim() }))
+        .filter(r => r.title.length > 0),
+    }))
+    .filter(s => s.title.length > 0 && s.rows.length > 0);
   const lat = parseFloat(latitude);
   const lng = parseFloat(longitude);
   const delayMs = bulkDelay.trim() === '' ? undefined : parseInt(bulkDelay, 10);
@@ -245,6 +255,11 @@ export function MessageTester() {
     formValid = !!mediaFile || mediaUrl.trim().length > 0;
   } else if (messageType === 'poll') {
     formValid = pollQuestion.trim().length > 0 && pollOptionsFilled.length >= 2;
+  } else if (messageType === 'list') {
+    formValid =
+      listTitle.trim().length > 0 &&
+      listButtonText.trim().length > 0 &&
+      listSectionsFilled.length >= 1;
   } else if (messageType === 'forward') {
     formValid = forwardTo.trim().length > 0 && forwardMessageId.trim().length > 0;
   } else if (messageType === 'bulk') {
@@ -359,6 +374,15 @@ export function MessageTester() {
             name: pollQuestion.trim(),
             options: pollOptionsFilled,
             ...(allowMultipleAnswers ? { allowMultipleAnswers: true } : {}),
+          });
+          break;
+        case 'list':
+          result = await messageApi.sendList(session, {
+            chatId,
+            title: listTitle.trim(),
+            buttonText: listButtonText.trim(),
+            ...(listFooter.trim() ? { footerText: listFooter.trim() } : {}),
+            sections: listSectionsFilled,
           });
           break;
         case 'forward': {
@@ -714,6 +738,146 @@ export function MessageTester() {
                   />
                   {t('messageTester.allowMultipleAnswers')}
                 </label>
+              </div>
+            </>
+          )}
+
+          {messageType === 'list' && (
+            <>
+              <div className="form-group">
+                <label>{t('messageTester.listTitle')}</label>
+                <input
+                  type="text"
+                  value={listTitle}
+                  onChange={e => setListTitle(e.target.value)}
+                  placeholder={t('messageTester.listTitlePlaceholder')}
+                />
+              </div>
+              <div className="form-group">
+                <label>{t('messageTester.listButtonText')}</label>
+                <input
+                  type="text"
+                  value={listButtonText}
+                  onChange={e => setListButtonText(e.target.value)}
+                  placeholder={t('messageTester.listButtonTextPlaceholder')}
+                />
+              </div>
+              <div className="form-group">
+                <label>
+                  {t('messageTester.listFooter')} ({t('common.optional')})
+                </label>
+                <input
+                  type="text"
+                  value={listFooter}
+                  onChange={e => setListFooter(e.target.value)}
+                  placeholder={t('messageTester.listFooterPlaceholder')}
+                />
+              </div>
+              <div className="form-group">
+                <label>{t('messageTester.listSections')}</label>
+                {listSections.map((section, si) => (
+                  <div className="list-section" key={si}>
+                    <input
+                      type="text"
+                      value={section.title}
+                      onChange={e =>
+                        setListSections(prev =>
+                          prev.map((s, i) => (i === si ? { ...s, title: e.target.value } : s)),
+                        )
+                      }
+                      placeholder={t('messageTester.listSectionTitle', { index: si + 1 })}
+                    />
+                    {section.rows.map((row, ri) => (
+                      <div className="list-row" key={ri}>
+                        <input
+                          type="text"
+                          value={row.title}
+                          onChange={e =>
+                            setListSections(prev =>
+                              prev.map((s, i) =>
+                                i === si
+                                  ? {
+                                      ...s,
+                                      rows: s.rows.map((r, j) =>
+                                        j === ri ? { ...r, title: e.target.value } : r,
+                                      ),
+                                    }
+                                  : s,
+                              ),
+                            )
+                          }
+                          placeholder={t('messageTester.listRowTitle', { index: ri + 1 })}
+                        />
+                        <input
+                          type="text"
+                          value={row.description}
+                          onChange={e =>
+                            setListSections(prev =>
+                              prev.map((s, i) =>
+                                i === si
+                                  ? {
+                                      ...s,
+                                      rows: s.rows.map((r, j) =>
+                                        j === ri ? { ...r, description: e.target.value } : r,
+                                      ),
+                                    }
+                                  : s,
+                              ),
+                            )
+                          }
+                          placeholder={t('messageTester.listRowDescription')}
+                        />
+                        <button
+                          type="button"
+                          className="remove-option-btn"
+                          onClick={() =>
+                            setListSections(prev =>
+                              prev.map((s, i) =>
+                                i === si ? { ...s, rows: s.rows.filter((_, j) => j !== ri) } : s,
+                              ),
+                            )
+                          }
+                          disabled={section.rows.length <= 1}
+                          aria-label={t('messageTester.removeRow')}
+                        >
+                          <X size={14} />
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      className="add-option-btn"
+                      onClick={() =>
+                        setListSections(prev =>
+                          prev.map((s, i) =>
+                            i === si ? { ...s, rows: [...s.rows, { title: '', description: '' }] } : s,
+                          ),
+                        )
+                      }
+                    >
+                      <Plus size={14} /> {t('messageTester.addRow')}
+                    </button>
+                    <button
+                      type="button"
+                      className="remove-option-btn"
+                      onClick={() => setListSections(prev => prev.filter((_, i) => i !== si))}
+                      disabled={listSections.length <= 1}
+                      aria-label={t('messageTester.removeSection')}
+                    >
+                      <X size={14} /> {t('messageTester.removeSection')}
+                    </button>
+                  </div>
+                ))}
+                <button
+                  type="button"
+                  className="add-option-btn"
+                  onClick={() =>
+                    setListSections(prev => [...prev, { title: '', rows: [{ title: '', description: '' }] }])
+                  }
+                >
+                  <Plus size={14} /> {t('messageTester.addSection')}
+                </button>
+                <span className="hint">{t('messageTester.listHint')}</span>
               </div>
             </>
           )}
