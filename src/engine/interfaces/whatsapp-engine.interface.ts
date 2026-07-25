@@ -217,6 +217,34 @@ export interface LocationInput {
   address?: string;
 }
 
+export interface ListRow {
+  /** Row title — the tappable item the user picks. */
+  title: string;
+  /** Optional row description shown under the title. */
+  description?: string;
+  /** Optional unique row id (WhatsApp uses it in the selection callback); auto-generated when omitted. */
+  rowId?: string;
+}
+
+export interface ListSection {
+  /** Section heading shown above its rows. */
+  title: string;
+  /** Optional section description. */
+  description?: string;
+  rows: ListRow[];
+}
+
+export interface ListInput {
+  /** Title shown in the list message header. */
+  title: string;
+  /** Button label that opens the list (WhatsApp shows this on the CTA button). */
+  buttonText: string;
+  /** Footer text (optional). */
+  footerText?: string;
+  /** One or more sections — each section has a title and a set of rows. WhatsApp requires >= 1 section. */
+  sections: ListSection[];
+}
+
 export interface PollInput {
   /** Poll question / title. */
   name: string;
@@ -548,6 +576,8 @@ export interface IWhatsAppEngine {
   sendContactMessage(chatId: string, contact: ContactCard): Promise<MessageResult>;
   sendStickerMessage(chatId: string, media: MediaInput): Promise<MessageResult>;
   sendPollMessage(chatId: string, poll: PollInput): Promise<MessageResult>;
+  /** Send a WhatsApp list message (interactive menu with one or more sections of rows). */
+  sendListMessage(chatId: string, list: ListInput): Promise<MessageResult>;
 
   // Reply & Forward
   replyToMessage(chatId: string, quotedMsgId: string, text: string): Promise<MessageResult>;

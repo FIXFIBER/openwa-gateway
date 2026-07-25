@@ -401,6 +401,34 @@ export class MessageService {
     return this.persistSentState(message, result);
   }
 
+  async sendList(
+    sessionId: string,
+    dto: { chatId: string; title: string; buttonText: string; footerText?: string; sections: { title: string; description?: string; rows: { title: string; description?: string; rowId?: string }[] }[] },
+  ): Promise<MessageResponseDto> {
+    const finalDto = await this.applySendingGate(sessionId, 'list', dto);
+    const engine = this.getEngine(sessionId);
+
+    // Persist a readable pending record. The body holds the list title so the chat history stays legible.
+    const message = await this.saveOutgoingMessage(sessionId, {
+      chatId: finalDto.chatId,
+      body: `📋 ${finalDto.title}`,
+      type: 'list',
+    });
+
+    let result: MessageResult;
+    try {
+      result = await engine.sendListMessage(finalDto.chatId, {
+        title: finalDto.title,
+        buttonText: finalDto.buttonText,
+        ...(finalDto.footerText ? { footerText: finalDto.footerText } : {}),
+        sections: finalDto.sections,
+      });
+    } catch (error) {
+      return this.failSend(sessionId, 'list', message, finalDto, error);
+    }
+    return this.persistSentState(message, result);
+  }
+
   async sendSticker(sessionId: string, dto: SendMediaMessageDto): Promise<MessageResponseDto> {
     const finalDto = await this.applySendingGate(sessionId, 'sticker', dto);
     const engine = this.getEngine(sessionId);

@@ -10,7 +10,9 @@ import {
   ArrayMinSize,
   ArrayMaxSize,
   MaxLength,
+  ValidateNested,
 } from 'class-validator';
+import { Type } from 'class-transformer';
 import { ToStrictBoolean, ToStrictNumber } from '../../../common/utils/strict-boolean';
 
 /**
@@ -102,6 +104,78 @@ export class SendPollDto {
   @IsOptional()
   @IsBoolean()
   allowMultipleAnswers?: boolean;
+}
+
+export class SendListRowDto {
+  @ApiProperty({ description: 'Row title (the tappable item)', maxLength: 255 })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  title: string;
+
+  @ApiPropertyOptional({ description: 'Optional row description', maxLength: 255 })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  description?: string;
+
+  @ApiPropertyOptional({ description: 'Optional unique row id' })
+  @IsOptional()
+  @IsString()
+  rowId?: string;
+}
+
+export class SendListSectionDto {
+  @ApiProperty({ description: 'Section heading', maxLength: 255 })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  title: string;
+
+  @ApiPropertyOptional({ description: 'Optional section description', maxLength: 255 })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  description?: string;
+
+  @ApiProperty({ description: 'Rows in this section (at least one)', type: [SendListRowDto] })
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => SendListRowDto)
+  rows: SendListRowDto[];
+}
+
+export class SendListDto {
+  @ApiProperty({ description: 'Chat ID (e.g. 628123456789@c.us or 1203630000@g.us)' })
+  @IsString()
+  @IsNotEmpty()
+  chatId: string;
+
+  @ApiProperty({ description: 'Title shown in the list message header', maxLength: 255 })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  title: string;
+
+  @ApiProperty({ description: 'Button label that opens the list', maxLength: 255, example: 'View menu' })
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  buttonText: string;
+
+  @ApiPropertyOptional({ description: 'Footer text', maxLength: 255 })
+  @IsOptional()
+  @IsString()
+  @MaxLength(255)
+  footerText?: string;
+
+  @ApiProperty({ description: 'One or more sections; each section has a title and rows', type: [SendListSectionDto] })
+  @IsArray()
+  @ArrayMinSize(1)
+  @ValidateNested({ each: true })
+  @Type(() => SendListSectionDto)
+  sections: SendListSectionDto[];
 }
 
 export class ReplyMessageDto {

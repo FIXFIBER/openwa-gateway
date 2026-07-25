@@ -30,6 +30,7 @@ import {
   IncomingMessage,
   IWhatsAppEngine,
   Label,
+  ListInput,
   LocationInput,
   MediaInput,
   MessageReaction,
@@ -53,6 +54,7 @@ import { CallNotFoundError } from '../../common/errors/call-not-found.error';
 import { EngineRefusedError } from '../../common/errors/engine-refused.error';
 import { InvalidInviteCodeError } from '../../common/errors/invalid-invite-code.error';
 import { ChannelNotFoundError } from '../../common/errors/channel-not-found.error';
+import { InternalServerErrorException } from '@nestjs/common';
 import { createLogger } from '../../common/services/logger.service';
 import { BaileysAdapterConfig, BaileysLogger } from '../types/baileys.types';
 import { BaileysSessionStore } from './baileys-session-store';
@@ -732,6 +734,30 @@ export class BaileysAdapter implements IWhatsAppEngine {
         selectableCount: poll.allowMultipleAnswers ? 0 : 1,
       },
     });
+  }
+
+  async sendListMessage(chatId: string, list: ListInput): Promise<MessageResult> {
+    this.ensureReady();
+    if (!list.sections || list.sections.length === 0) {
+      throw new InternalServerErrorException('A list message requires at least one section with one row.');
+    }
+    const sections = list.sections.map((s, si) => ({
+      title: s.title,
+      ...(s.description ? { description: s.description } : {}),
+      rows: s.rows.map((r, ri) => ({
+        rowId: r.rowId || `${chatId}-s${si}-r${ri}-${Math.random().toString(36).slice(2, 8)}`,
+        title: r.title,
+        ...(r.description ? { description: r.description } : {}),
+      })),
+    }));
+    return this.sendContent(chatId, {
+      listMessage: {
+        title: list.title,
+        buttonText: list.buttonText,
+        footerText: list.footerText || '',
+        sections,
+      },
+    } as unknown as AnyMessageContent);
   }
 
   async replyToMessage(chatId: string, quotedMsgId: string, text: string): Promise<MessageResult> {

@@ -39,6 +39,7 @@ const messageTypes = [
   'contact',
   'sticker',
   'poll',
+  'list',
   'forward',
   'bulk',
 ] as const;
@@ -114,6 +115,14 @@ export function MessageTester() {
   // WhatsApp caps polls at 2..12 options; rows are trimmed and empty ones dropped at send time.
   const [pollOptions, setPollOptions] = useState<string[]>(['', '']);
   const [allowMultipleAnswers, setAllowMultipleAnswers] = useState(false);
+  // List message (interactive sections). A list has a title, a button label, optional footer, and
+  // one or more sections each with rows (title + optional description).
+  const [listTitle, setListTitle] = useState('');
+  const [listButtonText, setListButtonText] = useState('');
+  const [listFooter, setListFooter] = useState('');
+  const [listSections, setListSections] = useState<{ title: string; rows: { title: string; description: string }[] }[]>([
+    { title: '', rows: [{ title: '', description: '' }] },
+  ]);
   const [forwardFrom, setForwardFrom] = useState('');
   const [forwardTo, setForwardTo] = useState('');
   const [forwardMessageId, setForwardMessageId] = useState('');

@@ -248,6 +248,14 @@ export interface SendContactPayload {
   contactNumber: string;
 }
 
+export interface SendListPayload {
+  chatId: string;
+  title: string;
+  buttonText: string;
+  footerText?: string;
+  sections: { title: string; description?: string; rows: { title: string; description?: string; rowId?: string }[] }[];
+}
+
 export interface SendPollPayload {
   chatId: string;
   name: string;
@@ -801,6 +809,11 @@ export const messageApi = {
     }),
   sendPoll: (sessionId: string, data: SendPollPayload) =>
     request<MessageResponse>(`/sessions/${sessionId}/messages/send-poll`, {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }),
+  sendList: (sessionId: string, data: SendListPayload) =>
+    request<MessageResponse>(`/sessions/${sessionId}/messages/send-list`, {
       method: 'POST',
       body: JSON.stringify(data),
     }),

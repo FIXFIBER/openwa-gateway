@@ -47,6 +47,7 @@ import {
   ReactionEvent,
   GroupEvent,
   IncomingCallEvent,
+  ListInput,
 } from '../interfaces/whatsapp-engine.interface';
 import { resolveWebVersionPin } from '../wa-web-version';
 import { chatKind, isChannelJid, userPart } from '../identity/wa-id';
@@ -1687,6 +1688,35 @@ export class WhatsAppWebJsAdapter extends EventEmitter implements IWhatsAppEngin
     const msg = await this.sendResolved(chatId, to =>
       this.client!.sendMessage(to, new Poll(poll.name, poll.options, pollOptions)),
     );
+    return this.toMessageResult(msg);
+  }
+
+  async sendListMessage(chatId: string, list: ListInput): Promise<MessageResult> {
+    this.ensureReady();
+    const module = await import('whatsapp-web.js');
+    const List = module.List || module.default?.List;
+
+    // Build the ListMessage args (title, body/buttonText, sections, footer). WhatsApp rejects the
+    // send with "no section" when sections is empty, so surface a clean error before we hit the wire.
+    if (!list.sections || list.sections.length === 0) {
+      throw new InternalServerErrorException('A list message requires at least one section with one row.');
+    }
+    const sections = list.sections.map(s => ({
+      title: s.title,
+      ...(s.description ? { description: s.description } : {}),
+      rows: s.rows.map((r, i) => ({
+        id: r.rowId || `${chatId}-row-${i}-${Math.random().toString(36).slice(2, 8)}`,
+        title: r.title,
+        ...(r.description ? { description: r.description } : {}),
+      })),
+    }));
+    const listArgs = {
+      body: list.title,
+      buttonText: list.buttonText,
+      sections,
+      ...(list.footerText ? { footer: list.footerText } : {}),
+    };
+    const msg = await this.sendResolved(chatId, to => this.client!.sendMessage(to, listArgs, { list: true } as any));
     return this.toMessageResult(msg);
   }
 

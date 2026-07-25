@@ -9,6 +9,7 @@ import {
   SendLocationDto,
   SendContactDto,
   SendPollDto,
+  SendListDto,
   ReplyMessageDto,
   ForwardMessageDto,
   ReactMessageDto,
@@ -230,6 +231,21 @@ export class MessageController {
   })
   async sendPoll(@Param('sessionId') sessionId: string, @Body() dto: SendPollDto): Promise<MessageResponseDto> {
     return this.messageService.sendPoll(sessionId, dto);
+  }
+
+  @Post('send-list')
+  @RequireRole(ApiKeyRole.OPERATOR)
+  @ApiOperation({ summary: 'Send a WhatsApp list message (interactive menu with sections)' })
+  @ApiParam({ name: 'sessionId', description: 'Session ID' })
+  @ApiResponse({
+    status: 201,
+    description: 'List message sent',
+    type: MessageResponseDto,
+  })
+  @ApiResponse({ status: 400, description: 'Session not active or invalid request' })
+  @ApiResponse({ status: 404, description: 'Session not found' })
+  async sendList(@Param('sessionId') sessionId: string, @Body() dto: SendListDto): Promise<MessageResponseDto> {
+    return this.messageService.sendList(sessionId, dto);
   }
 
   @Post('reply')
