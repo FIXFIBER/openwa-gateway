@@ -5,6 +5,7 @@ import { Repository } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm';
 import { SessionService } from '../session/session.service';
 import { SendTextMessageDto, SendMediaMessageDto, SendAudioMessageDto, MessageResponseDto } from './dto';
+import { SendListDto } from './dto/message-actions.dto';
 import { SendTemplateMessageDto } from './dto/send-template.dto';
 import { assertBase64WithinMediaCap, stripBase64DataUri } from './media-cap.util';
 import { MediaInput, IWhatsAppEngine, MessageResult } from '../../engine/interfaces/whatsapp-engine.interface';
@@ -401,10 +402,7 @@ export class MessageService {
     return this.persistSentState(message, result);
   }
 
-  async sendList(
-    sessionId: string,
-    dto: { chatId: string; title: string; buttonText: string; footerText?: string; sections: { title: string; description?: string; rows: { title: string; description?: string; rowId?: string }[] }[] },
-  ): Promise<MessageResponseDto> {
+  async sendList(sessionId: string, dto: SendListDto): Promise<MessageResponseDto> {
     const finalDto = await this.applySendingGate(sessionId, 'list', dto);
     const engine = this.getEngine(sessionId);
 

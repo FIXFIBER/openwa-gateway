@@ -9,6 +9,7 @@ import {
   type Call,
   type GroupNotification,
   type Message,
+  type MessageSendOptions,
 } from 'whatsapp-web.js';
 import * as qrcode from 'qrcode';
 import * as path from 'path';
@@ -1693,8 +1694,6 @@ export class WhatsAppWebJsAdapter extends EventEmitter implements IWhatsAppEngin
 
   async sendListMessage(chatId: string, list: ListInput): Promise<MessageResult> {
     this.ensureReady();
-    const module = await import('whatsapp-web.js');
-    const List = module.List || module.default?.List;
 
     // Build the ListMessage args (title, body/buttonText, sections, footer). WhatsApp rejects the
     // send with "no section" when sections is empty, so surface a clean error before we hit the wire.
@@ -1716,7 +1715,8 @@ export class WhatsAppWebJsAdapter extends EventEmitter implements IWhatsAppEngin
       sections,
       ...(list.footerText ? { footer: list.footerText } : {}),
     };
-    const msg = await this.sendResolved(chatId, to => this.client!.sendMessage(to, listArgs, { list: true } as any));
+    const listOptions: MessageSendOptions = { list: true } as unknown as MessageSendOptions;
+    const msg = await this.sendResolved(chatId, to => this.client!.sendMessage(to, listArgs, listOptions));
     return this.toMessageResult(msg);
   }
 

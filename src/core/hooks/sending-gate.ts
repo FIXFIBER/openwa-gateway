@@ -34,5 +34,5 @@ export async function applySendingGate<T extends object>(
     throw new BadRequestException('Message sending blocked by plugin');
   }
   // Use the potentially plugin-modified input.
-  return (hookData as { input: T }).input;
+  return (hookData as unknown as { input: T }).input;
 }
