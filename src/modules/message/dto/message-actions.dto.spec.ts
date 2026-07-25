@@ -3,6 +3,7 @@ import { validate, ValidationError } from 'class-validator';
 import {
   SendLocationDto,
   SendPollDto,
+  SendListDto,
   ReactMessageDto,
   DeleteMessageDto,
   ForwardMessageDto,
@@ -139,5 +140,55 @@ describe('message action DTOs', () => {
   it('EditMessageDto: missing messageId is rejected', async () => {
     const errs = await errorsFor(EditMessageDto, { chatId: 'x@c.us', body: 'new text' });
     expect(errs.some(e => e.property === 'messageId')).toBe(true);
+  });
+
+  it('SendListDto: a valid list (one section, one row) passes', async () => {
+    expect(
+      await errorsFor(SendListDto, {
+        chatId: '120363000@g.us',
+        title: 'Menu',
+        buttonText: 'View',
+        sections: [{ title: 'Main', rows: [{ title: 'Item 1' }] }],
+      }),
+    ).toHaveLength(0);
+  });
+
+  it('SendListDto: missing chatId is rejected', async () => {
+    const errs = await errorsFor(SendListDto, {
+      title: 'Menu',
+      buttonText: 'View',
+      sections: [{ title: 'Main', rows: [{ title: 'Item 1' }] }],
+    });
+    expect(errs.some(e => e.property === 'chatId')).toBe(true);
+  });
+
+  it('SendListDto: empty section array is rejected (needs >= 1 section)', async () => {
+    const errs = await errorsFor(SendListDto, {
+      chatId: 'x@c.us',
+      title: 'Menu',
+      buttonText: 'View',
+      sections: [],
+    });
+    expect(errs.some(e => e.property === 'sections')).toBe(true);
+  });
+
+  it('SendListDto: a section with no rows is rejected', async () => {
+    const errs = await errorsFor(SendListDto, {
+      chatId: 'x@c.us',
+      title: 'Menu',
+      buttonText: 'View',
+      sections: [{ title: 'Main', rows: [] }],
+    });
+    expect(errs.some(e => e.property === 'sections')).toBe(true);
+  });
+
+  it('SendListDto: a row with empty title is rejected', async () => {
+    const errs = await errorsFor(SendListDto, {
+      chatId: 'x@c.us',
+      title: 'Menu',
+      buttonText: 'View',
+      sections: [{ title: 'Main', rows: [{ title: '' }] }],
+    });
+    expect(errs.some(e => e.property === 'sections')).toBe(true);
   });
 });
